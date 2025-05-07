@@ -1,8 +1,13 @@
 package com.example.mealmeatapp.view.home
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +22,6 @@ import com.example.mealmeatapp.ui.theme.AppColors
 import com.example.mealmeatapp.ui.theme.AppShapes
 import com.example.mealmeatapp.ui.theme.AppTypography
 import com.example.mealmeatapp.view.components.CustomButton
-
 
 
 

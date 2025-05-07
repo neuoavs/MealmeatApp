@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.sp
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.view.components.CustomButton
 
+
+
 @Composable
 fun CompletionScreen(onNextClick: () -> Unit) {
     Box(

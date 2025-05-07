@@ -19,6 +19,7 @@ import com.example.mealmeatapp.R
 import com.example.mealmeatapp.model.OnboardingPage
 import com.example.mealmeatapp.view.components.CustomButton
 
+
 @Composable
 fun OnboardingScreen(
     pages: List<OnboardingPage>,
