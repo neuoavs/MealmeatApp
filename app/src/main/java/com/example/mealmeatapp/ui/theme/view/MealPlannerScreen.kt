@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -43,6 +44,7 @@ fun MealPlannerScreen(
     viewModel: HomeViewModel,
     navController: NavController
 ) {
+    println("Entered MealPlannerScreen")
     // Lưu trữ trạng thái mở rộng của từng ngày
     val expandedDays = remember { mutableStateMapOf<String, Boolean>().apply {
         daysOfWeek.forEach { day -> this[day] = false }
@@ -444,3 +446,4 @@ fun MealPlannerScreenPreview() {
         MealPlannerScreen(HomeViewModel(), rememberNavController())
     }
 }
+

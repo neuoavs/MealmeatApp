@@ -23,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.mealmeatapp.controller.AuthViewModel
+import com.example.mealmeatapp.ui.theme.controller.HomeViewModel
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
@@ -37,8 +39,11 @@ data class SettingItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    homeViewModel: HomeViewModel
 ) {
+    println("Entered SettingScreen")
     val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
@@ -414,10 +419,12 @@ fun SettingScreen(
                 TextButton(
                     onClick = {
                         showLogoutDialog = false
+                        println("Logging out and navigating to mealtime")
+                        authViewModel.logout() // Xóa dữ liệu đăng nhập
+                        homeViewModel.clearPlannedMeals() // Xóa dữ liệu bữa ăn
                         navController.navigate("mealtime") {
                             popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         }
-                        // TODO: Clear user session/auth data
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Orange)
                 ) { Text("Log Out", fontWeight = FontWeight.Medium) }
@@ -544,6 +551,10 @@ fun SettingScreen(
 @Composable
 fun SettingScreenPreview() {
     MealtimeAppTheme {
-        SettingScreen(rememberNavController())
+        SettingScreen(
+            navController = rememberNavController(),
+            authViewModel = AuthViewModel(),
+            homeViewModel = HomeViewModel()
+        )
     }
 }

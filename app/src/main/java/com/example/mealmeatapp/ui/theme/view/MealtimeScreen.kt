@@ -43,7 +43,7 @@ fun MealtimeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Black)
+            .background(DarkGreen)
     ) {
         Image(
             painter = painterResource(id = R.drawable.group7),

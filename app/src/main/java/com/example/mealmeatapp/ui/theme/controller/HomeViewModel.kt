@@ -72,7 +72,10 @@ class HomeViewModel(private val repository: MealRepository = MealRepository()) :
 
     fun addRandomPlannedMeal() {
         val randomMeal = repository.getRandomMeal() ?: return
-        addPlannedMeal(randomMeal)
-        println("HomeViewModel: Added random meal=${randomMeal.id to randomMeal.name}, planned=${_plannedMeals.map { it.id to it.name }}")
+        val daysOfWeek = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+        val randomDay = daysOfWeek.random() // Chọn ngày ngẫu nhiên
+        val mealWithDay = randomMeal.copy(dayOfWeek = randomDay) // Gán ngày cho bữa ăn
+        addPlannedMeal(mealWithDay)
+        println("HomeViewModel: Added random meal=${mealWithDay.id to mealWithDay.name}, day=${mealWithDay.dayOfWeek}, planned=${_plannedMeals.map { it.id to it.name }}")
     }
 }

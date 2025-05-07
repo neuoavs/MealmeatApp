@@ -24,7 +24,8 @@ import com.example.mealmeatapp.ui.theme.*
 fun SignInScreen(
     viewModel: AuthViewModel,
     navController: NavController,
-    onForgotPasswordClick: () -> Unit
+    onForgotPasswordClick: () -> Unit,
+    onSignInSuccess: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -94,9 +95,7 @@ fun SignInScreen(
         Button(
             onClick = {
                 if (viewModel.onSignIn()) {
-                    navController.navigate("home") {
-                        popUpTo("signin") { inclusive = true }
-                    }
+                    onSignInSuccess()
                 }
             },
             modifier = Modifier
@@ -132,7 +131,9 @@ fun SignInScreenPreview() {
         SignInScreen(
             viewModel = AuthViewModel(),
             navController = rememberNavController(),
-            onForgotPasswordClick = {}
+            onForgotPasswordClick = {},
+            onSignInSuccess = {}
+
         )
     }
 }
