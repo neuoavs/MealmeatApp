@@ -126,7 +126,7 @@ fun AppNavigation(
                 weightUnit = authViewModel.weightUnit.value,
                 weightKg = authViewModel.weightKg.value,
                 weightLb = authViewModel.weightLb.value,
-                selectedProgress = authViewModel.selectedProgress.value,
+//                selectedProgress = authViewModel.selectedProgress.value,
                 onStepChange = { step -> authViewModel.onStepChange(step) },
                 onGoalChange = { goal -> authViewModel.onGoalChange(goal) },
                 onGenderChange = { gender -> authViewModel.onGenderChange(gender) },
@@ -138,7 +138,7 @@ fun AppNavigation(
                 onWeightUnitChange = { unit -> authViewModel.onWeightUnitChange(unit) },
                 onWeightKgChange = { kg -> authViewModel.onWeightKgChange(kg) },
                 onWeightLbChange = { lb -> authViewModel.onWeightLbChange(lb) },
-                onProgressChange = { progress -> authViewModel.onProgressChange(progress) },
+//                onProgressChange = { progress -> authViewModel.onProgressChange(progress) },
                 onBackClick = {
                     authViewModel.onBackClick()
                     navController.navigate("signin") {

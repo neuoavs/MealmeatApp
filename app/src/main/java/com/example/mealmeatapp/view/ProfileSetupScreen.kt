@@ -47,7 +47,6 @@ fun ProfileSetupScreen(
     weightUnit: String,
     weightKg: Int,
     weightLb: Int,
-    selectedProgress: String?,
     onStepChange: (Int) -> Unit,
     onGoalChange: (String) -> Unit,
     onGenderChange: (String) -> Unit,
@@ -59,7 +58,6 @@ fun ProfileSetupScreen(
     onWeightUnitChange: (String) -> Unit,
     onWeightKgChange: (Int) -> Unit,
     onWeightLbChange: (Int) -> Unit,
-    onProgressChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onSkipClick: () -> Unit,
     onNextClick: (ProfileData) -> Unit
@@ -610,12 +608,6 @@ fun ProfileSetupScreen(
                             fontSize = 16.sp,
                             color = Color.Black
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
-//                        Text(
-//                            text = "Progress: ${profileDataToSubmit!!.progress}",
-//                            fontSize = 16.sp,
-//                            color = Color.Black
-//                        )
                     }
                 },
                 confirmButton = {
@@ -755,7 +747,7 @@ fun ProfileSetupPreview() {
             weightUnit = "kg",
             weightKg = 70,
             weightLb = 154,
-            selectedProgress = "Steady",
+//            selectedProgress = "Steady",
             onStepChange = { /* Mock for preview */ },
             onGoalChange = { /* Mock for preview */ },
             onGenderChange = { /* Mock for preview */ },
@@ -767,7 +759,7 @@ fun ProfileSetupPreview() {
             onWeightUnitChange = { /* Mock for preview */ },
             onWeightKgChange = { /* Mock for preview */ },
             onWeightLbChange = { /* Mock for preview */ },
-            onProgressChange = { /* Mock for preview */ },
+//            onProgressChange = { /* Mock for preview */ },
             onBackClick = { /* Mock for preview */ },
             onSkipClick = { /* Mock for preview */ },
             onNextClick = { /* Mock for preview */ }

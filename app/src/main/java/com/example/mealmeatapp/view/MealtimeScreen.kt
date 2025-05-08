@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +36,7 @@ class MealtimeActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun MealtimeScreen(
     onSignUpClick: () -> Unit = {},
@@ -43,16 +45,15 @@ fun MealtimeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkGreen)
+            .background(colorResource(id = R.color.dark_green))
     ) {
         Image(
             painter = painterResource(id = R.drawable.food_background), // food_background
             contentDescription = "Food Image",
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.6f)
+                .fillMaxHeight(0.4f)
                 .align(Alignment.Center),
-            contentScale = ContentScale.Crop
         )
 
         Column(
@@ -67,16 +68,16 @@ fun MealtimeScreen(
                 modifier = Modifier.padding(top = 50.dp)
             ) {
                 Text(
-                    text = "Mealtime",
-                    color = Gold,
+                    text = "Mealmeat",
+                    color = colorResource(id = R.color.gold),
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Text(
                     text = "Recipes & Meal Planning",
-                    color = White,
+                    color = colorResource(id = R.color.white),
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
-                    lineHeight = 24.sp
+                    lineHeight = 16.sp
                 )
             }
 
@@ -93,7 +94,7 @@ fun MealtimeScreen(
                         .height(50.dp)
                         .padding(horizontal = 16.dp),
                     shape = RoundedCornerShape(25.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = White)
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.white))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -108,7 +109,7 @@ fun MealtimeScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Sign In with Google",
-                            color = Black,
+                            color = colorResource(id = R.color.black),
                             style = MaterialTheme.typography.labelLarge
                         )
                     }
@@ -123,7 +124,7 @@ fun MealtimeScreen(
                         .height(50.dp)
                         .padding(horizontal = 16.dp),
                     shape = RoundedCornerShape(25.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -132,13 +133,13 @@ fun MealtimeScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.mail_fill), // mail_fill
                             contentDescription = "Email Icon",
-                            tint = White,
+                            tint = colorResource(id = R.color.white),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Sign Up with Email",
-                            color = White,
+                            color = colorResource(id = R.color.white),
                             style = MaterialTheme.typography.labelLarge
                         )
                     }
@@ -149,7 +150,7 @@ fun MealtimeScreen(
                 TextButton(onClick = onSignInClick) {
                     Text(
                         text = "Already have an account? Sign In",
-                        color = White,
+                        color = colorResource(id = R.color.white),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }

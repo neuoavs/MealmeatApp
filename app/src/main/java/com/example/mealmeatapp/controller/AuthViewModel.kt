@@ -9,12 +9,11 @@ import java.time.LocalDate
 
 class AuthViewModel : ViewModel() {
     val email = mutableStateOf("")
-    val password = mutableStateOf("")
+    val password =  mutableStateOf("")
     val passwordVisible = mutableStateOf(false)
     val userCredentials = mutableStateOf(UserCredentials())
     val confirmPassword = mutableStateOf("")
     val confirmPasswordVisible = mutableStateOf(false)
-
     // Profile setup states
     val currentProfileStep = mutableStateOf(1)
     val selectedGoal = mutableStateOf<String?>(null)
@@ -77,10 +76,6 @@ class AuthViewModel : ViewModel() {
         weightLb.value = lb
     }
 
-    fun onProgressChange(progress: String) {
-        selectedProgress.value = progress
-    }
-
     fun onBackClick() {
         // Logic to navigate back (to be handled in NavigationController)
     }
@@ -93,8 +88,6 @@ class AuthViewModel : ViewModel() {
         profileData.value = data
         // Logic to navigate to next screen (to be handled in NavigationController)
     }
-
-
 
     fun onSignIn(): Boolean {
         return true // Always allow navigation for frontend-only
@@ -115,6 +108,7 @@ class AuthViewModel : ViewModel() {
             password = password.value
         )
     }
+
     fun logout() {
         userCredentials.value = UserCredentials()
         email.value = ""

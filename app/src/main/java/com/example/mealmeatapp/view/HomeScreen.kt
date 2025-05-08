@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -97,7 +98,7 @@ fun HomeScreen(
                                 .padding(horizontal = 2.dp),
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (viewModel.selectedCategory.value == category) Orange else White,
+                                containerColor = if (viewModel.selectedCategory.value == category) colorResource(id = R.color.orange) else White,
                                 contentColor = if (viewModel.selectedCategory.value == category) White else Black
                             ),
                             contentPadding = PaddingValues(8.dp)
@@ -123,7 +124,7 @@ fun HomeScreen(
                 Text(
                     text = stringResource(id = R.string.des_home),
                     style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-                    color = Gray,
+                    color = colorResource(id = R.color.gray),
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
@@ -134,7 +135,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .height(45.dp),
                     shape = RoundedCornerShape(22.5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -232,7 +233,7 @@ fun MealItemLarge(
                 Text(
                     text = "${meal.calories} kcal • ${meal.weight}g",
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
-                    color = Gray.copy(alpha = 0.6f)
+                    color = colorResource(id = R.color.gray).copy(alpha = 0.6f)
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -272,7 +273,7 @@ fun MealItemLarge(
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
                     contentDescription = "Favorite",
-                    tint = if (isFavorite) Orange else MaterialTheme.colorScheme.primary,
+                    tint = if (isFavorite) colorResource(id = R.color.orange) else MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable { onFavoriteClick() }
@@ -281,7 +282,7 @@ fun MealItemLarge(
                 Icon(
                     painter = painterResource(id = if (isPlanned) R.drawable.check_circle else R.drawable.add),
                     contentDescription = if (isPlanned) "Planned" else "Add to Plan",
-                    tint = if (isPlanned) Orange else MaterialTheme.colorScheme.primary,
+                    tint = if (isPlanned) colorResource(id = R.color.orange) else MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable { onPlanClick() }
@@ -302,7 +303,7 @@ fun NutrientItemWithBar(label: String, value: Int, maxValue: Int, color: Color) 
                 .width(4.dp)
                 .height(40.dp)
                 .clip(RoundedCornerShape(2.dp))
-                .background(Gray.copy(alpha = 0.2f))
+                .background(colorResource(id = R.color.gray).copy(alpha = 0.2f))
         ) {
             Box(
                 modifier = Modifier
@@ -376,8 +377,8 @@ fun BottomNavigationBar(navController: NavController, plannedCount: Int) {
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Orange,
-                    selectedTextColor = Orange,
+                    selectedIconColor = colorResource(id = R.color.orange),
+                    selectedTextColor = colorResource(id = R.color.orange),
                     unselectedIconColor = Black,
                     unselectedTextColor = Black
                 )

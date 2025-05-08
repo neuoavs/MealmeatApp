@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,6 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.controller.AuthViewModel
 import com.example.mealmeatapp.ui.theme.*
+import com.example.mealmeatapp.R
 @Composable
 fun ForgotPasswordScreen(
     viewModel: AuthViewModel,
@@ -35,7 +37,7 @@ fun ForgotPasswordScreen(
         Text(
             text = "Enter your email to reset your password",
             style = MaterialTheme.typography.bodyMedium,
-            color = Gray,
+            color = colorResource(id = R.color.gray),
             modifier = Modifier.padding(bottom = 32.dp)
         )
 
@@ -66,11 +68,11 @@ fun ForgotPasswordScreen(
                 .height(50.dp)
                 .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(25.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Orange)
+            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
         ) {
             Text(
                 text = "Reset Password",
-                color = White,
+                color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.labelLarge
             )
         }
@@ -80,7 +82,7 @@ fun ForgotPasswordScreen(
         TextButton(onClick = { navController.navigate("signin") }) {
             Text(
                 text = "Back to Sign In",
-                color = Black,
+                color = colorResource(id = R.color.black),
                 style = MaterialTheme.typography.bodySmall
             )
         }

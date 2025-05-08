@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,14 +47,14 @@ fun FoodDetailScreen(
 
     var isFavorite by remember { mutableStateOf(false) }
     val favoriteIconColor by animateColorAsState(
-        targetValue = if (isFavorite) Orange else Gray,
+        targetValue = if (isFavorite) colorResource(id = R.color.orange) else colorResource(id = R.color.gray),
         label = "Favorite Icon Color"
     )
-
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(White)
+            .background(colorResource(id = R.color.white))
             .padding(bottom = 56.dp) // Space for bottom navigation bar
     ) {
         item {
@@ -88,7 +89,7 @@ fun FoodDetailScreen(
                         .align(Alignment.TopStart)
                         .padding(15.dp)
                         .size(20.dp)
-                        .background(White.copy(alpha = 0.1f), CircleShape)
+                        .background(colorResource(id = R.color.white).copy(alpha = 0.1f), CircleShape)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.arrow_back_ios),// arrow_back_ios
@@ -120,7 +121,7 @@ fun FoodDetailScreen(
                     onClick = { isFavorite = !isFavorite },
                     modifier = Modifier
                         .size(48.dp)
-                        .background(White, CircleShape)
+                        .background(colorResource(id = R.color.white), CircleShape)
                         .shadow(4.dp, CircleShape)
                 ) {
                     Icon(
@@ -147,7 +148,7 @@ fun FoodDetailScreen(
                 NutrientCircle(
                     label = "kcal",
                     value = meal.calories.toString(),
-                    color = Orange
+                    color = colorResource(id = R.color.orange)
                 )
                 NutrientCircle(
                     label = "Protein",
@@ -174,7 +175,7 @@ fun FoodDetailScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .shadow(4.dp, RoundedCornerShape(12.dp)),
-                colors = CardDefaults.cardColors(containerColor = White)
+                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.white))
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -182,7 +183,7 @@ fun FoodDetailScreen(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 22.sp,
-                        color = Orange
+                        color = colorResource(id = R.color.orange)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     meal.ingredients.forEach { ingredient ->
@@ -205,7 +206,7 @@ fun FoodDetailScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .shadow(4.dp, RoundedCornerShape(12.dp)),
-                colors = CardDefaults.cardColors(containerColor = White)
+                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.white))
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -213,7 +214,7 @@ fun FoodDetailScreen(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 22.sp,
-                        color = Orange
+                        color = colorResource(id = R.color.orange)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     meal.instructions.forEachIndexed { index, instruction ->

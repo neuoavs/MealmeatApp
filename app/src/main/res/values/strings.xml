@@ -13,5 +13,8 @@
     <string name="des_planner">Plan your weekly meals.</string>
     <string name="des_favourite">Your favorite meals, all in one place.</string>
     <string name="no_favorite">No favorite meals yet.</string>
-<!--    What should I eat today?-->
+    <string name="title_sign_in">Welcome Back</string>
+    <string name="title_sign_up">Getting Started</string>
+    <string name="des_sign_in">Login to your account to continue enjoying our services</string>
+    <string name="des_sign_up">Create an account to continue with the app</string>
 </resources>

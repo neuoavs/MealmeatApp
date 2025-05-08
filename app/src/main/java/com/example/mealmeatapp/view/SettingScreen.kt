@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -108,7 +109,7 @@ fun SettingScreen(
         ModalBottomSheet(
             onDismissRequest = { showThemeDialog = false },
             sheetState = rememberModalBottomSheetState(),
-            containerColor = White
+            containerColor = colorResource(id = R.color.white)
         ) {
             Column(
                 modifier = Modifier
@@ -122,7 +123,7 @@ fun SettingScreen(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 20.sp
                     ),
-                    color = Black,
+                    color = colorResource(id = R.color.black),
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
@@ -130,7 +131,6 @@ fun SettingScreen(
                 val themeOptions = listOf(
                     "Light" to R.drawable.light_mode_fill, // sunny
                     "Dark" to R.drawable.dark_mode_fill, // nightlight
-                    "System Default" to R.drawable.setting // setting
                 )
                 themeOptions.forEach { (option, iconRes) ->
                     val isSelected = selectedTheme == option
@@ -143,12 +143,12 @@ fun SettingScreen(
                             }
                             .border(
                                 width = if (isSelected) 2.dp else 0.dp,
-                                color = if (isSelected) Orange else Color.Transparent,
+                                color = if (isSelected) colorResource(id = R.color.orange) else Color.Transparent,
                                 shape = RoundedCornerShape(12.dp)
                             ),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (isSelected) Orange.copy(alpha = 0.1f) else White
+                            containerColor = if (isSelected) colorResource(id = R.color.orange).copy(alpha = 0.1f) else colorResource(id = R.color.white)
                         )
                     ) {
                         Row(
@@ -161,13 +161,13 @@ fun SettingScreen(
                                 modifier = Modifier
                                     .size(40.dp)
                                     .clip(CircleShape)
-                                    .background(Orange.copy(alpha = 0.2f)),
+                                    .background(colorResource(id = R.color.orange).copy(alpha = 0.2f)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     painter = painterResource(iconRes),
                                     contentDescription = option,
-                                    tint = Orange,
+                                    tint = colorResource(id = R.color.orange),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -178,7 +178,7 @@ fun SettingScreen(
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                     fontSize = 16.sp
                                 ),
-                                color = Black
+                                color = colorResource(id = R.color.black)
                             )
                         }
                     }
@@ -197,7 +197,7 @@ fun SettingScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                 ) {
                     Text(
                         text = "Save",
@@ -205,7 +205,7 @@ fun SettingScreen(
                             fontWeight = FontWeight.Medium,
                             fontSize = 16.sp
                         ),
-                        color = White
+                        color = colorResource(id = R.color.white)
                     )
                 }
             }
@@ -219,32 +219,32 @@ fun SettingScreen(
             text = {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Meal reminders", style = MaterialTheme.typography.bodyLarge, color = Black)
+                        Text("Meal reminders", style = MaterialTheme.typography.bodyLarge, color = colorResource(id = R.color.black))
                         Spacer(modifier = Modifier.weight(1f))
                         Switch(
                             checked = mealReminders,
                             onCheckedChange = { mealReminders = it },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Orange)
+                            colors = SwitchDefaults.colors(checkedThumbColor = colorResource(id = R.color.orange))
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("New recipe notifications", style = MaterialTheme.typography.bodyLarge, color = Black)
+                        Text("New recipe notifications", style = MaterialTheme.typography.bodyLarge, color = colorResource(id = R.color.black))
                         Spacer(modifier = Modifier.weight(1f))
                         Switch(
                             checked = recipeNotifications,
                             onCheckedChange = { recipeNotifications = it },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Orange)
+                            colors = SwitchDefaults.colors(checkedThumbColor = colorResource(id = R.color.orange))
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("App updates", style = MaterialTheme.typography.bodyLarge, color = Black)
+                        Text("App updates", style = MaterialTheme.typography.bodyLarge, color = colorResource(id = R.color.black))
                         Spacer(modifier = Modifier.weight(1f))
                         Switch(
                             checked = appUpdates,
                             onCheckedChange = { appUpdates = it },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Orange)
+                            colors = SwitchDefaults.colors(checkedThumbColor = colorResource(id = R.color.orange))
                         )
                     }
                 }
@@ -256,18 +256,18 @@ fun SettingScreen(
                         // TODO: Save to DataStore or SharedPreferences
                         println("Saved notifications: Meal=$mealReminders, Recipe=$recipeNotifications, Updates=$appUpdates")
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
                 ) { Text("Save", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showNotificationDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = White,
-            titleContentColor = Black,
-            textContentColor = Black
+            containerColor = colorResource(id = R.color.white),
+            titleContentColor = colorResource(id = R.color.black),
+            textContentColor = colorResource(id = R.color.black)
         )
     }
 
@@ -305,18 +305,18 @@ fun SettingScreen(
                         context.startActivity(Intent.createChooser(intent, "Send Feedback"))
                         // TODO: Optionally send via API
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
                 ) { Text("Submit", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showReportDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = White,
-            titleContentColor = Black,
-            textContentColor = Black
+            containerColor = colorResource(id = R.color.white),
+            titleContentColor = colorResource(id = R.color.black),
+            textContentColor = colorResource(id = R.color.black)
         )
     }
 
@@ -336,18 +336,18 @@ fun SettingScreen(
                             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")))
                         }
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
                 ) { Text("Rate Now", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showRateDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
                 ) { Text("Later", fontWeight = FontWeight.Medium) }
             },
-            containerColor = White,
-            titleContentColor = Black,
-            textContentColor = Black
+            containerColor = colorResource(id = R.color.white),
+            titleContentColor = colorResource(id = R.color.black),
+            textContentColor = colorResource(id = R.color.black)
         )
     }
 
@@ -367,18 +367,18 @@ fun SettingScreen(
                         }
                         context.startActivity(Intent.createChooser(shareIntent, "Share App"))
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
                 ) { Text("Share", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showShareDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = White,
-            titleContentColor = Black,
-            textContentColor = Black
+            containerColor = colorResource(id = R.color.white),
+            titleContentColor = colorResource(id = R.color.black),
+            textContentColor = colorResource(id = R.color.black)
         )
     }
 
@@ -394,18 +394,18 @@ fun SettingScreen(
                         showPrivacyDialog = false
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://yourapp.com/privacy")))
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
                 ) { Text("View", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showPrivacyDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = White,
-            titleContentColor = Black,
-            textContentColor = Black
+            containerColor = colorResource(id = R.color.white),
+            titleContentColor = colorResource(id = R.color.black),
+            textContentColor = colorResource(id = R.color.black)
         )
     }
 
@@ -426,125 +426,26 @@ fun SettingScreen(
                             popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         }
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
                 ) { Text("Log Out", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showLogoutDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
+                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = White,
-            titleContentColor = Black,
-            textContentColor = Black
+            containerColor = colorResource(id = R.color.white),
+            titleContentColor = colorResource(id = R.color.black),
+            textContentColor = colorResource(id = R.color.black)
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Settings",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Black,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navController.popBackStack() },
-                        modifier = Modifier
-                            .size(20.dp)
-                            .background(White.copy(alpha = 0.7f), CircleShape)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_back_ios),
-                            contentDescription = "Back",
-                            tint = Black
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White,
-                    titleContentColor = Black
-                ),
-                modifier = Modifier.shadow(4.dp)
-            )
-        },
-        containerColor = White
-    ) { paddingValues ->
-        LazyColumn(
-            contentPadding = paddingValues,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(White)
-                .padding(horizontal = 15.dp)
-        ) {
-            items(settingItems.size) { index ->
-                val item = settingItems[index]
-                Card(
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .shadow(2.dp, RoundedCornerShape(12.dp))
-                        .clickable { item.onClick() },
-                    colors = CardDefaults.cardColors(containerColor = White)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(30.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .background(Orange.copy(alpha = 0.1f), CircleShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = item.iconResId),
-                                    contentDescription = item.title,
-                                    tint = Orange,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(14.dp))
-                            Text(
-                                text = item.title,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 20.sp,
-                                color = Black
-                            )
-                        }
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_forward_ios), // arrow_forward_ios
-                            contentDescription = "Navigate",
-                            tint = Orange,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-                if (index < settingItems.size - 1) {
-                    Divider(
-                        color = Gray.copy(alpha = 0.2f),
-                        thickness = 0.5.dp,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
-            }
-        }
-    }
+
 }
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)

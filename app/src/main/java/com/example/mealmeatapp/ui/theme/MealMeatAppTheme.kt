@@ -10,18 +10,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Colors
-val Orange = Color(0xFFFF5722)
-val Gold = Color(0xFFFFD700)
-val White = Color(0xFFFFFFFF)
-val Black = Color(0xFF000000)
-val Gray = Color(0xFF888888)
-val LightCream = Color(0xFFFFF9E6)
-val DarkGreen = Color(0xFF2E7D32)
-val LightGreen = Color(0xFFE8F5E9)
-val DarkTeal = Color(0xFF00695C)
-val DarkBlue = Color(0xFF0D47A1)
-
 
 // Font Sizes
 val TitleFontSize = 24.sp

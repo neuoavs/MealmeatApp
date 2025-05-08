@@ -12,10 +12,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
+
+import androidx.compose.ui.res.colorResource
+
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -82,7 +84,7 @@ fun MealPlannerScreen(
                 Text(
                     text = stringResource(id = R.string.des_planner),
                     style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-                    color = Gray,
+                    color = colorResource(id = R.color.gray),
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
@@ -97,7 +99,7 @@ fun MealPlannerScreen(
                             .weight(1f)
                             .padding(end = 4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                     ) {
                         Text(
                             text = "Workout Plan",
@@ -111,7 +113,7 @@ fun MealPlannerScreen(
                             .weight(1f)
                             .padding(horizontal = 4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                     ) {
                         Text(
                             text = "Shopping List",
@@ -125,7 +127,7 @@ fun MealPlannerScreen(
                             .weight(1f)
                             .padding(start = 4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                     ) {
                         Text(
                             text = "Nutrition Info",
@@ -160,7 +162,7 @@ fun MealPlannerScreen(
                         .fillMaxWidth()
                         .height(45.dp),
                     shape = RoundedCornerShape(22.5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -191,7 +193,7 @@ fun MealPlannerScreen(
                     Text(
                         text = "Weekly Meal Summary (${viewModel.plannedMeals.size})",
                         style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
-                        color = Orange,
+                        color = colorResource(id = R.color.orange),
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
 
@@ -216,7 +218,7 @@ fun MealPlannerScreen(
                                 Icon(
                                     painter = painterResource(id = R.drawable.remove), // delete
                                     contentDescription = "Remove",
-                                    tint = Orange
+                                    tint = colorResource(id = R.color.orange)
                                 )
                             }
                         }
@@ -230,7 +232,7 @@ fun MealPlannerScreen(
                             .fillMaxWidth()
                             .height(45.dp),
                         shape = RoundedCornerShape(22.5.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Orange)
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
                     ) {
                         Text(
                             text = "Clear All Plans",
@@ -278,7 +280,7 @@ fun DayMealSection(
                 Icon(
                     painter = painterResource(id = if (isExpanded) R.drawable.keyboard_arrow_up else R.drawable.keyboard_arrow_down),// arrow_drop_down and arrow_drop_up
                     contentDescription = "Expand/Collapse",
-                    tint = Orange,
+                    tint = colorResource(id = R.color.orange),
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -290,7 +292,7 @@ fun DayMealSection(
                     Text(
                         text = "No meals planned for $day.",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-                        color = Gray,
+                        color = colorResource(id = R.color.gray),
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 } else {
@@ -371,7 +373,7 @@ fun MealItemLarge(
                 Text(
                     text = "${meal.calories} kcal • ${meal.weight}g",
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
-                    color = Gray.copy(alpha = 0.6f)
+                    color = colorResource(id = R.color.gray).copy(alpha = 0.6f)
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -405,7 +407,7 @@ fun MealItemLarge(
             Icon(
                 painter = painterResource(id = if (isSelected) R.drawable.check_circle else R.drawable.add),
                 contentDescription = if (isSelected) "Selected" else "Add to Plan",
-                tint = if (isSelected) Orange else MaterialTheme.colorScheme.primary,
+                tint = if (isSelected) colorResource(id = R.color.orange)else MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .size(24.dp)
                     .clickable { onSelectClick() }
@@ -437,12 +439,12 @@ fun NutrientCircle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 ),
-                color = Black
+                color = colorResource(id = R.color.black)
             )
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
-                color = Black
+                color = colorResource(id = R.color.black)
             )
         }
     }
