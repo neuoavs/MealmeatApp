@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.model
+package com.example.mealmeatapp.ui.theme.model
 
 data class ProfileData(
     val goal: String,
@@ -6,5 +6,5 @@ data class ProfileData(
     val age: Int,
     val height: String,
     val weight: String,
-    val progress: String
+//    val progress: String
 )

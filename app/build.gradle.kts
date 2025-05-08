@@ -41,13 +41,19 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+
+    //Thư viện UI
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
     implementation("io.coil-kt.coil3:coil-compose:3.1.0")
-    // define any required OkHttp artifacts without version
+
+    // Thư viện API
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0") // Thư viện Gson cho retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0") //Thư viện retrofit
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

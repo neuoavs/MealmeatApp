@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">MealmeatApp</string>
+    <string name="title_s1">WHAT IS YOUR GOAL?</string>
+    <string name="title_s2">WHAT IS YOUR GENDER?</string>
+    <string name="title_s3">HOW OLD ARE YOU?</string>
+    <string name="title_s4">HOW TALL ARE YOU?"</string>
+    <string name="title_s5">WHAT IS YOUR WEIGHT?</string>
+    <string name="des_set_tup">We will use this data to give you a better diet type for you</string>
+    <string name="title_home">What should I eat today?</string>
+    <string name="title_planner">Meal Planner</string>
+    <string name="title_favourite">Favorite Meals</string>
+    <string name="des_home">Deciding what to eat can be a chore. Let us help you out.</string>
+    <string name="des_planner">Plan your weekly meals.</string>
+    <string name="des_favourite">Your favorite meals, all in one place.</string>
+    <string name="no_favorite">No favorite meals yet.</string>
+<!--    What should I eat today?-->
 </resources>
