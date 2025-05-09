@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.ui.theme.controller
+package com.example.mealmeatapp.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf

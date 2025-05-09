@@ -1,5 +1,8 @@
 package com.example.mealmeatapp.view
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -342,6 +346,109 @@ fun TitleMealMeat() {
         )
     }
 }
-
 // End Meal Time Screen
 
+// Profile Set Up Screen
+@Composable
+fun ProfileOption(
+    text: String? = null,
+//    title: String? = null,
+//    difficulty: String? = null,
+//    duration: String? = null,
+//    weightChange: String? = null,
+    iconResId: Int,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    layoutType: String
+) {
+    when (layoutType) {
+        "row" -> {
+            RowOption(
+                text = text,
+                iconResId = iconResId,
+                isSelected = isSelected,
+                onClick = onClick,
+            )
+        }
+        "column" -> {
+            ColumnOption(
+                text = text,
+                iconResId = iconResId,
+                isSelected = isSelected,
+                onClick = onClick,
+            )
+        }
+    }
+}
+
+@Composable
+fun RowOption(
+    text: String?,
+    iconResId: Int,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .background(
+                color = if (isSelected) Color(0xFFF5F5F5) else Color.White,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onClick() }
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = text ?: "",
+            fontSize = 16.sp,
+            color = Color.Black,
+            lineHeight = 20.sp
+        )
+        Icon(
+            painter = painterResource(id = iconResId),
+            contentDescription = "$text Icon",
+            tint = Color(0xFF2E7D32),
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
+
+
+@Composable
+fun ColumnOption(
+    text: String?,
+    iconResId: Int,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .width(150.dp)
+            .background(
+                color = if (isSelected) Color(0xFFF5F5F5) else Color.White,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onClick() }
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            painter = painterResource(id = iconResId),
+            contentDescription = "$text Icon",
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .size(100.dp)
+                .padding(bottom = 8.dp)
+        )
+        Text(
+            text = text ?: "",
+            fontSize = 16.sp,
+            color = Color.Black,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+// End Profile Set Up Screen

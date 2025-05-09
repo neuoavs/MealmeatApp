@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.view
+package com.example.mealmeatapp.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,73 +23,30 @@ import androidx.compose.ui.unit.sp
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.ui.theme.model.ProfileData
-import com.example.mealmeatapp.ui.theme.model.ProfileOption
-import java.time.LocalDate
-import java.time.Period
-import java.time.format.DateTimeFormatter
+import com.example.mealmeatapp.view.ProfileOption
+import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
+import org.threeten.bp.format.DateTimeFormatter
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileSetupScreen(
-    currentStep: Int,
-    selectedGoal: String?,
-    selectedGender: String?,
-    selectedDate: LocalDate,
-    heightUnit: String,
-    heightFeet: Int,
-    heightInches: Int,
-    heightCm: Int,
-    weightUnit: String,
-    weightKg: Int,
-    weightLb: Int,
-    onStepChange: (Int) -> Unit,
-    onGoalChange: (String) -> Unit,
-    onGenderChange: (String) -> Unit,
-    onDateChange: (LocalDate) -> Unit,
-    onHeightUnitChange: (String) -> Unit,
-    onHeightFeetChange: (Int) -> Unit,
-    onHeightInchesChange: (Int) -> Unit,
-    onHeightCmChange: (Int) -> Unit,
-    onWeightUnitChange: (String) -> Unit,
-    onWeightKgChange: (Int) -> Unit,
-    onWeightLbChange: (Int) -> Unit,
-    onBackClick: () -> Unit,
-    onSkipClick: () -> Unit,
-    onNextClick: (ProfileData) -> Unit
+    profileSetUpViewModel: ProfileSetUpViewModel,
+//    onBackClick: () -> Unit,
+//    onSkipClick: () -> Unit,
+//    onNextClick: (ProfileData) -> Unit
 ) {
-    val age = Period.between(selectedDate, LocalDate.now()).years
-    val heightInCm = if (heightUnit == "ft") {
-        (heightFeet * 30.48 + heightInches * 2.54).toInt()
-    } else {
-        heightCm
-    }
-    val heightInFeetInches = if (heightUnit == "cm") {
-        val totalInches = (heightCm / 2.54).toInt()
-        val feet = totalInches / 12
-        val inches = totalInches % 12
-        feet to inches
-    } else {
-        heightFeet to heightInches
-    }
-    val weightInKg = if (weightUnit == "kg") {
-        weightKg
-    } else {
-        (weightLb / 2.2).toInt()
-    }
-    val weightInLb = if (weightUnit == "lb") {
-        weightLb
-    } else {
-        (weightKg * 2.2).toInt()
-    }
-    var showDatePicker by remember { mutableStateOf(false) }
+
+
     var showSummaryDialog by remember { mutableStateOf(false) } // State for summary dialog
-    var profileDataToSubmit by remember { mutableStateOf<ProfileData?>(null) } // Store profile data for submission
+
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF9E6))
+            .background(colorResource(id = R.color.light_cream))
     ) {
         Row(
             modifier = Modifier
@@ -104,15 +62,15 @@ fun ProfileSetupScreen(
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
-                        if (currentStep == 1) {
-                            onBackClick()
+                        if (profileSetUpViewModel.currentStep.value == 1) {
+//                            onBackClick()
                         } else {
-                            onStepChange(currentStep - 1)
+//                            onStepChange(profileSetUpViewModel.currentStep.value - 1)
                         }
                     }
             )
             Text(
-                text = "$currentStep/6",
+                text = "${profileSetUpViewModel.currentStep.value}/5",
                 fontSize = 16.sp,
                 color = Color.Black,
                 modifier = Modifier
@@ -127,7 +85,9 @@ fun ProfileSetupScreen(
                 fontSize = 16.sp,
                 color = Color.Black,
                 modifier = Modifier
-                    .clickable { onSkipClick() }
+                    .clickable {
+//                        onSkipClick()
+                    }
                     .padding(8.dp)
             )
         }
@@ -139,7 +99,7 @@ fun ProfileSetupScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            when (currentStep) {
+            when (profileSetUpViewModel.currentStep.value) {
                 1 -> {
                     Text(
                         text = stringResource(id = R.string.title_s1),
@@ -159,22 +119,22 @@ fun ProfileSetupScreen(
                     ProfileOption(
                         text = "Less weight",
                         iconResId = R.drawable.nutrition_fill, // less_weight
-                        isSelected = selectedGoal == "Less weight",
-                        onClick = { onGoalChange("Less weight") },
+                        isSelected = profileSetUpViewModel.goal.value == "Less weight",
+                        onClick = { profileSetUpViewModel.onGoalChange("Less weight") },
                         layoutType = "row"
                     )
                     ProfileOption(
                         text = "Gain weight",
                         iconResId = R.drawable.fitness_center, // gain_weight
-                        isSelected = selectedGoal == "Gain weight",
-                        onClick = { onGoalChange("Gain weight") },
+                        isSelected = profileSetUpViewModel.goal.value == "Gain weight",
+                        onClick = { profileSetUpViewModel.onGoalChange("Gain weight") },
                         layoutType = "row"
                     )
                     ProfileOption(
                         text = "Stay healthy",
                         iconResId = R.drawable.ecg_heart_fill, // stay_healthy
-                        isSelected = selectedGoal == "Stay healthy",
-                        onClick = { onGoalChange("Stay healthy") },
+                        isSelected = profileSetUpViewModel.goal.value == "Stay healthy",
+                        onClick = { profileSetUpViewModel.onGoalChange("Stay healthy") },
                         layoutType = "row"
                     )
                 }
@@ -202,16 +162,16 @@ fun ProfileSetupScreen(
                     ) {
                         ProfileOption(
                             text = "Male",
-                            iconResId = R.drawable.male, // male
-                            isSelected = selectedGender == "Male",
-                            onClick = { onGenderChange("Male") },
+                            iconResId = R.drawable.male,
+                            isSelected = profileSetUpViewModel.gender.value == true,
+                            onClick = { profileSetUpViewModel.onGenderChange(true) },
                             layoutType = "column"
                         )
                         ProfileOption(
                             text = "Female",
-                            iconResId = R.drawable.female, // female
-                            isSelected = selectedGender == "Female",
-                            onClick = { onGenderChange("Female") },
+                            iconResId = R.drawable.female,
+                            isSelected = profileSetUpViewModel.gender.value == false,
+                            onClick = { profileSetUpViewModel.onGenderChange(false) },
                             layoutType = "column"
                         )
                     }
@@ -240,20 +200,22 @@ fun ProfileSetupScreen(
                                 color = Color(0xFFE8F5E9),
                                 shape = RoundedCornerShape(8.dp)
                             )
-                            .clickable { showDatePicker = true }
+                            .clickable {
+                                profileSetUpViewModel.showDatePicker.value = true
+                            }
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
                             Text(
-                                text = age.toString(),
+                                text = profileSetUpViewModel.age.value.toString(),
                                 fontSize = 32.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black
                             )
                             Text(
-                                text = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                                text = profileSetUpViewModel.date.value.format(DateTimeFormatter.ofPattern("dd MMM yyyy")),
                                 fontSize = 16.sp,
                                 color = Color.Black
                             )
@@ -265,17 +227,18 @@ fun ProfileSetupScreen(
                             modifier = Modifier.size(24.dp)
                         )
                     }
-                    if (showDatePicker) {
+                    /*if (profileSetUpViewModel.showDatePicker.value) {
                         val datePickerState = rememberDatePickerState(
-                            initialSelectedDateMillis = selectedDate.toEpochDay() * 24 * 60 * 60 * 1000
+                            initialSelectedDateMillis = profileSetUpViewModel.date.value.toEpochDay() * 24 * 60 * 60 * 1000
                         )
                         DatePickerDialog(
-                            onDismissRequest = { showDatePicker = false },
+                            onDismissRequest = { profileSetUpViewModel.showDatePicker.value = false },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
-                                        showDatePicker = false
-                                        datePickerState.selectedDateMillis?.let { millis ->
+                                        profileSetUpViewModel.showDatePicker.value = false
+                                        datePickerState
+                                        datePickerState.profileSetUpViewModel.date.value.valueMillis?.let { millis ->
                                             onDateChange(LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000)))
                                         }
                                     }
@@ -284,14 +247,14 @@ fun ProfileSetupScreen(
                                 }
                             },
                             dismissButton = {
-                                TextButton(onClick = { showDatePicker = false }) {
+                                TextButton(onClick = { profileSetUpViewModel.showDatePicker.value = false }) {
                                     Text("Cancel")
                                 }
                             }
                         ) {
                             DatePicker(state = datePickerState)
                         }
-                    }
+                    }*/
                 }
                 4 -> {
                     Text(
@@ -318,11 +281,11 @@ fun ProfileSetupScreen(
                         Text(
                             text = "ft",
                             fontSize = 16.sp,
-                            color = if (heightUnit == "ft") Color.Black else Color.Gray,
+                            color = if (profileSetUpViewModel.heightUnit.value == "ft") Color.Black else Color.Gray,
                             modifier = Modifier
                                 .clickable {
-                                    onHeightUnitChange("ft")
-                                    onHeightFeetChange(heightInFeetInches.first)
+                                    profileSetUpViewModel.onHeightUnitChange("ft")
+                                    profileSetUpViewModel.(heightInFeetInches.first)
                                     onHeightInchesChange(heightInFeetInches.second)
                                 }
                                 .padding(horizontal = 8.dp)
@@ -330,10 +293,10 @@ fun ProfileSetupScreen(
                         Text(
                             text = "cm",
                             fontSize = 16.sp,
-                            color = if (heightUnit == "cm") Color.Black else Color.Gray,
+                            color = if (profileSetUpViewModel.heightUnit.value == "cm") Color.Black else Color.Gray,
                             modifier = Modifier
                                 .clickable {
-                                    onHeightUnitChange("cm")
+                                    profileSetUpViewModel.onHeightUnitChange("cm")
                                     onHeightCmChange(heightInCm)
                                 }
                                 .padding(horizontal = 8.dp)
@@ -356,7 +319,7 @@ fun ProfileSetupScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = if (heightUnit == "ft") {
+                                text = if (profileSetUpViewModel.heightUnit.value == "ft") {
                                     "${heightFeet}'${heightInches}\""
                                 } else {
                                     "$heightCm cm"
@@ -367,7 +330,7 @@ fun ProfileSetupScreen(
                             )
                         }
                         Spacer(modifier = Modifier.width(16.dp))
-                        if (heightUnit == "ft") {
+                        if (profileSetUpViewModel.heightUnit.value == "ft") {
                             Column(
                                 modifier = Modifier
                                     .width(80.dp)
@@ -540,7 +503,7 @@ fun ProfileSetupScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Age: ${profileDataToSubmit!!.age}",
+                            text = "Age: ${profileDataToSubmit!!.profileSetUpViewModel.age.value}",
                             fontSize = 16.sp,
                             color = Color.Black
                         )
@@ -593,13 +556,13 @@ fun ProfileSetupScreen(
             CustomButton(
                 text = "NEXT",
                 onClick = {
-                    when (currentStep) {
-                        1 -> if (selectedGoal != null) onStepChange(currentStep + 1)
-                        2 -> if (selectedGender != null) onStepChange(currentStep + 1)
-                        3 -> onStepChange(currentStep + 1)
-                        4 -> onStepChange(currentStep + 1)
+                    when (profileSetUpViewModel.currentStep.value) {
+                        1 -> if (profileSetUpViewModel.goal.value != null) onStepChange(profileSetUpViewModel.currentStep.value + 1)
+                        2 -> if (gender != null) onStepChange(profileSetUpViewModel.currentStep.value + 1)
+                        3 -> onStepChange(profileSetUpViewModel.currentStep.value + 1)
+                        4 -> onStepChange(profileSetUpViewModel.currentStep.value + 1)
                         5 -> {
-                            val height = if (heightUnit == "ft") {
+                            val height = if (profileSetUpViewModel.heightUnit.value == "ft") {
                                 "${heightFeet}'${heightInches}\""
                             } else {
                                 "$heightCm cm"
@@ -610,50 +573,24 @@ fun ProfileSetupScreen(
                                 "$weightLb lb"
                             }
                             val profileData = ProfileData(
-                                selectedGoal!!,
-                                selectedGender!!,
-                                age,
+                                profileSetUpViewModel.goal.value!!,
+                                gender!!,
+                                profileSetUpViewModel.age.value,
                                 height,
                                 weight,
-//                                    selectedProgress!!
                             )
                             profileDataToSubmit = profileData
                             showSummaryDialog = true // Show summary dialog instead of direct navigation
                         }
-//                        6 -> {
-//                            if (selectedProgress != null) {
-//                                val height = if (heightUnit == "ft") {
-//                                    "${heightFeet}'${heightInches}\""
-//                                } else {
-//                                    "$heightCm cm"
-//                                }
-//                                val weight = if (weightUnit == "kg") {
-//                                    "$weightKg kg"
-//                                } else {
-//                                    "$weightLb lb"
-//                                }
-//                                val profileData = ProfileData(
-//                                    selectedGoal!!,
-//                                    selectedGender!!,
-//                                    age,
-//                                    height,
-//                                    weight,
-////                                    selectedProgress!!
-//                                )
-//                                profileDataToSubmit = profileData
-//                                showSummaryDialog = true // Show summary dialog instead of direct navigation
-//                            }
-//                        }
                     }
                 },
                 modifier = Modifier.enabled(
-                    when (currentStep) {
-                        1 -> selectedGoal != null
-                        2 -> selectedGender != null
+                    when (profileSetUpViewModel.currentStep.value) {
+                        1 -> profileSetUpViewModel.goal.value != null
+                        2 -> gender != null
                         3 -> true
                         4 -> true
                         5 -> true
-//                        6 -> selectedProgress != null
                         else -> false
                     }
                 )
@@ -668,7 +605,7 @@ fun ProfileSetupScreen(
                         modifier = Modifier
                             .size(10.dp)
                             .background(
-                                color = if (index == currentStep - 1) Color(0xFF2E7D32) else Color.Gray,
+                                color = if (index == profileSetUpViewModel.currentStep.value - 1) Color(0xFF2E7D32) else Color.Gray,
                                 shape = CircleShape
                             )
                     )
@@ -686,11 +623,11 @@ fun ProfileSetupScreen(
 fun ProfileSetupPreview() {
     MealtimeAppTheme {
         ProfileSetupScreen(
-            currentStep = 1,
-            selectedGoal = "Less weight",
-            selectedGender = "Male",
-            selectedDate = LocalDate.now(),
-            heightUnit = "ft",
+            profileSetUpViewModel.currentStep.value = 1,
+            profileSetUpViewModel.goal.value = "Less weight",
+            gender = "Male",
+            profileSetUpViewModel.date.value = LocalDate.now(),
+            profileSetUpViewModel.heightUnit.value = "ft",
             heightFeet = 5,
             heightInches = 10,
             heightCm = 178,
@@ -702,7 +639,7 @@ fun ProfileSetupPreview() {
             onGoalChange = { /* Mock for preview */ },
             onGenderChange = { /* Mock for preview */ },
             onDateChange = { /* Mock for preview */ },
-            onHeightUnitChange = { /* Mock for preview */ },
+            profileSetUpViewModel.onHeightUnitChange = { /* Mock for preview */ },
             onHeightFeetChange = { /* Mock for preview */ },
             onHeightInchesChange = { /* Mock for preview */ },
             onHeightCmChange = { /* Mock for preview */ },
