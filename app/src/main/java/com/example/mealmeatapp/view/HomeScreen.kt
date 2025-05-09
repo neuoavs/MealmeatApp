@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.ui.theme.view
+package com.example.mealmeatapp.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.ui.theme.view
+package com.example.mealmeatapp.view
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

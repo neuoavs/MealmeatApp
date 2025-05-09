@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.ui.theme.view
+package com.example.mealmeatapp.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,9 +17,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
-import com.example.mealmeatapp.view.GoogleAuth
-import com.example.mealmeatapp.view.SignInLinkPage
-import com.example.mealmeatapp.view.TitleMealMeat
 
 
 class MealtimeActivity : ComponentActivity() {

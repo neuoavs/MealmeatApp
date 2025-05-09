@@ -1,10 +1,10 @@
-package com.example.mealmateapp.ui.theme.view
+package com.example.mealmeatapp.view
+/*
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -50,7 +50,7 @@ fun FoodDetailScreen(
         targetValue = if (isFavorite) colorResource(id = R.color.orange) else colorResource(id = R.color.gray),
         label = "Favorite Icon Color"
     )
-    
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +76,7 @@ fun FoodDetailScreen(
                         .fillMaxSize()
                         .background(
                             Brush.verticalGradient(
-                                colors = listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent),
+                                colors = listOf(Black.copy(alpha = 0.4f), Color.Transparent),
                                 startY = 0f,
                                 endY = 150f
                             )
@@ -277,4 +277,4 @@ fun FoodDetailScreenPreview() {
             mealId = 1
         )
     }
-}
+}*/

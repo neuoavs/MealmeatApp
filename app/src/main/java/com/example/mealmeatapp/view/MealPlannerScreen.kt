@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.ui.theme.view
+package com.example.mealmeatapp.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -36,8 +36,6 @@ import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.ui.theme.controller.HomeViewModel
 import com.example.mealmeatapp.ui.theme.model.Meal
-import com.example.mealmeatapp.ui.theme.view.BottomNavigationBar
-import kotlin.random.Random // Thêm import này
 
 // Danh sách các ngày trong tuần
 private val daysOfWeek = listOf(

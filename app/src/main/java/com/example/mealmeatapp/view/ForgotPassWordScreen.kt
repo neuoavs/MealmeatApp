@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.ui.theme.view
+package com.example.mealmeatapp.view
 
 /*
 
@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.mealmeatapp.ui.theme.*
+import com.example.mealmeatapp.*
 import com.example.mealmeatapp.R
 @Composable
 fun ForgotPasswordScreen(

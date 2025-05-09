@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.ui.theme.view
+package com.example.mealmeatapp.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -12,10 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
-import com.example.mealmeatapp.view.AlreadyLink
-import com.example.mealmeatapp.view.FormSignUp
-import com.example.mealmeatapp.view.GoogleAuth
-import com.example.mealmeatapp.view.TitleSignUp
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
 
 @Composable
