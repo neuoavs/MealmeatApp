@@ -7,34 +7,26 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.example.mealmateapp.ui.theme.view.FavoriteScreen
-import com.example.mealmateapp.ui.theme.view.FoodDetailScreen
-import com.example.mealmeatapp.ui.theme.controller.HomeViewModel
+
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
-
-import com.example.mealmeatapp.ui.theme.view.HomeScreen
-import com.example.mealmeatapp.ui.theme.view.MealPlannerScreen
-import com.example.mealmeatapp.ui.theme.view.MealtimeScreen
-import com.example.mealmeatapp.ui.theme.view.ProfileSetupScreen
-
-import com.example.mealmeatapp.ui.theme.view.SignInScreen
-import com.example.mealmeatapp.ui.theme.view.SignUpScreen
+import com.example.mealmeatapp.view.MealtimeScreen
+import com.example.mealmeatapp.view.SignInScreen
+import com.example.mealmeatapp.view.SignUpScreen
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
-import org.checkerframework.checker.units.qual.s
 
 
 class MainActivity : ComponentActivity() {
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val signInViewModel: SignInViewModel by viewModels()
+    private val signUpViewModel: SignUpViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,187 +34,30 @@ class MainActivity : ComponentActivity() {
         setContent {
             MealtimeAppTheme {
                 val navController = rememberNavController()
-//                MainScreen(navController, authViewModel, homeViewModel)
+                    Scaffold { innerPadding ->
+                        NavHost(navController = navController, startDestination = "meal_time", modifier = Modifier.padding(innerPadding)) {
+                            composable("meal_time") {
+                                MealtimeScreen(
+                                    navController = navController
+                                )
+                            }
+
+                            composable("sign_in") {
+                                SignInScreen(
+                                    navController = navController,
+                                    signInViewModel = signInViewModel
+                                )
+                            }
+
+                            composable("sign_up") {
+                                SignUpScreen(
+                                    navController = navController,
+                                    signUpViewModel = signUpViewModel
+                                )
+                            }
+                        }
+                }
             }
         }
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun AuthNavigation(
-    navController: NavHostController,
-    signUpViewModel: SignUpViewModel,
-    signInViewModel: SignInViewModel,
-    modifier: Modifier = Modifier
-) {
-    NavHost(navController = navController, startDestination = "meal_time", modifier = modifier) {
-        composable("meal_time") {
-            MealtimeScreen(
-                navController = navController
-            )
-        }
-
-        composable("sign_in") {
-            SignInScreen(
-                navController = navController,
-                signInViewModel = signInViewModel
-            )
-        }
-
-        composable("sign_up") {
-            SignUpScreen(
-                navController = navController,
-                signUpViewModel = signUpViewModel
-            )
-        }
-    }
-}
-
-
-
-/*
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun MainScreen(
-    navController: NavHostController,
-    authViewModel: SetUpViewModel,
-    homeViewModel: HomeViewModel
-) {
-    Scaffold { innerPadding ->
-        AppNavigation(
-            navController = navController,
-            authViewModel = authViewModel,
-            homeViewModel = homeViewModel,
-            modifier = Modifier.padding(innerPadding)
-        )
-    }
-}
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun AppNavigation(
-    navController: NavHostController,
-    authViewModel: SetUpViewModel,
-    homeViewModel: HomeViewModel,
-    modifier: Modifier = Modifier
-) {
-    NavHost(navController = navController, startDestination = "mealtime", modifier = modifier) {
-        composable("meal_time") {
-            MealtimeScreen(
-                onSignUpClick = { navController.navigate("signup") },
-                onSignInClick = { navController.navigate("signin") }
-            )
-        }
-        composable("signup") {
-            SignUpScreen(
-                viewModel = authViewModel,
-                navController = navController,
-                onSignUpSuccess = {
-                    navController.navigate("signin") {
-                        popUpTo("signup") { inclusive = true }
-                    }
-                }
-            )
-        }
-        composable("signin") {
-            SignInScreen(
-                viewModel = authViewModel,
-                navController = navController,
-                onForgotPasswordClick = {
-                    navController.navigate("forgotpassword")
-                },
-                onSignInSuccess = {
-                    if (authViewModel.onSignIn()) {
-                        navController.navigate("profilesetup") {
-                            popUpTo("signin") { inclusive = true }
-                        }
-                    }
-                }
-
-            )
-        }
-        composable("forgotpassword") {
-            ForgotPasswordScreen(
-                viewModel = authViewModel,
-                navController = navController
-            )
-        }
-        composable("profilesetup") {
-            ProfileSetupScreen(
-                currentStep = authViewModel.currentProfileStep.value,
-                selectedGoal = authViewModel.selectedGoal.value,
-                selectedGender = authViewModel.selectedGender.value,
-                selectedDate = authViewModel.selectedDate.value,
-                heightUnit = authViewModel.heightUnit.value,
-                heightFeet = authViewModel.heightFeet.value,
-                heightInches = authViewModel.heightInches.value,
-                heightCm = authViewModel.heightCm.value,
-                weightUnit = authViewModel.weightUnit.value,
-                weightKg = authViewModel.weightKg.value,
-                weightLb = authViewModel.weightLb.value,
-//                selectedProgress = authViewModel.selectedProgress.value,
-                onStepChange = { step -> authViewModel.onStepChange(step) },
-                onGoalChange = { goal -> authViewModel.onGoalChange(goal) },
-                onGenderChange = { gender -> authViewModel.onGenderChange(gender) },
-                onDateChange = { date -> authViewModel.onDateChange(date) },
-                onHeightUnitChange = { unit -> authViewModel.onHeightUnitChange(unit) },
-                onHeightFeetChange = { feet -> authViewModel.onHeightFeetChange(feet) },
-                onHeightInchesChange = { inches -> authViewModel.onHeightInchesChange(inches) },
-                onHeightCmChange = { cm -> authViewModel.onHeightCmChange(cm) },
-                onWeightUnitChange = { unit -> authViewModel.onWeightUnitChange(unit) },
-                onWeightKgChange = { kg -> authViewModel.onWeightKgChange(kg) },
-                onWeightLbChange = { lb -> authViewModel.onWeightLbChange(lb) },
-//                onProgressChange = { progress -> authViewModel.onProgressChange(progress) },
-                onBackClick = {
-                    authViewModel.onBackClick()
-                    navController.navigate("signin") {
-                        popUpTo("profilesetup") { inclusive = true }
-                    }
-                },
-                onSkipClick = {
-                    authViewModel.onSkipClick()
-                    navController.navigate("home") {
-                        popUpTo("profilesetup") { inclusive = true }
-                    }
-                },
-                onNextClick = { data ->
-                    authViewModel.onNextClick(data)
-                    navController.navigate("home") {
-                        popUpTo("profilesetup") { inclusive = true }
-                    }
-                }
-            )
-        }
-        composable("home") {
-            HomeScreen(viewModel = homeViewModel, navController = navController)
-        }
-        composable("favorite") {
-            FavoriteScreen(viewModel = homeViewModel, navController = navController)
-        }
-        composable("planner") {
-            MealPlannerScreen(viewModel = homeViewModel, navController = navController)
-        }
-        composable(
-            route = "foodDetail/{mealId}",
-            arguments = listOf(
-                navArgument("mealId") { type = androidx.navigation.NavType.IntType }
-            )
-        ) { backStackEntry ->
-            val mealId = backStackEntry.arguments?.getInt("mealId") ?: 0
-            FoodDetailScreen(
-                navController = navController,
-                mealId = mealId
-            )
-        }
-        composable("setting") {
-            SettingScreen(
-                navController = navController,
-                authViewModel = authViewModel,
-                homeViewModel = homeViewModel
-            )
-        }
-    }
-}*/

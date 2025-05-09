@@ -1,4 +1,4 @@
-package com.example.mealmateapp.ui.theme.view
+package com.example.mealmateapp.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -10,11 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,9 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.ui.theme.controller.HomeViewModel
-import com.example.mealmeatapp.ui.theme.model.Meal
-import com.example.mealmeatapp.ui.theme.view.MealItemLarge
-import com.example.mealmeatapp.ui.theme.view.BottomNavigationBar
+import com.example.mealmeatapp.view.MealItemLarge
+import com.example.mealmeatapp.view.BottomNavigationBar
 
 
 @Composable
