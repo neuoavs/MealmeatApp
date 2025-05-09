@@ -511,53 +511,6 @@ fun ProfileSetupScreen(
                         }
                     }
                 }
-//                6 -> {
-//                    Text(
-//                        text = "CHOOSE THE PROGRESS?",
-//                        fontSize = 24.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        color = Color.Black,
-//                        textAlign = TextAlign.Center,
-//                        modifier = Modifier.padding(bottom = 8.dp)
-//                    )
-//                    Text(
-//                        text = "We will use this data to give you a better diet type for you",
-//                        fontSize = 16.sp,
-//                        color = Color.Black,
-//                        textAlign = TextAlign.Center,
-//                        modifier = Modifier.padding(bottom = 32.dp)
-//                    )
-//                    ProfileOption(
-//                        title = "Power UP",
-//                        difficulty = "Hard",
-//                        duration = "4 weeks",
-//                        weightChange = "+2.9 kg/week",
-//                        iconResId = R.drawable.rewarded_ads_fill, // power_up
-//                        isSelected = selectedProgress == "Power UP",
-//                        onClick = { onProgressChange("Power UP") },
-//                        layoutType = "progress"
-//                    )
-//                    ProfileOption(
-//                        title = "Steady",
-//                        difficulty = "Medium",
-//                        duration = "4 weeks",
-//                        weightChange = "+2.9 kg/week",
-//                        iconResId = R.drawable.stress_management_fill, // steady
-//                        isSelected = selectedProgress == "Steady",
-//                        onClick = { onProgressChange("Steady") },
-//                        layoutType = "progress"
-//                    )
-//                    ProfileOption(
-//                        title = "Relaxed",
-//                        difficulty = "Easy",
-//                        duration = "4 weeks",
-//                        weightChange = "+2.9 kg/week",
-//                        iconResId = R.drawable.spa_fill, // relaxed
-//                        isSelected = selectedProgress == "Relaxed",
-//                        onClick = { onProgressChange("Relaxed") },
-//                        layoutType = "progress"
-//                    )
-//                }
             }
         }
 
@@ -729,6 +682,8 @@ fun ProfileSetupScreen(
         }
     }
 }
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)

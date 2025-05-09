@@ -1,4 +1,4 @@
-package com.example.mealmeatapp.controller
+package com.example.mealmeatapp.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -7,13 +7,15 @@ import androidx.lifecycle.ViewModel
 import com.example.mealmeatapp.ui.theme.model.ProfileData
 import java.time.LocalDate
 
-class AuthViewModel : ViewModel() {
+class SetUpVIewModel : ViewModel() {
     val email = mutableStateOf("")
     val password =  mutableStateOf("")
     val passwordVisible = mutableStateOf(false)
     val userCredentials = mutableStateOf(UserCredentials())
     val confirmPassword = mutableStateOf("")
     val confirmPasswordVisible = mutableStateOf(false)
+
+
     // Profile setup states
     val currentProfileStep = mutableStateOf(1)
     val selectedGoal = mutableStateOf<String?>(null)
@@ -25,7 +27,7 @@ class AuthViewModel : ViewModel() {
     val heightInches = mutableStateOf(8)
     val heightCm = mutableStateOf(203)
     val weightUnit = mutableStateOf("kg")
-    val weightKg = mutableStateOf(71)
+    val weightKg    = mutableStateOf(71)
     val weightLb = mutableStateOf(156)
     val selectedProgress = mutableStateOf<String?>(null)
     val profileData = mutableStateOf<ProfileData?>(null)

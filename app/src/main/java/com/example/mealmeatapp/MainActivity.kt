@@ -17,21 +17,23 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mealmateapp.ui.theme.view.FavoriteScreen
 import com.example.mealmateapp.ui.theme.view.FoodDetailScreen
-import com.example.mealmeatapp.controller.AuthViewModel
 import com.example.mealmeatapp.ui.theme.controller.HomeViewModel
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
-import com.example.mealmeatapp.ui.theme.view.ForgotPasswordScreen
+
 import com.example.mealmeatapp.ui.theme.view.HomeScreen
 import com.example.mealmeatapp.ui.theme.view.MealPlannerScreen
 import com.example.mealmeatapp.ui.theme.view.MealtimeScreen
 import com.example.mealmeatapp.ui.theme.view.ProfileSetupScreen
-import com.example.mealmeatapp.ui.theme.view.SettingScreen
+
 import com.example.mealmeatapp.ui.theme.view.SignInScreen
 import com.example.mealmeatapp.ui.theme.view.SignUpScreen
+import com.example.mealmeatapp.viewmodel.SignInViewModel
+import com.example.mealmeatapp.viewmodel.SignUpViewModel
+import org.checkerframework.checker.units.qual.s
 
 
 class MainActivity : ComponentActivity() {
-    private val authViewModel: AuthViewModel by viewModels()
+
     private val homeViewModel: HomeViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -40,7 +42,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MealtimeAppTheme {
                 val navController = rememberNavController()
-                MainScreen(navController, authViewModel, homeViewModel)
+//                MainScreen(navController, authViewModel, homeViewModel)
             }
         }
     }
@@ -48,9 +50,44 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
+fun AuthNavigation(
+    navController: NavHostController,
+    signUpViewModel: SignUpViewModel,
+    signInViewModel: SignInViewModel,
+    modifier: Modifier = Modifier
+) {
+    NavHost(navController = navController, startDestination = "meal_time", modifier = modifier) {
+        composable("meal_time") {
+            MealtimeScreen(
+                navController = navController
+            )
+        }
+
+        composable("sign_in") {
+            SignInScreen(
+                navController = navController,
+                signInViewModel = signInViewModel
+            )
+        }
+
+        composable("sign_up") {
+            SignUpScreen(
+                navController = navController,
+                signUpViewModel = signUpViewModel
+            )
+        }
+    }
+}
+
+
+
+/*
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
 fun MainScreen(
     navController: NavHostController,
-    authViewModel: AuthViewModel,
+    authViewModel: SetUpViewModel,
     homeViewModel: HomeViewModel
 ) {
     Scaffold { innerPadding ->
@@ -68,12 +105,12 @@ fun MainScreen(
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    authViewModel: AuthViewModel,
+    authViewModel: SetUpViewModel,
     homeViewModel: HomeViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(navController = navController, startDestination = "mealtime", modifier = modifier) {
-        composable("mealtime") {
+        composable("meal_time") {
             MealtimeScreen(
                 onSignUpClick = { navController.navigate("signup") },
                 onSignInClick = { navController.navigate("signin") }
@@ -188,4 +225,4 @@ fun AppNavigation(
             )
         }
     }
-}
+}*/

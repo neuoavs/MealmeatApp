@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "492223927699",
+    "firebase_url": "https://mealmeatapp-8125-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mealmeatapp-8125",
+    "storage_bucket": "mealmeatapp-8125.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492223927699:android:b46bdb02b6764647838466",
+        "android_client_info": {
+          "package_name": "com.example.mealmeatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUAqYnWk4_p14stO-1QATowtYQnYPbf54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

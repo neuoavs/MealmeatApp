@@ -1,5 +1,8 @@
 package com.example.mealmeatapp.ui.theme.view
 
+/*
+
+
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,12 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.mealmeatapp.controller.AuthViewModel
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.R
 @Composable
 fun ForgotPasswordScreen(
-    viewModel: AuthViewModel,
+    ,
     navController: NavController
 ) {
     Column(
@@ -94,8 +96,8 @@ fun ForgotPasswordScreen(
 fun ForgotPasswordScreenPreview() {
     MealtimeAppTheme {
         ForgotPasswordScreen(
-            viewModel = AuthViewModel(),
+            viewModel = SetUpViewModel(),
             navController = rememberNavController()
         )
     }
-}
+}*/

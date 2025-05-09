@@ -17,4 +17,7 @@
     <string name="title_sign_up">Getting Started</string>
     <string name="des_sign_in">Login to your account to continue enjoying our services</string>
     <string name="des_sign_up">Create an account to continue with the app</string>
+    <string name="sign_in_successful">Sign In Successful</string>
+    <string name="sign_in_text_button">Already have an account? Sign In</string>
+
 </resources>
