@@ -9,71 +9,78 @@ import androidx.lifecycle.ViewModel
 
 import com.example.mealmeatapp.ui.theme.model.ProfileData
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 
 
 class ProfileSetUpViewModel : ViewModel() {
+    // Profile setup states
     val currentStep = mutableIntStateOf(1)
-    val goal = mutableStateOf<String?>(null)
-    val gender = mutableStateOf(false)
-    @RequiresApi(Build.VERSION_CODES.O)
-    val date = mutableStateOf(LocalDate.now().minusYears(19))
+    val selectedGoal = mutableStateOf<String?>(null)
+    val selectedGender = mutableStateOf<String?>(null)
+    val selectedDate = mutableStateOf(LocalDate.now().minusYears(19))
     val heightUnit = mutableStateOf("ft")
     val heightFeet = mutableIntStateOf(6)
-
     val heightInches = mutableIntStateOf(8)
     val heightCm = mutableIntStateOf(203)
     val weightUnit = mutableStateOf("kg")
     val weightKg = mutableIntStateOf(71)
     val weightLb = mutableIntStateOf(156)
-    val profileData = mutableStateOf<ProfileData?>(null)
+    val selectedProgress = mutableStateOf<String?>(null)
+    val profileDataToSubmit = mutableStateOf<ProfileData?>(null)
     val showDatePicker = mutableStateOf(false)
+    var showSummaryDialog = mutableStateOf(false)
+    val age = mutableIntStateOf(Period.between(selectedDate.value, LocalDate.now()).years)
 
-    // Profile setup callbPreacks
-    fun onStepChange(stepPre: Int) {
-        currentStep.value = stepPre
+    // Profile setup callbacks
+    fun onStepChange(step: Int) {
+        currentStep.value = step
     }
 
-    fun onGoalChange(goalPre: String) {
-        goal.value = goalPre
+    fun onGoalChange(goal: String) {
+        selectedGoal.value = goal
     }
 
-    fun onGenderChange(genderPre: Boolean) {
-        gender.value = genderPre
+    fun onGenderChange(gender: String) {
+        selectedGender.value = gender
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun onDateChange(datePre: LocalDate) {
-        date.value = datePre
+    fun onDateChange(date: LocalDate) {
+        selectedDate.value = date
     }
 
-    fun onHeightUnitChange(unitPre: String) {
-        heightUnit.value = unitPre
+    fun onHeightUnitChange(unit: String) {
+        heightUnit.value = unit
     }
 
-    fun onHeightFeetChange(feetPre: Int) {
-        heightFeet.value = feetPre
+    fun onHeightFeetChange(feet: Int) {
+        heightFeet.value = feet
     }
 
-    fun onHeightInchesChange(inchesPre: Int) {
-        heightInches.value = inchesPre
+    fun onHeightInchesChange(inches: Int) {
+        heightInches.value = inches
     }
 
-    fun onHeightCmChange(cmPre: Int) {
-        heightCm.value = cmPre
+    fun onHeightCmChange(cm: Int) {
+        heightCm.value = cm
     }
 
-    fun onWeightUnitChange(unitPre: String) {
-        weightUnit.value = unitPre
+    fun onWeightUnitChange(unit: String) {
+        weightUnit.value = unit
     }
 
-    fun onWeightKgChange(kgPre: Int) {
-        weightKg.value = kgPre
+    fun onWeightKgChange(kg: Int) {
+        weightKg.value = kg
     }
 
-    fun onWeightLbChange(lbPre: Int) {
-        weightLb.value = lbPre
+    fun onWeightLbChange(lb: Int) {
+        weightLb.value = lb
     }
-    
+
+    fun onProgressChange(progress: String) {
+        selectedProgress.value = progress
+    }
+
     fun onBackClick() {
         // Logic to navigate back (to be handled in NavigationController)
     }
@@ -84,35 +91,17 @@ class ProfileSetUpViewModel : ViewModel() {
 
     fun onNextClick(data: ProfileData) {
         profileData.value = data
+        // Logic to navigate to next screen (to be handled in NavigationController)
     }
 
 
 
     fun onSignIn(): Boolean {
-        return true
+        return true // Always allow navigation for frontend-only
     }
 
 
-
-
-//    fun submitProfileData() {
-//        val age = Period.between(datePre.value, LocalDate.now()).years
-//        val height = if (heightUnit.value == "ft") {
-//            "${heightFeet.value}'${heightInches.value}\""
-//        } else {
-//            "${heightCm.value} cmPre"
-//        }
-//        val weight = if (weightUnit.value == "kgPre") {
-//            "${weightKg.value} kgPre"
-//        } else {
-//            "${weightLb.value} lbPre"
-//        }
-//        profileDataToSubmit.value = ProfileData(
-//            goalPre.value ?: "",
-//            genderPre.value,
-//            age,
-//            height,
-//            weight
-//        )
-//    }
+    fun onForgotPassword() {
+        // No-op for frontend-only
+    }
 }

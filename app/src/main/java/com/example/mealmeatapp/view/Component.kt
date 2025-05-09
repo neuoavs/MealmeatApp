@@ -1,9 +1,10 @@
 package com.example.mealmeatapp.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,15 +17,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -41,8 +44,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.R
+import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+
 
 // Sign In Screen
 @Composable
@@ -451,4 +458,393 @@ fun ColumnOption(
         )
     }
 }
+
+@Composable
+fun StepOne(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    Text(
+        text = stringResource(id = R.string.title_s1),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+    Text(
+        text = stringResource(id = R.string.des_set_tup),
+        fontSize = 16.sp,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 32.dp)
+    )
+    ProfileOption(
+        text = "Less weight",
+        iconResId = R.drawable.nutrition_fill, // less_weight
+        isSelected = profileSetUpViewModel.goal.value == "Less weight",
+        onClick = { profileSetUpViewModel.onGoalChange("Less weight") },
+        layoutType = "row"
+    )
+    ProfileOption(
+        text = "Gain weight",
+        iconResId = R.drawable.fitness_center, // gain_weight
+        isSelected = profileSetUpViewModel.goal.value == "Gain weight",
+        onClick = { profileSetUpViewModel.onGoalChange("Gain weight") },
+        layoutType = "row"
+    )
+    ProfileOption(
+        text = "Stay healthy",
+        iconResId = R.drawable.ecg_heart_fill, // stay_healthy
+        isSelected = profileSetUpViewModel.goal.value == "Stay healthy",
+        onClick = { profileSetUpViewModel.onGoalChange("Stay healthy") },
+        layoutType = "row"
+    )
+}
+
+@Composable
+fun StepTwo(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    Text(
+        text = stringResource(id = R.string.title_s2),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+    Text(
+        text = stringResource(id = R.string.des_set_tup),
+        fontSize = 16.sp,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 32.dp)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        ProfileOption(
+            text = "Male",
+            iconResId = R.drawable.male,
+            isSelected = profileSetUpViewModel.gender.value == true,
+            onClick = { profileSetUpViewModel.onGenderChange(true) },
+            layoutType = "column"
+        )
+        ProfileOption(
+            text = "Female",
+            iconResId = R.drawable.female,
+            isSelected = profileSetUpViewModel.gender.value == false,
+            onClick = { profileSetUpViewModel.onGenderChange(false) },
+            layoutType = "column"
+        )
+    }
+}
+
+@Composable
+fun StepThree(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    Text(
+        text = stringResource(id = R.string.title_s3),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+    Text(
+        text = stringResource(id = R.string.des_set_tup),
+        fontSize = 16.sp,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 32.dp)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .background(
+                color = Color(0xFFE8F5E9),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { profileSetUpViewModel.showDatePicker.value = true }
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(
+                text = age.toString(),
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            Text(
+                text = profileSetUpViewModel.selectedDate.value.format(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                ),
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+        }
+        Icon(
+            painter = painterResource(id = R.drawable.calendar_month_fill),
+            contentDescription = "Select Date",
+            tint = Color(0xFF2E7D32),
+            modifier = Modifier.size(24.dp)
+        )
+    }
+    if (profileSetUpViewModel.showDatePicker.value) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = profileSetUpViewModel.selectedDate.value.toEpochDay() * 24 * 60 * 60 * 1000
+        )
+        DatePickerDialog(
+            onDismissRequest = { profileSetUpViewModel.showDatePicker.value = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        profileSetUpViewModel.showDatePicker.value = false
+                        datePickerState.profileSetUpViewModel.selectedDate.valueMillis?.let { millis ->
+                            profileSetUpViewModel.onDateChange(LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000)))
+                        }
+                    }
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { profileSetUpViewModel.showDatePicker.value = false }) {
+                    Text("Cancel")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+}
+
+
+@Composable
+fun stepFour(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    Text(
+        text = stringResource(id = R.string.title_s4),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+    Text(
+        text = stringResource(id = R.string.des_set_tup),
+        fontSize = 16.sp,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 32.dp)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "ft",
+            fontSize = 16.sp,
+            color = if (profileSetUpViewModel.heightUnit.value == "ft") Color.Black else Color.Gray,
+            modifier = Modifier
+                .clickable {
+                    profileSetUpViewModel.onHeightUnitChange("ft")
+                    profileSetUpViewModel.(heightInFeetInches.first)
+                    onHeightInchesChange(heightInFeetInches.second)
+                }
+                .padding(horizontal = 8.dp)
+        )
+        Text(
+            text = "cm",
+            fontSize = 16.sp,
+            color = if (profileSetUpViewModel.heightUnit.value == "cm") Color.Black else Color.Gray,
+            modifier = Modifier
+                .clickable {
+                    profileSetUpViewModel.onHeightUnitChange("cm")
+                    onHeightCmChange(heightInCm)
+                }
+                .padding(horizontal = 8.dp)
+        )
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .height(100.dp)
+                .background(
+                    color = Color(0xFFE8F5E9),
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (profileSetUpViewModel.heightUnit.value == "ft") {
+                    "${heightFeet}'${heightInches}\""
+                } else {
+                    "$heightCm cm"
+                },
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        if (profileSetUpViewModel.heightUnit.value == "ft") {
+            Column(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Slider(
+                    value = heightFeet.toFloat(),
+                    onValueChange = { onHeightFeetChange(it.toInt()) },
+                    valueRange = 3f..8f,
+                    steps = 4,
+                    modifier = Modifier.height(50.dp)
+                )
+                Slider(
+                    value = heightInches.toFloat(),
+                    onValueChange = { onHeightInchesChange(it.toInt()) },
+                    valueRange = 0f..11f,
+                    steps = 11,
+                    modifier = Modifier.height(50.dp)
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Slider(
+                    value = heightCm.toFloat(),
+                    onValueChange = { onHeightCmChange(it.toInt()) },
+                    valueRange = 90f..250f,
+                    steps = 159,
+                    modifier = Modifier.height(100.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun StepFive() {
+    Text(
+        text = stringResource(id = R.string.title_s5),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+    Text(
+        text = stringResource(id = R.string.des_set_tup),
+        fontSize = 16.sp,
+        color = Color.Black,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 32.dp)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "kg",
+            fontSize = 16.sp,
+            color = if (weightUnit == "kg") Color.Black else Color.Gray,
+            modifier = Modifier
+                .clickable {
+                    onWeightUnitChange("kg")
+                    onWeightKgChange(weightInKg)
+                }
+                .padding(horizontal = 8.dp)
+        )
+        Text(
+            text = "lb",
+            fontSize = 16.sp,
+            color = if (weightUnit == "lb") Color.Black else Color.Gray,
+            modifier = Modifier
+                .clickable {
+                    onWeightUnitChange("lb")
+                    onWeightLbChange(weightInLb)
+                }
+                .padding(horizontal = 8.dp)
+        )
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .height(100.dp)
+                .background(
+                    color = Color(0xFFE8F5E9),
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (weightUnit == "kg") {
+                    "$weightKg"
+                } else {
+                    "$weightLb"
+                },
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(
+            modifier = Modifier
+                .width(80.dp)
+                .height(100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (weightUnit == "kg") {
+                Slider(
+                    value = weightKg.toFloat(),
+                    onValueChange = { onWeightKgChange(it.toInt()) },
+                    valueRange = 30f..150f,
+                    steps = 119,
+                    modifier = Modifier.height(100.dp)
+                )
+            } else {
+                Slider(
+                    value = weightLb.toFloat(),
+                    onValueChange = { onWeightLbChange(it.toInt()) },
+                    valueRange = 66f..330f,
+                    steps = 263,
+                    modifier = Modifier.height(100.dp)
+                )
+            }
+        }
+    }
+}
 // End Profile Set Up Screen
+
+
