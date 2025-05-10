@@ -1,5 +1,7 @@
 package com.example.mealmeatapp.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 
 import androidx.compose.foundation.clickable
@@ -13,8 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
@@ -49,7 +53,7 @@ import com.example.mealmeatapp.viewmodel.SignInViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 // Sign In Screen
 @Composable
@@ -357,12 +361,49 @@ fun TitleMealMeat() {
 
 // Profile Set Up Screen
 @Composable
+fun HeaderProfile(
+    navController: NavController,
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.arrow_back_ios),
+        contentDescription = "Back",
+        tint = Color(0xFF2E7D32),
+        modifier = Modifier
+            .size(40.dp)
+            .clickable {
+                if (profileSetUpViewModel.currentStep.intValue == 1) {
+                    profileSetUpViewModel.onBackClick(
+                        navController = navController
+                    )
+                } else {
+                    profileSetUpViewModel.onStepChange(--profileSetUpViewModel.currentStep.intValue)
+                }
+            }
+    )
+    Text(
+        text = "${profileSetUpViewModel.currentStep.intValue}/6",
+        fontSize = 16.sp,
+        color = Color.Black,
+        modifier = Modifier
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    )
+    Text(
+        text = "SKIP",
+        fontSize = 16.sp,
+        color = Color.Black,
+        modifier = Modifier
+            .clickable { profileSetUpViewModel.onSkipClick() }
+            .padding(8.dp)
+    )
+}
+@Composable
 fun ProfileOption(
     text: String? = null,
-//    title: String? = null,
-//    difficulty: String? = null,
-//    duration: String? = null,
-//    weightChange: String? = null,
     iconResId: Int,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -481,21 +522,21 @@ fun StepOne(
     ProfileOption(
         text = "Less weight",
         iconResId = R.drawable.nutrition_fill, // less_weight
-        isSelected = profileSetUpViewModel.goal.value == "Less weight",
+        isSelected = profileSetUpViewModel.selectedGoal.value == "Less weight",
         onClick = { profileSetUpViewModel.onGoalChange("Less weight") },
         layoutType = "row"
     )
     ProfileOption(
         text = "Gain weight",
         iconResId = R.drawable.fitness_center, // gain_weight
-        isSelected = profileSetUpViewModel.goal.value == "Gain weight",
+        isSelected = profileSetUpViewModel.selectedGoal.value == "Gain weight",
         onClick = { profileSetUpViewModel.onGoalChange("Gain weight") },
         layoutType = "row"
     )
     ProfileOption(
         text = "Stay healthy",
         iconResId = R.drawable.ecg_heart_fill, // stay_healthy
-        isSelected = profileSetUpViewModel.goal.value == "Stay healthy",
+        isSelected = profileSetUpViewModel.selectedGoal.value == "Stay healthy",
         onClick = { profileSetUpViewModel.onGoalChange("Stay healthy") },
         layoutType = "row"
     )
@@ -529,20 +570,23 @@ fun StepTwo(
         ProfileOption(
             text = "Male",
             iconResId = R.drawable.male,
-            isSelected = profileSetUpViewModel.gender.value == true,
+            isSelected = profileSetUpViewModel.selectedGender.value == true,
             onClick = { profileSetUpViewModel.onGenderChange(true) },
             layoutType = "column"
         )
         ProfileOption(
             text = "Female",
             iconResId = R.drawable.female,
-            isSelected = profileSetUpViewModel.gender.value == false,
+            isSelected = profileSetUpViewModel.selectedGender.value == false,
             onClick = { profileSetUpViewModel.onGenderChange(false) },
             layoutType = "column"
         )
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
+@ExperimentalMaterial3Api
 @Composable
 fun StepThree(
     profileSetUpViewModel: ProfileSetUpViewModel
@@ -577,7 +621,7 @@ fun StepThree(
     ) {
         Column {
             Text(
-                text = age.toString(),
+                text = profileSetUpViewModel.age.intValue.toString(),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
@@ -607,8 +651,10 @@ fun StepThree(
                 TextButton(
                     onClick = {
                         profileSetUpViewModel.showDatePicker.value = false
-                        datePickerState.profileSetUpViewModel.selectedDate.valueMillis?.let { millis ->
-                            profileSetUpViewModel.onDateChange(LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000)))
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            profileSetUpViewModel.onDateChange(
+                                LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
+                            )
                         }
                     }
                 ) {
@@ -628,7 +674,7 @@ fun StepThree(
 
 
 @Composable
-fun stepFour(
+fun StepFour(
     profileSetUpViewModel: ProfileSetUpViewModel
 ) {
     Text(
@@ -659,8 +705,8 @@ fun stepFour(
             modifier = Modifier
                 .clickable {
                     profileSetUpViewModel.onHeightUnitChange("ft")
-                    profileSetUpViewModel.(heightInFeetInches.first)
-                    onHeightInchesChange(heightInFeetInches.second)
+                    profileSetUpViewModel.onHeightFeetChange(profileSetUpViewModel.heightInFeetInches.value.first)
+                    profileSetUpViewModel.onHeightInchesChange(profileSetUpViewModel.heightInFeetInches.value.second)
                 }
                 .padding(horizontal = 8.dp)
         )
@@ -671,7 +717,7 @@ fun stepFour(
             modifier = Modifier
                 .clickable {
                     profileSetUpViewModel.onHeightUnitChange("cm")
-                    onHeightCmChange(heightInCm)
+                    profileSetUpViewModel.onHeightCmChange(profileSetUpViewModel.heightInCm.intValue)
                 }
                 .padding(horizontal = 8.dp)
         )
@@ -694,9 +740,9 @@ fun stepFour(
         ) {
             Text(
                 text = if (profileSetUpViewModel.heightUnit.value == "ft") {
-                    "${heightFeet}'${heightInches}\""
+                    "${profileSetUpViewModel.heightFeet.intValue}'${profileSetUpViewModel.heightInches.intValue}\""
                 } else {
-                    "$heightCm cm"
+                    "$profileSetUpViewModel.heightCm.value cm"
                 },
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
@@ -712,15 +758,15 @@ fun stepFour(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Slider(
-                    value = heightFeet.toFloat(),
-                    onValueChange = { onHeightFeetChange(it.toInt()) },
+                    value = profileSetUpViewModel.heightFeet.intValue.toFloat(),
+                    onValueChange = { profileSetUpViewModel.onHeightFeetChange(it.toInt()) },
                     valueRange = 3f..8f,
                     steps = 4,
                     modifier = Modifier.height(50.dp)
                 )
                 Slider(
-                    value = heightInches.toFloat(),
-                    onValueChange = { onHeightInchesChange(it.toInt()) },
+                    value = profileSetUpViewModel.heightInches.intValue.toFloat(),
+                    onValueChange = { profileSetUpViewModel.onHeightInchesChange(it.toInt()) },
                     valueRange = 0f..11f,
                     steps = 11,
                     modifier = Modifier.height(50.dp)
@@ -734,8 +780,8 @@ fun stepFour(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Slider(
-                    value = heightCm.toFloat(),
-                    onValueChange = { onHeightCmChange(it.toInt()) },
+                    value = profileSetUpViewModel.heightCm.intValue.toFloat(),
+                    onValueChange = { profileSetUpViewModel.onHeightCmChange(it.toInt()) },
                     valueRange = 90f..250f,
                     steps = 159,
                     modifier = Modifier.height(100.dp)
@@ -746,7 +792,9 @@ fun stepFour(
 }
 
 @Composable
-fun StepFive() {
+fun StepFive(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
     Text(
         text = stringResource(id = R.string.title_s5),
         fontSize = 24.sp,
@@ -762,6 +810,7 @@ fun StepFive() {
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(bottom = 32.dp)
     )
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -771,22 +820,22 @@ fun StepFive() {
         Text(
             text = "kg",
             fontSize = 16.sp,
-            color = if (weightUnit == "kg") Color.Black else Color.Gray,
+            color = if (profileSetUpViewModel.weightUnit.value == "kg") Color.Black else Color.Gray,
             modifier = Modifier
                 .clickable {
-                    onWeightUnitChange("kg")
-                    onWeightKgChange(weightInKg)
+                    profileSetUpViewModel.onWeightUnitChange("kg")
+                    profileSetUpViewModel.onWeightKgChange(profileSetUpViewModel.weightInKg.intValue)
                 }
                 .padding(horizontal = 8.dp)
         )
         Text(
             text = "lb",
             fontSize = 16.sp,
-            color = if (weightUnit == "lb") Color.Black else Color.Gray,
+            color = if (profileSetUpViewModel.weightUnit.value == "lb") Color.Black else Color.Gray,
             modifier = Modifier
                 .clickable {
-                    onWeightUnitChange("lb")
-                    onWeightLbChange(weightInLb)
+                    profileSetUpViewModel.onWeightUnitChange("lb")
+                    profileSetUpViewModel.onWeightLbChange(profileSetUpViewModel.weightInLb.intValue)
                 }
                 .padding(horizontal = 8.dp)
         )
@@ -808,10 +857,10 @@ fun StepFive() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (weightUnit == "kg") {
-                    "$weightKg"
+                text = if (profileSetUpViewModel.weightUnit.value == "kg") {
+                    "$profileSetUpViewModel.weightKg.value"
                 } else {
-                    "$weightLb"
+                    "$profileSetUpViewModel.weightLb.value"
                 },
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
@@ -825,18 +874,18 @@ fun StepFive() {
                 .height(100.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (weightUnit == "kg") {
+            if (profileSetUpViewModel.weightUnit.value == "kg") {
                 Slider(
-                    value = weightKg.toFloat(),
-                    onValueChange = { onWeightKgChange(it.toInt()) },
+                    value = profileSetUpViewModel.weightKg.intValue.toFloat(),
+                    onValueChange = { profileSetUpViewModel.onWeightKgChange(it.toInt()) },
                     valueRange = 30f..150f,
                     steps = 119,
                     modifier = Modifier.height(100.dp)
                 )
             } else {
                 Slider(
-                    value = weightLb.toFloat(),
-                    onValueChange = { onWeightLbChange(it.toInt()) },
+                    value = profileSetUpViewModel.weightLb.intValue.toFloat(),
+                    onValueChange = { profileSetUpViewModel.onWeightLbChange(it.toInt()) },
                     valueRange = 66f..330f,
                     steps = 263,
                     modifier = Modifier.height(100.dp)
@@ -845,6 +894,149 @@ fun StepFive() {
         }
     }
 }
+
+@Composable
+fun ProfileTable(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "Goal: ${profileSetUpViewModel.selectedGoal.value}",
+            fontSize = 16.sp,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Gender: ${
+                profileSetUpViewModel.getGenderValueString()
+            }",
+            fontSize = 16.sp,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Age: ${profileSetUpViewModel.profileDataToSubmit.value!!.age}",
+            fontSize = 16.sp,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Height: ${
+                profileSetUpViewModel.getHeighValueString()
+            }",
+            fontSize = 16.sp,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Weight: ${profileSetUpViewModel.profileDataToSubmit.value!!.weight}",
+            fontSize = 16.sp,
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+fun ProfileDialog(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    // Summary Dialog
+    if (profileSetUpViewModel.showSummaryDialog.value && profileSetUpViewModel.profileDataToSubmit.value != null) {
+        AlertDialog(
+            onDismissRequest = { profileSetUpViewModel.showSummaryDialog.value = false },
+            title = {
+                Text(
+                    text = "Profile Summary",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+            },
+            text = {
+                ProfileTable(
+                    profileSetUpViewModel = profileSetUpViewModel
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        profileSetUpViewModel.showSummaryDialog.value = false
+                        profileSetUpViewModel.onNextClick(profileSetUpViewModel.profileDataToSubmit.value!!) // Proceed to Home
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF2E7D32))
+                ) {
+                    Text("Confirm", fontWeight = FontWeight.Medium)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { profileSetUpViewModel.showSummaryDialog.value = false },
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color.Gray)
+                ) {
+                    Text("Back", fontWeight = FontWeight.Medium)
+                }
+            },
+            containerColor = Color(0xFFFFF9E6),
+            titleContentColor = Color.Black,
+            textContentColor = Color.Black
+        )
+    }
+}
+
+@Composable
+fun NextButtonProfile(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    CustomButton(
+        text = "NEXT",
+        onClick = {
+            when (profileSetUpViewModel.currentStep.intValue) {
+                1 -> if (profileSetUpViewModel.selectedGoal.value != null) profileSetUpViewModel.onStepChange(profileSetUpViewModel.currentStep.intValue + 1)
+                2 -> profileSetUpViewModel.onStepChange(profileSetUpViewModel.currentStep.intValue + 1)
+                3 -> profileSetUpViewModel.onStepChange(profileSetUpViewModel.currentStep.intValue + 1)
+                4 -> profileSetUpViewModel.onStepChange(profileSetUpViewModel.currentStep.intValue + 1)
+                5 -> profileSetUpViewModel.onStepChange(profileSetUpViewModel.currentStep.intValue + 1)
+            }
+
+        },
+        modifier = Modifier.enabled(
+            when (profileSetUpViewModel.currentStep.intValue) {
+                1 -> profileSetUpViewModel.selectedGoal.value != null
+                2 -> true
+                3 -> true
+                4 -> true
+                5 -> true
+                else -> false
+            }
+        )
+    )
+}
+
+@Composable
+fun StepCircle(
+    profileSetUpViewModel: ProfileSetUpViewModel
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(bottom = 16.dp)
+    ) {
+        repeat(6) { index ->
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .background(
+                        color = if (index == profileSetUpViewModel.currentStep.intValue - 1) Color(0xFF2E7D32) else Color.Gray,
+                        shape = CircleShape
+                    )
+            )
+        }
+    }
+}
+
 // End Profile Set Up Screen
 
 
