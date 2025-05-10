@@ -15,7 +15,7 @@ class SignInViewModel : ViewModel(){
         navController: NavController,
     ) {
         navController.navigate("profile_set_up")
-
+        // Đăng nhập vào
 /*        val user = User(email = email.value, password = password.value)
         val authRepository = AuthRepository()
 

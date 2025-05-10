@@ -14,10 +14,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
+import com.example.mealmeatapp.view.HomeScreen
 import com.example.mealmeatapp.view.MealtimeScreen
 import com.example.mealmeatapp.view.ProfileSetupScreen
 import com.example.mealmeatapp.view.SignInScreen
 import com.example.mealmeatapp.view.SignUpScreen
+import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
@@ -28,6 +30,8 @@ class MainActivity : ComponentActivity() {
     private val signInViewModel: SignInViewModel by viewModels()
     private val signUpViewModel: SignUpViewModel by viewModels()
     private val profileSetUpViewModel: ProfileSetUpViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +64,13 @@ class MainActivity : ComponentActivity() {
                                 ProfileSetupScreen(
                                     navController = navController,
                                     profileSetUpViewModel = profileSetUpViewModel
+                                )
+                            }
+
+                            composable("home") {
+                                HomeScreen(
+                                    navController = navController,
+                                    homeViewModel = homeViewModel
                                 )
                             }
                         }

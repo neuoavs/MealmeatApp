@@ -49,10 +49,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
+import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.view.BottomNavItem
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 
@@ -104,7 +106,7 @@ fun RandomRecipeButton(
     homeViewModel: HomeViewModel
 ) {
     Button(
-        onClick = { homeViewModel.onRandomRecipeClick() },
+        onClick = {  },
         modifier = Modifier
             .fillMaxWidth()
             .height(45.dp),
@@ -308,11 +310,11 @@ fun NutrientItemWithBar(
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
-    plannedCount: Int
+//    plannedCount: Int
 ) {
     val navItems = listOf(
         BottomNavItem("home", R.drawable.home, "Home"),
-        BottomNavItem("planner", R.drawable.calendar_month_fill, "Planner ($plannedCount)"),
+        BottomNavItem("planner", R.drawable.calendar_month_fill, "Planner"),
         BottomNavItem("favorite", R.drawable.favorite_fill, "Favorite"),
         BottomNavItem("setting", R.drawable.setting, "Setting"),
     )
@@ -359,15 +361,26 @@ fun BottomNavigationBar(
     }
 }
 
-/*@Composable
-fun CategoryButton(
+@Preview(showBackground = true)
+@Composable
+fun NutrientItemWithBarPreview() {
+    MealtimeAppTheme {
+        BottomNavigationBar(navController = rememberNavController())
+    }
+}
 
+
+
+
+@Composable
+fun CategoryButton(
+    homeViewModel: HomeViewModel
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        categories.forEach { category ->
+        homeViewModel.categories.forEach { category ->
             Button(
                 onClick = { homeViewModel.onCategoryChange(category) },
                 modifier = Modifier
@@ -378,7 +391,7 @@ fun CategoryButton(
                     containerColor = if (homeViewModel.selectedCategory.value == category) colorResource(id = R.color.orange) else White,
                     contentColor = if (homeViewModel.selectedCategory.value == category) White else Black
                 ),
-                contentPadding = PaddingValues(8.dp)
+                contentPadding = PaddingValues(0.dp)
             ) {
                 Text(
                     text = category.uppercase(),
@@ -388,4 +401,5 @@ fun CategoryButton(
             }
         }
     }
-}*/
+}
+

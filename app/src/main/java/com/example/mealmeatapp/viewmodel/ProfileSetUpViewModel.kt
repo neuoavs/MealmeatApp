@@ -166,7 +166,7 @@ class ProfileSetUpViewModel : ViewModel() {
     ) {
         showSummaryDialog.value = false
         commitProfileData()
-//        navController.navigate("home")
+        navController.navigate("home")
     }
 
     fun getHeightValueString(): String {

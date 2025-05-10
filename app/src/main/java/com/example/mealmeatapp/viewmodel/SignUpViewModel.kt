@@ -16,6 +16,8 @@ class SignUpViewModel : ViewModel(){
     fun onSignUpClick(
         navController: NavController,
     ) {
+        // Đăng kí vào
+
         navController.navigate("profile_set_up")
 
 /*        val user = User(email = email.value, password = password.value)

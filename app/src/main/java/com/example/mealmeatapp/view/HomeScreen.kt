@@ -1,5 +1,9 @@
 package com.example.mealmeatapp.view
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -13,23 +17,34 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.view.component.*
-import kotlin.text.category
+import androidx.compose.foundation.lazy.items
+
+class HomeTestActivity : ComponentActivity() {
+
+    private val homeViewModel: HomeViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MealtimeAppTheme {
+                HomeScreen(
+                    navController = rememberNavController(),
+                    homeViewModel = homeViewModel
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel,
-    navController: NavController
+    navController: NavController,
+    homeViewModel: HomeViewModel
 ) {
-    val categories = listOf(
-        "All",
-        "Breakfast",
-        "Lunch",
-        "Dinner"
-    )
-
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController, homeViewModel.plannedMeals.size) // Số lượng công thức, List
+            BottomNavigationBar(navController) // Mục menu
         }
     ) { padding ->
         LazyColumn(
@@ -43,40 +58,32 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Search box
-                SearchBoxHome(
-                    homeViewModel = homeViewModel
-                )
+                SearchBoxHome(homeViewModel = homeViewModel)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Category buttons
-//                CategoryButton()
+                CategoryButton(homeViewModel = homeViewModel)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 TitleHome()
 
-                // Button "Random Meal"
-                RandomRecipeButton(
-                    homeViewModel = homeViewModel
-                )
-
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-          // Display meals based on selected category
-//            items(homeViewModel.recipe.value) { recipe ->
-//                if (homeViewModel.selectedCategory.value == "All" || recipe.category == homeViewModel.selectedCategory.value) {
-//                    RecipeItemLarge(
-//                        homeViewModel = homeViewModel,
-//                        recipe = recipe,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(vertical = 6.dp),
-//                    )
-//                }
-//            }
+
+            items(homeViewModel.recipes.value) { recipe ->
+                RecipeItemLarge(
+                    homeViewModel = homeViewModel,
+                    recipe = recipe,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                )
+            }
         }
+
     }
 }
 
@@ -91,6 +98,6 @@ data class BottomNavItem(
 @Composable
 fun HomeScreenPreview() {
     MealtimeAppTheme {
-        HomeScreen(HomeViewModel(), rememberNavController())
+        HomeScreen(rememberNavController(), HomeViewModel())
     }
 }
