@@ -8,17 +8,17 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.view.MealtimeScreen
+import com.example.mealmeatapp.view.ProfileSetupScreen
 import com.example.mealmeatapp.view.SignInScreen
 import com.example.mealmeatapp.view.SignUpScreen
+import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
 
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 
     private val signInViewModel: SignInViewModel by viewModels()
     private val signUpViewModel: SignUpViewModel by viewModels()
-
+    private val profileSetUpViewModel: ProfileSetUpViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +53,13 @@ class MainActivity : ComponentActivity() {
                                 SignUpScreen(
                                     navController = navController,
                                     signUpViewModel = signUpViewModel
+                                )
+                            }
+
+                            composable("profile_set_up") {
+                                ProfileSetupScreen(
+                                    navController = navController,
+                                    profileSetUpViewModel = profileSetUpViewModel
                                 )
                             }
                         }

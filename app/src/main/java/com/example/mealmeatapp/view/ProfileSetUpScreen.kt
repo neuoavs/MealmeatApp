@@ -8,12 +8,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.mealmeatapp.R
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
 
 
@@ -27,7 +25,9 @@ fun ProfileSetupScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF9E6))
+            .background(
+                colorResource(id = R.color.light_cream)
+            )
     ) {
         Row(
             modifier = Modifier
@@ -78,7 +78,8 @@ fun ProfileSetupScreen(
         }
 
         ProfileDialog(
-            profileSetUpViewModel = profileSetUpViewModel,
+            navController = navController,
+            profileSetUpViewModel = profileSetUpViewModel
         )
         // Footer
         Column(
@@ -98,15 +99,5 @@ fun ProfileSetupScreen(
         }
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun ProfileSetupPreview() {
-    MealtimeAppTheme {
-        ProfileSetupScreen(
-            navController = rememberNavController() ,
-            profileSetUpViewModel = ProfileSetUpViewModel()
-        )
-    }
-}
+
+

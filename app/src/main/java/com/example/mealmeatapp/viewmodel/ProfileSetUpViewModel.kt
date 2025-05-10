@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 
 import com.example.mealmeatapp.ui.theme.model.ProfileData
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
+import java.time.LocalDate
+import java.time.Period
 
 
 class ProfileSetUpViewModel : ViewModel() {
@@ -18,6 +18,7 @@ class ProfileSetUpViewModel : ViewModel() {
     val currentStep = mutableIntStateOf(1)
     val selectedGoal = mutableStateOf<String?>(null)
     val selectedGender = mutableStateOf(true) // true for male, false for female
+    @RequiresApi(Build.VERSION_CODES.O)
     val selectedDate = mutableStateOf(LocalDate.now().minusYears(19))
     val heightUnit = mutableStateOf("ft")
     val heightFeet = mutableIntStateOf(6)
@@ -29,7 +30,8 @@ class ProfileSetUpViewModel : ViewModel() {
     val profileDataToSubmit = mutableStateOf<ProfileData?>(null)
     val showDatePicker = mutableStateOf(false)
     var showSummaryDialog = mutableStateOf(false)
-    val age = mutableIntStateOf(Period.between(selectedDate.value, LocalDate.now()).years)
+    @RequiresApi(Build.VERSION_CODES.O)
+    val age = mutableIntStateOf(calculateAge(selectedDate.value))
 
     val heightInCm = mutableIntStateOf(
         if (heightUnit.value == "ft") {
@@ -66,7 +68,8 @@ class ProfileSetUpViewModel : ViewModel() {
         }
     )
 
-    fun commitProfileData() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun commitProfileData() {
         profileDataToSubmit.value = ProfileData(
             goal = selectedGoal.value ?: "",
             gender = selectedGender.value,
@@ -95,7 +98,15 @@ class ProfileSetUpViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun onDateChange(date: LocalDate) {
         selectedDate.value = date
+        age.value = calculateAge(date)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateAge(dateOfBirth: LocalDate): Int {
+        return Period.between(dateOfBirth, LocalDate.now()).years
+    }
+
+
 
     fun onHeightUnitChange(unit: String) {
         heightUnit.value = unit
@@ -131,40 +142,62 @@ class ProfileSetUpViewModel : ViewModel() {
         navController.navigate("sign_in")
     }
 
-    fun onSkipClick() {
-        // Logic to skip (to be handled in NavigationController)
+    fun onSkipClick(
+        navController: NavController
+    ) {
+        navController.navigate("home")
     }
 
-    fun onNextClick(data: ProfileData) {
-        profileDataToSubmit.value = data
-        // Logic to navigate to next screen (to be handled in NavigationController)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun onNextClick() {
+        when (currentStep.intValue) {
+            1 -> if (selectedGoal.value != null) ++currentStep.value
+            2 -> ++currentStep.value
+            3 -> ++currentStep.value
+            4 -> ++currentStep.value
+            5 -> showSummaryDialog.value = true
+        }
+        commitProfileData()
     }
 
-    fun onConfirmClick() {
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun onConfirmClick(
+        navController: NavController
+    ) {
+        showSummaryDialog.value = false
+        commitProfileData()
+//        navController.navigate("home")
     }
 
-    fun getHeighValueString(): String {
-        if (heightUnit.value == "ft") {
-            return "${heightFeet.intValue}'${heightInches.intValue}"
+    fun getHeightValueString(): String {
+        return if (heightUnit.value == "ft") {
+            "${heightFeet.intValue}'${heightInches.intValue}"
         } else {
-            return "${heightCm.intValue} cm"
+            "${heightCm.intValue} cm"
+        }
+    }
+
+    fun getWeightValueString(): String {
+        return if (weightUnit.value == "kg") {
+            "${weightKg.intValue} kg"
+        } else {
+            "${weightLb.intValue} lb"
         }
     }
 
     fun getGenderValueString(): String {
-        if (selectedGender.value) {
-            return "Male"
+        return if (selectedGender.value) {
+            "Male"
         } else {
-            return "Female"
+            "Female"
         }
     }
 
     fun getWeighValue(): Int {
-        if (weightUnit.value == "kg") {
-            return weightKg.intValue
+        return if (weightUnit.value == "kg") {
+            weightKg.intValue
         } else {
-            return weightLb.intValue
+            weightLb.intValue
         }
     }
 }

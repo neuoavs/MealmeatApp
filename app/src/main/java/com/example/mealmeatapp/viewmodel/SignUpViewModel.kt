@@ -16,14 +16,16 @@ class SignUpViewModel : ViewModel(){
     fun onSignUpClick(
         navController: NavController,
     ) {
-        val user = User(email = email.value, password = password.value)
+        navController.navigate("profile_set_up")
+
+/*        val user = User(email = email.value, password = password.value)
         val authRepository = AuthRepository()
-        // Thiếu check database
+
         if (authRepository.signUp(user, confirmPassword.value)) {
-            navController.navigate("profile_setup")
-            // Thông báo
+            navController.navigate("profile_set_up")
+
         } else {
-            // Thông báo
-        }
+
+        }*/
     }
 }
