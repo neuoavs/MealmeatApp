@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
+import com.example.mealmeatapp.view.component.*
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 
 @Composable
