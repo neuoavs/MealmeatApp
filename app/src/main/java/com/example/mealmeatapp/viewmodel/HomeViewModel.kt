@@ -38,13 +38,16 @@ class HomeViewModel : ViewModel() {
 
     fun fetchRandomRecipes() {
 
-        ApiClient.apiService.getRandomRecipe().enqueue(object : retrofit2.Callback<RandomRecipesResponse> {
+        ApiClient.apiService.getRandomRecipe(
+            includeTags = if (selectedCategory.value.lowercase() == "random") null else selectedCategory.value.lowercase(),
+        ).enqueue(object : retrofit2.Callback<RandomRecipesResponse> {
             override fun onResponse(
                 call: retrofit2.Call<RandomRecipesResponse>,
                 response: retrofit2.Response<RandomRecipesResponse>
             ) {
                 if (response.isSuccessful) {
                     recipes.value = response.body()?.recipes ?: emptyList()
+                    println("Lấy thành công")
                 } else {
                     // Log lỗi nếu cần
                     println("Lỗi response: ${response.errorBody()?.string()}")

@@ -64,7 +64,7 @@ fun FormSignIn(
     signInViewModel: SignInViewModel
 
 ) {
-    var isPasswordVisible = true
+
 
     // Email
     OutlinedTextField(
@@ -87,16 +87,16 @@ fun FormSignIn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (signInViewModel.isPasswordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         trailingIcon = {
             IconButton(
                 onClick = {
-                    isPasswordVisible = !isPasswordVisible
+                    signInViewModel.isPasswordVisibility.value = !signInViewModel.isPasswordVisibility.value
                 }) {
                 Icon(
                     painter = painterResource(
-                        id = if (isPasswordVisible) R.drawable.visibility else R.drawable.visibility_off // visibility and visibility_off
+                        id = if (signInViewModel.isPasswordVisibility.value) R.drawable.visibility else R.drawable.visibility_off // visibility and visibility_off
                     ),
                     contentDescription = "Toggle password visibility"
                 )
