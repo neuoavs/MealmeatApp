@@ -1,6 +1,6 @@
 package com.example.mealmeatapp.apimodel.request
 
-import com.example.example.Recipe
+import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.ingredient.Ingredient
 import com.example.mealmeatapp.apimodel.result.RandomRecipesResponse
 import com.example.mealmeatapp.apimodel.result.SearchIngredientResponse

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 class HomeViewModel : ViewModel() {
     val query = mutableStateOf("")
 
+
     fun onQueryChange(search: String) {
         query.value = search
     }

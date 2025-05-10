@@ -50,7 +50,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Category buttons
-                CategoryButton()
+//                CategoryButton()
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -64,22 +64,18 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Display meals based on selected category
-            items(homeViewModel.meals.value) { meal ->
-                if (homeViewModel.selectedCategory.value == "All" || meal.category == homeViewModel.selectedCategory.value) {
-                    RecipeItemLarge(
-                        meal = meal,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 6.dp),
-                        isFavorite = homeViewModel.favoriteMeals.contains(meal),
-                        isPlanned = homeViewModel.plannedMeals.contains(meal),
-                        onFavoriteClick = { homeViewModel.toggleFavorite(meal) },
-                        onPlanClick = { homeViewModel.addPlannedMeal(meal) },
-                        onClick = { navController.navigate("foodDetail/${meal.id}") }
-                    )
-                }
-            }
+          // Display meals based on selected category
+//            items(homeViewModel.recipe.value) { recipe ->
+//                if (homeViewModel.selectedCategory.value == "All" || recipe.category == homeViewModel.selectedCategory.value) {
+//                    RecipeItemLarge(
+//                        homeViewModel = homeViewModel,
+//                        recipe = recipe,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(vertical = 6.dp),
+//                    )
+//                }
+//            }
         }
     }
 }

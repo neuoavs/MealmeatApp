@@ -1,6 +1,5 @@
 package com.example.mealmeatapp.view.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +27,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -46,12 +44,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil3.compose.AsyncImage
+import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.R
-import com.example.mealmeatapp.ui.theme.model.Meal
+import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
 import com.example.mealmeatapp.view.BottomNavItem
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 
@@ -133,19 +134,24 @@ fun RandomRecipeButton(
 
 @Composable
 fun RecipeItemLarge(
-    meal: Meal,
-    modifier: Modifier = Modifier,
-    isFavorite: Boolean,
-    isPlanned: Boolean,
-    onFavoriteClick: () -> Unit,
-    onPlanClick: () -> Unit,
-    onClick: () -> Unit
+    homeViewModel: HomeViewModel,
+    recipe: Recipe,
+    modifier: Modifier = Modifier
+
+//    isFavorite: Boolean,
+//    isPlanned: Boolean,
+//    onFavoriteClick: () -> Unit,
+//    onPlanClick: () -> Unit,
+//    onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier
-            .clickable { onClick() }
+            .clickable {
+                // Chuyển tới trang chi tiết công thức
+                //onClick()
+            }
     ) {
         Row(
             modifier = Modifier
@@ -154,9 +160,9 @@ fun RecipeItemLarge(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Circular image
-            Image(
-                painter = painterResource(id = meal.imageResId),
-                contentDescription = meal.name,
+            AsyncImage(
+                model = recipe.imageUrl,
+                contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
@@ -171,7 +177,7 @@ fun RecipeItemLarge(
             ) {
                 // Meal name (bold)
                 Text(
-                    text = meal.name,
+                    text = recipe.title,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
@@ -183,34 +189,31 @@ fun RecipeItemLarge(
 
                 // Calorie info (small, faded)
                 Text(
-                    text = "${meal.calories} kcal • ${meal.weight}g",
+                    text = RecipeRepository().getNutritionValue(recipe, "Calories").second,
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
                     color = colorResource(id = R.color.gray).copy(alpha = 0.6f)
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Nutrient row with circles
+                // Nutrient row with circles protein, fat, carbs
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     NutrientItemWithBar(
-                        label = "Protein",
-                        value = meal.protein,
-                        maxValue = 50,
+                        name = "Protein",
+                        recipe = recipe,
                         color = Green
                     )
                     NutrientItemWithBar(
-                        label = "Fat",
-                        value = meal.fat,
-                        maxValue = 50,
+                        name = "Fat",
+                        recipe = recipe,
                         color = Yellow
                     )
                     NutrientItemWithBar(
-                        label = "Carbs",
-                        value = meal.carbs,
-                        maxValue = 50,
+                        name = "Carbohydrates",
+                        recipe = recipe,
                         color = Blue
                     )
                 }
@@ -219,7 +222,7 @@ fun RecipeItemLarge(
             Spacer(modifier = Modifier.width(12.dp))
 
             // Favorite and Plan icons
-            Column(
+            /*Column(
                 horizontalAlignment = Alignment.End
             ) {
                 Icon(
@@ -228,7 +231,10 @@ fun RecipeItemLarge(
                     tint = if (isFavorite) colorResource(id = R.color.orange) else MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
-                        .clickable { onFavoriteClick() }
+                        .clickable {
+                             Xử lý thêm vào yêu thích
+                             onFavoriteClick()
+                        }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Icon(
@@ -237,9 +243,12 @@ fun RecipeItemLarge(
                     tint = if (isPlanned) colorResource(id = R.color.orange) else MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
-                        .clickable { onPlanClick() }
+                        .clickable {
+                             Xử lý thêm vào thực đơn
+                             onPlanClick()
+                        }
                 )
-            }
+            }*/
         }
     }
 }
@@ -247,15 +256,15 @@ fun RecipeItemLarge(
 
 @Composable
 fun NutrientItemWithBar(
-    label: String,
-    value: Int,
-    maxValue: Int,
+    name: String,
+    recipe: Recipe,
     color: Color
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Vertical progress bar
+        val nutritionValue = RecipeRepository().getNutritionValue(recipe, name)
         Box(
             modifier = Modifier
                 .width(4.dp)
@@ -266,9 +275,7 @@ fun NutrientItemWithBar(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(
-                        (value.toFloat() / maxValue).coerceIn(0f, 1f)
-                    )
+                    .fillMaxHeight(nutritionValue.first.coerceIn(0f, 1f))
                     .clip(RoundedCornerShape(2.dp))
                     .background(color)
                     .align(Alignment.BottomStart)
@@ -280,7 +287,7 @@ fun NutrientItemWithBar(
         // Nutrient info
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "${value}g",
+                text = nutritionValue.second,
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
@@ -288,13 +295,14 @@ fun NutrientItemWithBar(
                 color = Black
             )
             Text(
-                text = label,
+                text = name,
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                 color = Black
             )
         }
     }
 }
+
 
 
 @Composable
@@ -351,7 +359,7 @@ fun BottomNavigationBar(
     }
 }
 
-@Composable
+/*@Composable
 fun CategoryButton(
 
 ) {
@@ -380,5 +388,4 @@ fun CategoryButton(
             }
         }
     }
-}
-
+}*/
