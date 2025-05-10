@@ -20,7 +20,7 @@ interface ApiService {
     number	            number	    1	                    The number of random recipes to be returned (between 1 and 100)
      */
     @GET("recipes/random")
-    fun getRamdomRepice(
+    fun getRandomRecipe(
         @Query("apiKey") apiKey: String = "c84bbc45816e4665a7941fa34fb71841",
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("include-tags") includeTags:  String ?= null,

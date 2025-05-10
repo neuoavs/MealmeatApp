@@ -38,9 +38,7 @@ class HomeViewModel : ViewModel() {
 
     fun fetchRandomRecipes() {
 
-        ApiClient.apiService.getRamdomRepice(
-            includeTags = selectedCategory.value.lowercase()
-        ).enqueue(object : retrofit2.Callback<RandomRecipesResponse> {
+        ApiClient.apiService.getRandomRecipe().enqueue(object : retrofit2.Callback<RandomRecipesResponse> {
             override fun onResponse(
                 call: retrofit2.Call<RandomRecipesResponse>,
                 response: retrofit2.Response<RandomRecipesResponse>
