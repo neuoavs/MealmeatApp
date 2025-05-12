@@ -30,6 +30,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +60,7 @@ import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.viewmodel.HomeViewModel
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
 
@@ -110,37 +114,7 @@ fun TitleHome() {
     )
 }
 
-@Composable
-fun RandomRecipeButton(
-    homeViewModel: HomeViewModel
-) {
-    Button(
-        onClick = {  },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(45.dp),
-        shape = RoundedCornerShape(22.5.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.shuffle), // shuffle
-                contentDescription = "Random Icon",
-                tint = White,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = "Random Meal",
-                color = White,
-                style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
-            )
-        }
-    }
-}
+
 
 
 @Composable
@@ -148,7 +122,7 @@ fun RecipeItemLargeHome(
     navController: NavController,
     recipeDetailViewModel: RecipeDetailViewModel,
     homeViewModel: HomeViewModel,
-
+    profileViewModel: ProfileViewModel,
     recipe: Recipe,
     modifier: Modifier = Modifier
 ) {
@@ -169,7 +143,7 @@ fun RecipeItemLargeHome(
         ) {
             // Circular image
             AsyncImage(
-                model = recipe.imageUrl,
+                model = recipe.image.toString(),
                 contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -230,20 +204,24 @@ fun RecipeItemLargeHome(
             Spacer(modifier = Modifier.width(12.dp))
 
             // Favorite and Plan icons
-            /*Column(
+            Column(
                 horizontalAlignment = Alignment.End
             ) {
+                val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe?.id }
+                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe?.id }
+
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
                     contentDescription = "Favorite",
-                    tint = if (isFavorite) colorResource(id = R.color.orange) else MaterialTheme.colorScheme.primary,
+                    tint = if (isFavorite) colorResource(id = R.color.red) else MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                             Xử lý thêm vào yêu thích
-                             onFavoriteClick()
+                            if (isFavorite) profileViewModel.removeFavoriteRecipe(recipe)
+                            else profileViewModel.addFavoriteRecipe(recipe)
                         }
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
                 Icon(
                     painter = painterResource(id = if (isPlanned) R.drawable.check_circle else R.drawable.add),
@@ -252,11 +230,11 @@ fun RecipeItemLargeHome(
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                             Xử lý thêm vào thực đơn
-                             onPlanClick()
+                            if (isPlanned) profileViewModel.removeRecipe(recipe)
+                            else profileViewModel.addRecipe(recipe)
                         }
                 )
-            }*/
+            }
         }
     }
 }
@@ -265,7 +243,7 @@ fun RecipeItemLargeHome(
 @Composable
 fun NutrientItemWithBar(
     name: String,
-    recipe: Recipe,
+    recipe: Recipe?,
     color: Color
 ) {
     Row(
@@ -379,7 +357,8 @@ fun NutrientItemWithBarPreview() {
 
 @Composable
 fun CategoryButton(
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -387,7 +366,10 @@ fun CategoryButton(
     ) {
         homeViewModel.categories.forEach { category ->
             Button(
-                onClick = { homeViewModel.onCategoryChange(category) },
+                onClick = { homeViewModel.onCategoryChange(
+                    category = category,
+                    profileViewModel = profileViewModel
+                ) },
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 2.dp),

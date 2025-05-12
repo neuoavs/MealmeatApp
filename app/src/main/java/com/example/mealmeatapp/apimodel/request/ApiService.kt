@@ -20,13 +20,13 @@ interface ApiService {
     number	            number	    1	                    The number of random recipes to be returned (between 1 and 100)
      */
     @GET("recipes/random")
-    fun getRandomRecipe(
+    suspend fun getRandomRecipe(
         @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("include-tags") includeTags:  String ?= null,
         @Query("exclude-tags") excludeTags: String ?= null,
         @Query("number") number: Int = 5,
-    ): Call<RandomRecipesResponse>
+    ): RandomRecipesResponse
 
     @GET("recipes/complexSearch")
     suspend fun searchRepice(
@@ -57,6 +57,12 @@ interface ApiService {
         @Query("addRecipeInstructions") addRecipeInstructions: Boolean = true
     ) : SearchRecipeResponse
 
+    @GET("recipes/informationBulk")
+    suspend fun getRecipesInformationBulk(
+        @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
+        @Query("ids") ids: String,
+        @Query("includeNutrition") includeNutrition: Boolean = true
+    ): ArrayList<Recipe>
 
     @GET("recipes/{id}/information")
     suspend fun getInformationOfPriceByID(
@@ -67,7 +73,7 @@ interface ApiService {
         @Query("addTasteData") addTasteData: Boolean = false,
     ) : Recipe
 
-    @GET("recipes/{id}/information")
+    @GET("recipes/informationBulk")
     suspend fun getInformationOfManyPricesByIDs(
         @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
         @Path("ids") ids: String ?= null, // "715538,716429"

@@ -1,39 +1,52 @@
 package com.example.mealmeatapp.view
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Yellow
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
+import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.view.component.BottomNavigationBar
 import com.example.mealmeatapp.view.component.IngredientContent
 import com.example.mealmeatapp.view.component.InstructionContent
+import com.example.mealmeatapp.view.component.NutrientCircle
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeDetailScreen(
     navController: NavController,
@@ -41,10 +54,25 @@ fun RecipeDetailScreen(
     profileViewModel: ProfileViewModel
 ) {
     val recipeRepository = RecipeRepository()
+    val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipeDetailViewModel.recipe.value?.id }
+    val isPlanned  = profileViewModel.addedRecipe   .any { it.id == recipeDetailViewModel.recipe.value?.id }
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController) // Mục menu
+            BottomNavigationBar(navController)
+        },
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "")},//stringResource(R.string.profile_info)) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrow_back_ios),
+                            contentDescription = "Back button"
+                        )
+                    }
+                }
+            )
         }
     ) { padding ->
         LazyColumn(
@@ -63,7 +91,7 @@ fun RecipeDetailScreen(
                         .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
                 ) {
                     AsyncImage(
-                        model = recipeDetailViewModel.recipe.value?.imageUrl.toString(),
+                        model = recipeDetailViewModel.recipe.value?.image.toString(),
                         contentDescription = recipeDetailViewModel.recipe.value?.title.toString(),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxSize()
@@ -79,21 +107,6 @@ fun RecipeDetailScreen(
                                 )
                             )
                     )
-                    // Back Button
-                    IconButton(
-                        onClick = { navController.popBackStack() },
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(15.dp)
-                            .size(20.dp)
-                            .background(colorResource(id = R.color.white).copy(alpha = 0.1f), CircleShape)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_back_ios),
-                            contentDescription = "Back",
-                            tint = colorResource(id = R.color.black)
-                        )
-                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -106,6 +119,7 @@ fun RecipeDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+
                     Text(
                         text = recipeDetailViewModel.recipe.value?.title.toString(),
                         style = MaterialTheme.typography.headlineLarge,
@@ -116,21 +130,21 @@ fun RecipeDetailScreen(
                     )
                     IconButton(
                         onClick = {
-                            recipeDetailViewModel.isFavorite.value = !recipeDetailViewModel.isFavorite.value
-                            recipeDetailViewModel.updateFavoriteStatus()
+                            if (isFavorite) profileViewModel.removeFavoriteRecipe(recipeDetailViewModel.recipe.value)
+                            else profileViewModel.addFavoriteRecipe(recipeDetailViewModel.recipe.value)
                         },
                         modifier = Modifier
-                            .size(48.dp)
-                            .background(colorResource(id = R.color.white), CircleShape)
-                            .shadow(4.dp, CircleShape)
+                            .size(52.dp)
+                            .background(color = colorResource(id = R.color.white), shape = CircleShape)
+                            .clip(CircleShape)
                     ) {
                         Icon(
                             painter = painterResource(
-                                id = if (recipeDetailViewModel.isFavorite.value) R.drawable.favorite_fill else R.drawable.favorite
+                                id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite
                             ),
                             contentDescription = "Favorite",
                             tint = colorResource(id = R.color.red),
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.fillMaxSize(0.6f) // icon chiếm 60% diện tích nút
                         )
                     }
                 }
@@ -147,23 +161,27 @@ fun RecipeDetailScreen(
                 ) {
                     NutrientCircle(
                         label = "Calories",
-                        value = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Calories").second,
-                        color = colorResource(id = R.color.orange)
+                        size = 72.dp,
+                        valuePair = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Calories"),
+                        progressColor = colorResource(id = R.color.orange)
                     )
                     NutrientCircle(
                         label = "Protein",
-                        value = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Protein").second,
-                        color = Green
+                        size = 72.dp,
+                        valuePair = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Protein"),
+                        progressColor = Green
                     )
                     NutrientCircle(
                         label = "Fat",
-                        value = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Fat").second,
-                        color = Yellow
+                        size = 72.dp,
+                        valuePair = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Fat"),
+                        progressColor = Yellow
                     )
                     NutrientCircle(
-                        label = "Carbohydrates",
-                        value = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Carbohydrates").second,
-                        color = Blue
+                        label = "Carbs",
+                        size = 72.dp,
+                        valuePair = recipeRepository.getNutritionValue(recipeDetailViewModel.recipe.value, "Carbohydrates"),
+                        progressColor = Blue
                     )
                 }
 
@@ -196,56 +214,50 @@ fun RecipeDetailScreen(
                         recipe = recipeDetailViewModel.recipe.value
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        if (isPlanned) profileViewModel.removeRecipe(recipeDetailViewModel.recipe.value)
+                        else profileViewModel.addRecipe(recipeDetailViewModel.recipe.value)
+                    },
+                    modifier = Modifier,
+                    enabled = true,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.orange),
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+
+                    Icon(
+                        painter = painterResource(id = if (isPlanned) R.drawable.check_circle else R.drawable.add),
+                        contentDescription = if (isPlanned) "Planned" else "Add to Plan",
+                        tint = if (isPlanned) colorResource(id = R.color.orange) else colorResource(id = R.color.white),
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(end = 8.dp)
+                    )
+                    Text(
+                        text = if (isPlanned) "Planned" else "Add to Plan",
+                        style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
+                    )
+                }
+
             }
         }
 
     }
 }
-
-@Composable
-fun NutrientCircle(
-    label: String,
-    value: String,
-    color: Color
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(60.dp) // Increased size to fit both value and label
-            .clip(CircleShape)
-            .border(2.dp, color, CircleShape) // Colored border with no background fill
-            .padding(4.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                color = Black // Black text for value
-            )
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
-                color = Black // Black text for label
-            )
-        }
-    }
-}
-
-/*
 @Preview(showBackground = true)
 @Composable
 fun FoodDetailScreenPreview() {
     MealtimeAppTheme {
-        FoodDetailScreen(
+        RecipeDetailScreen(
             navController = rememberNavController(),
-            mealId = 1
+            recipeDetailViewModel = RecipeDetailViewModel(),
+            profileViewModel = ProfileViewModel()
         )
     }
-}*/
+}

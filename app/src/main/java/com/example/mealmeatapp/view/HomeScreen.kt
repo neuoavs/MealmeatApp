@@ -81,7 +81,10 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Category buttons
-                CategoryButton(homeViewModel = homeViewModel)
+                CategoryButton(
+                    homeViewModel = homeViewModel,
+                    profileViewModel = profileViewModel
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -96,6 +99,7 @@ fun HomeScreen(
                     navController = navController,
                     recipeDetailViewModel = recipeDetailViewModel,
                     homeViewModel = homeViewModel,
+                    profileViewModel = profileViewModel,
                     recipe = recipe,
                     modifier = Modifier
                         .fillMaxWidth()

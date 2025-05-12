@@ -1,13 +1,16 @@
 package com.example.mealmeatapp.viewmodel
 
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.request.ApiClient
 import com.example.mealmeatapp.apimodel.result.RandomRecipesResponse
+import kotlinx.coroutines.launch
 
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel() : ViewModel() {
     val query = mutableStateOf("")
     val selectedCategory = mutableStateOf("random")
     val recipes = mutableStateOf(emptyList<Recipe>())
@@ -19,43 +22,43 @@ class HomeViewModel : ViewModel() {
         "Desert"
     )
 
-    init {
-        fetchRandomRecipes() // Tự động gọi API khi ViewModel khởi tạo
-    }
-
     fun onQueryChange(search: String) {
         query.value = search
     }
 
 
-    fun onCategoryChange(category: String) {
+    fun onCategoryChange(
+        category: String,
+        profileViewModel: ProfileViewModel
+    ) {
         selectedCategory.value = category
-        fetchRandomRecipes()
+        fetchRandomRecipes(profileViewModel)
     }
 
-    fun fetchRandomRecipes() {
+    fun fetchRandomRecipes(
+        profileViewModel: ProfileViewModel
+    ) {
+        val builder = StringBuilder()
 
-        ApiClient.apiService.getRandomRecipe(
-            includeTags = if (selectedCategory.value.lowercase() == "random") null else selectedCategory.value.lowercase(),
-        ).enqueue(object : retrofit2.Callback<RandomRecipesResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<RandomRecipesResponse>,
-                response: retrofit2.Response<RandomRecipesResponse>
-            ) {
-                if (response.isSuccessful) {
-                    recipes.value = response.body()?.recipes ?: emptyList()
-                    println("Lấy thành công")
-                } else {
-                    // Log lỗi nếu cần
-                    println("Lỗi response: ${response.errorBody()?.string()}")
-                }
+        if(profileViewModel.isDiet.value) {
+            builder.append("diet")
+            if (selectedCategory.value.lowercase() != "random") {
+                builder.append(",").append(selectedCategory.value.lowercase())
             }
+        } else {
+            if (selectedCategory.value.lowercase() != "random") {
+                builder.append(selectedCategory.value.lowercase())
+            }
+        }
 
-            override fun onFailure(call: retrofit2.Call<RandomRecipesResponse>, t: Throwable) {
-                // Log lỗi nếu cần
-                println("Lỗi kết nối: ${t.localizedMessage}")
+        viewModelScope.launch {
+            try {
+                val includeTags = builder.toString()
+                recipes.value = ApiClient.apiService.getRandomRecipe(includeTags = includeTags).recipes
+            } catch (e: Exception) {
+
             }
-        })
+        }
     }
 
     fun onRecipeClick(recipe: Recipe) {

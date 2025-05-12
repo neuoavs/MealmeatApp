@@ -19,5 +19,8 @@
     <string name="des_sign_up">Create an account to continue with the app</string>
     <string name="sign_in_successful">Sign In Successful</string>
     <string name="sign_in_text_button">Already have an account? Sign In</string>
-
+    <string name="diet_on">Less weight</string>
+    <string name="diet_off">Stay healthy</string>
+    <string name="title_profile">Your profile </string>
+    <string name="title_description">Stay healthy</string>
 </resources>

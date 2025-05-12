@@ -61,7 +61,8 @@ class MainActivity : ComponentActivity() {
                                 SignInScreen(
                                     navController = navController,
                                     signInViewModel = signInViewModel,
-                                    profileViewModel = profileViewModel
+                                    profileViewModel = profileViewModel,
+                                    homeViewModel = homeViewModel
                                 )
                             }
 
@@ -77,7 +78,8 @@ class MainActivity : ComponentActivity() {
                                 ProfileSetupScreen(
                                     navController = navController,
                                     profileSetUpViewModel = profileSetUpViewModel,
-                                    profileViewModel = profileViewModel
+                                    profileViewModel = profileViewModel,
+                                    homeViewModel = homeViewModel
                                 )
                             }
 
@@ -94,13 +96,14 @@ class MainActivity : ComponentActivity() {
                                 RecipeDetailScreen(
                                     navController = navController,
                                     recipeDetailViewModel = recipeDetailViewModel,
-                                    profileViewModel = profileViewModel
+                                    profileViewModel = profileViewModel,
                                 )
                             }
 
                             composable("planner") {
 
                             }
+
                             composable("favorite") {
                                 FavoriteScreen(
                                     navController = navController,

@@ -46,12 +46,13 @@ fun FavoriteScreen(
             }
 
 
-            items(favoriteViewModel.favoriteRecipes.value) { recipe ->
+            items(profileViewModel.favoriteRecipe) { recipe ->
                 RecipeItemLargeFavorite(
                     navController = navController,
                     recipeDetailViewModel = recipeDetailViewModel,
                     favoriteViewModel = favoriteViewModel,
                     recipe = recipe,
+                    profileViewModel = profileViewModel,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 6.dp)

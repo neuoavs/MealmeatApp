@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 data class Recipe (
     @SerializedName("id") var id: Int = 0,
     @SerializedName("title") var title: String = "",
-    @SerializedName("image") var imageUrl: String = "",
+    @SerializedName("image") var image: String = "",
     @SerializedName("readyInMinutes") var readyInMinutes: Int = 0,
     @SerializedName("servings") var servings: Int = 0,
     @SerializedName("sourceUrl") var sourceUrl: String = "",
@@ -61,7 +61,7 @@ class RecipeRepository {
 
     fun isFavorite(
         profileViewModel: ProfileViewModel,
-        recipe: Recipe
+        recipe: Recipe?
     ): Boolean {
         // Kiểm tra xem đã có trong danh sách yêu thích ở cơ sơ dữ liệu chưa ở bảng favoriteRecipes
         /*
@@ -75,7 +75,7 @@ class RecipeRepository {
 
     fun isAddedToCart(
         profileViewModel: ProfileViewModel,
-        recipe: Recipe
+        recipe: Recipe?
     ): Boolean {
         // Kiểm tra xem đã thêm công thức vào trong cơ sở dữ liệu chưa ở bảng addedRecipes
         /*

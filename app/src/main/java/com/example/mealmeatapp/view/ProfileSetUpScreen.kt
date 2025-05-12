@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
 import com.example.mealmeatapp.view.component.*
+import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,7 +23,8 @@ import com.example.mealmeatapp.viewmodel.ProfileViewModel
 fun ProfileSetupScreen(
     navController: NavController,
     profileSetUpViewModel: ProfileSetUpViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    homeViewModel: HomeViewModel
 ) {
     Box(
         modifier = Modifier
@@ -82,7 +84,8 @@ fun ProfileSetupScreen(
         ProfileDialog(
             navController = navController,
             profileSetUpViewModel = profileSetUpViewModel,
-            profileViewModel = profileViewModel
+            profileViewModel = profileViewModel,
+            homeViewModel = homeViewModel
         )
         // Footer
         Column(
@@ -94,7 +97,8 @@ fun ProfileSetupScreen(
         ) {
             NextButtonProfile(
                 profileSetUpViewModel = profileSetUpViewModel,
-                profileViewModel = profileViewModel
+                profileViewModel = profileViewModel,
+                homeViewModel = homeViewModel
             )
             Spacer(modifier = Modifier.height(16.dp))
             StepCircle(

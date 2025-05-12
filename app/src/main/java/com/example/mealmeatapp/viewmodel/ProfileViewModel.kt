@@ -1,9 +1,9 @@
 package com.example.mealmeatapp.viewmodel
 
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.model.ProfileData
 import com.example.mealmeatapp.model.User
@@ -21,8 +21,14 @@ class ProfileViewModel : ViewModel(){
     val weight = mutableIntStateOf(71)
     val weightUnit = mutableStateOf("kg")
 
-    val addedRecipe = mutableListOf<Recipe?>()
-    val favoriteRecipe = mutableListOf<Recipe?>()
+    val addedRecipe =  mutableStateListOf<Recipe>()
+    val favoriteRecipe = mutableStateListOf<Recipe>()
+
+    init {
+        fetchFavoriteRecipes()
+        fetchAddedRecipes()
+    }
+
 
     fun updateAuth(user: User) {
         email.value = user.email
@@ -74,30 +80,51 @@ class ProfileViewModel : ViewModel(){
 
     }
 
-    fun addRecipe(recipe: Recipe) {
-        addedRecipe.add(recipe)
-        //update lên database
+    fun addRecipe(recipe: Recipe?) {
+        if (addedRecipe.none { it.id == recipe?.id }) {
+            recipe?.let { addedRecipe.add(it)}
+            // TODO: add to Firebase
+        }
+    }
+
+    fun removeRecipe(recipe: Recipe?) {
+        if (addedRecipe.none { it.id == recipe?.id }) {
+            recipe?.let { addedRecipe.remove(it)}
+            // TODO: add to Firebase
+        }
 
     }
 
-    fun removeRecipe(recipe: Recipe) {
-        addedRecipe.remove(recipe)
-        //update lên database
-//        email.value -> string
-//        recipe.id -> int
+    fun addFavoriteRecipe(recipe: Recipe?) {
+        if (favoriteRecipe.none { it.id == recipe?.id }) {
+            recipe?.let { favoriteRecipe.add(it)}
+            // TODO: add to Firebase
+        }
     }
 
-    fun addFavoriteRecipe(recipe: Recipe) {
-        favoriteRecipe.add(recipe)
-        //update lên database
-    //        email.value -> string
-//        recipe.id -> int
+    fun removeFavoriteRecipe(recipe: Recipe?) {
+        if (favoriteRecipe.none { it.id == recipe?.id }) {
+            recipe?.let { favoriteRecipe.remove(it)}
+            // TODO: add to Firebase
+        }
+        // TODO: remove from Firebase
     }
 
-    fun removeFavoriteRecipe(recipe: Recipe) {
-        favoriteRecipe.remove(recipe)
-        //update lên database
-//        email.value -> string
-//        recipe.id -> int
+    private fun fetchFavoriteRecipes() {
+
+    }
+
+    private fun fetchAddedRecipes() {
+
+    }
+
+    private fun getIdsFavoriteRecipes() : String {
+
+        return ""
+    }
+
+    private fun getIdsAddRecipes() : String {
+
+        return ""
     }
 }

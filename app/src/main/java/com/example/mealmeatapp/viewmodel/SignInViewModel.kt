@@ -8,7 +8,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.mealmeatapp.model.AuthRepository
 import com.example.mealmeatapp.model.User
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import kotlinx.coroutines.launch
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.example.mealmeatapp.model.ProfileDatabase
 
 class SignInViewModel : ViewModel() {
     val email = mutableStateOf("")
@@ -24,7 +31,8 @@ class SignInViewModel : ViewModel() {
     // Hàm xử lý khi người dùng nhấn nút đăng nhập
     fun onSignInClick(
         navController: NavController,
-        profileViewModel: ProfileViewModel
+        profileViewModel: ProfileViewModel,
+        homeViewModel: HomeViewModel
     ) {
         // Tạo đối tượng User từ email và password hiện tại
         val user = User(email = email.value, password = password.value)
@@ -42,7 +50,30 @@ class SignInViewModel : ViewModel() {
                     isLoading.value = false
                     profileViewModel.updateAuth(user)
                     Toast.makeText(navController.context, "Sign in successfully", Toast.LENGTH_SHORT).show()
-                    navController.navigate("profile_set_up")
+                    homeViewModel.fetchRandomRecipes(profileViewModel)
+                    navController.navigate("home")
+                    /*val dbRef = Firebase.database.getReference("users")
+                        .child(user.email)
+                    dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val pd = dataSnapshot.getValue(ProfileDatabase::class.java)
+                            if (pd != null) {
+                                profileViewModel.isDiet.value = pd.isDiet
+                                profileViewModel.gender.value = pd.gender
+                                profileViewModel.age.value = pd.age
+                                profileViewModel.heightCm.value = pd.heightCm.toInt()
+                                profileViewModel.heightFeetInches.value = pd.heightFeet.toInt() to pd.heightInch.toInt()
+                                profileViewModel.heightUnit.value = pd.heightUnit
+                                profileViewModel.weight.value = pd.weight.toInt()
+                                profileViewModel.weightUnit.value = pd.weightUnit
+                                homeViewModel.fetchRandomRecipes(profileViewModel)
+                                navController.navigate("home")
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            Toast.makeText(navController.context, "Sign in failed", Toast.LENGTH_SHORT).show()
+                        }
+                    })*/
                 },
                 onFailure = { exception ->
                     // Khi đăng nhập thất bại, tắt trạng thái loading, lưu thông báo lỗi và ghi log

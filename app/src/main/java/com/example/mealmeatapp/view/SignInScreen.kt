@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.view.component.*
+import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 
@@ -21,7 +22,8 @@ import com.example.mealmeatapp.viewmodel.SignInViewModel
 fun SignInScreen(
     navController: NavController,
     signInViewModel: SignInViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    homeViewModel: HomeViewModel
 ) {
     Column(
         modifier = Modifier
@@ -37,7 +39,8 @@ fun SignInScreen(
         FormSignIn(
             navController = navController,
             profileViewModel = profileViewModel,
-            signInViewModel = signInViewModel
+            signInViewModel = signInViewModel,
+            homeViewModel = homeViewModel
         )
 
         CreateLink(navController)
@@ -62,7 +65,8 @@ fun SignInScreenPreview() {
         SignInScreen(
             navController = rememberNavController(),
             signInViewModel = SignInViewModel(),
-            profileViewModel = ProfileViewModel()
+            profileViewModel = ProfileViewModel(),
+            homeViewModel = HomeViewModel()
         )
     }
 }

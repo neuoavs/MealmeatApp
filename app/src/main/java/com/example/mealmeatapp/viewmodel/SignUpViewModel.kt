@@ -20,7 +20,7 @@ class SignUpViewModel : ViewModel() {
     //  Gọi đăng ký bằng Firebase
     fun onSignUpClick(
         navController: NavController,
-        profileViewModel: ProfileViewModel
+        profileViewModel: ProfileViewModel,
     ) {
         val user = User(email = email.value, password = password.value)
 

@@ -18,10 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,7 +27,6 @@ import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,36 +36,20 @@ import coil3.compose.AsyncImage
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
-import com.example.mealmeatapp.viewmodel.FavoriteViewModel
+import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
-@Composable
-fun TitleFavorite() {
-    Text(
-        text = stringResource(id = R.string.title_favourite),
-        style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
-    )
-
-    Text(
-        text = stringResource(id = R.string.des_favourite),
-        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-        color = colorResource(id = R.color.gray),
-        modifier = Modifier.padding(vertical = 8.dp)
-    )
-}
-
 
 @Composable
-fun RecipeItemLargeFavorite(
+fun RecipeItemLargePlanner(
     navController: NavController,
     recipeDetailViewModel: RecipeDetailViewModel,
-    favoriteViewModel: FavoriteViewModel,
+    homeViewModel: HomeViewModel,
     profileViewModel: ProfileViewModel,
-    recipe: Recipe?,
-    modifier: Modifier = Modifier,
-
-    ) {
+    recipe: Recipe,
+    modifier: Modifier = Modifier
+) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -88,8 +67,8 @@ fun RecipeItemLargeFavorite(
         ) {
             // Circular image
             AsyncImage(
-                model = recipe?.image.toString(),
-                contentDescription = recipe?.title,
+                model = recipe.image.toString(),
+                contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
@@ -104,7 +83,7 @@ fun RecipeItemLargeFavorite(
             ) {
                 // Meal name (bold)
                 Text(
-                    text = recipe?.title ?: "",
+                    text = recipe.title,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
@@ -153,7 +132,7 @@ fun RecipeItemLargeFavorite(
                 horizontalAlignment = Alignment.End
             ) {
                 val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe?.id }
-                val isPlanned  = profileViewModel.addedRecipe   .any { it.id == recipe?.id }
+                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe?.id }
 
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
@@ -163,7 +142,7 @@ fun RecipeItemLargeFavorite(
                         .size(24.dp)
                         .clickable {
                             if (isFavorite) profileViewModel.removeFavoriteRecipe(recipe)
-                            else           profileViewModel.addFavoriteRecipe(recipe)
+                            else profileViewModel.addFavoriteRecipe(recipe)
                         }
                 )
 
@@ -176,7 +155,7 @@ fun RecipeItemLargeFavorite(
                         .size(24.dp)
                         .clickable {
                             if (isPlanned) profileViewModel.removeRecipe(recipe)
-                            else           profileViewModel.addRecipe(recipe)
+                            else profileViewModel.addRecipe(recipe)
                         }
                 )
             }

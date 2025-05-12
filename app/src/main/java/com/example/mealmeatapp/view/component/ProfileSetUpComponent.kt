@@ -39,11 +39,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.R
+import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.example.mealmeatapp.model.ProfileDatabase
 
 // Profile Set Up Screen
 @Composable
@@ -624,10 +627,11 @@ fun ProfileTable(
 fun ProfileDialog(
     navController: NavController,
     profileSetUpViewModel: ProfileSetUpViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    homeViewModel: HomeViewModel
 ) {
     // Summary Dialog
-    if (profileSetUpViewModel.showSummaryDialog.value && profileSetUpViewModel.profileDataToSubmit.value != null) {
+    if (profileSetUpViewModel.showSummaryDialog.value) {
         AlertDialog(
             onDismissRequest = { profileSetUpViewModel.showSummaryDialog.value = false },
             title = {
@@ -649,7 +653,8 @@ fun ProfileDialog(
                     onClick = {
                         profileSetUpViewModel.onConfirmClick(
                             navController = navController,
-                            profileViewModel = profileViewModel
+                            profileViewModel = profileViewModel,
+                            homeViewModel = homeViewModel
                         )
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF2E7D32))
@@ -676,13 +681,15 @@ fun ProfileDialog(
 @Composable
 fun NextButtonProfile(
     profileSetUpViewModel: ProfileSetUpViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    homeViewModel: HomeViewModel
 ) {
     CustomButton(
         text = "NEXT",
         onClick = {
             profileSetUpViewModel.onNextClick(
-                profileViewModel = profileViewModel
+                profileViewModel = profileViewModel,
+                homeViewModel = homeViewModel
             )
         },
         modifier = Modifier.enabled(
