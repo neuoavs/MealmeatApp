@@ -1,5 +1,6 @@
 package com.example.mealmeatapp.apimodel.recipe
 
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.google.gson.annotations.SerializedName
 
 
@@ -58,13 +59,30 @@ class RecipeRepository {
         return (percent/100).toFloat() to "$nameValue ${nameObject?.unit}"
     }
 
-    fun isFavorite(recipe: Recipe): Boolean {
-        // Kiểm tra xem đã có trong danh sách yêu thích ở cơ sơ dữ liệu chưa
+    fun isFavorite(
+        profileViewModel: ProfileViewModel,
+        recipe: Recipe
+    ): Boolean {
+        // Kiểm tra xem đã có trong danh sách yêu thích ở cơ sơ dữ liệu chưa ở bảng favoriteRecipes
+        /*
+        profileViewModel.email.value -> Lấy email
+        recipe.id -> Lấy id công thức
+         */
+
         return false
     }
 
-    fun isAddedToCart(recipe: Recipe): Boolean {
-        // Kiểm tra xem đã thêm công thức vào trong cơ sở dữ liệu chưa
+
+    fun isAddedToCart(
+        profileViewModel: ProfileViewModel,
+        recipe: Recipe
+    ): Boolean {
+        // Kiểm tra xem đã thêm công thức vào trong cơ sở dữ liệu chưa ở bảng addedRecipes
+        /*
+        profileViewModel.email.value -> Lấy email
+        recipe.id -> Lấy id công thức
+         */
+
         return false
     }
 }

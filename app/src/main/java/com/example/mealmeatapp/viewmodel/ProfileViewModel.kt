@@ -23,6 +23,7 @@ class ProfileViewModel : ViewModel(){
 
     val addedRecipe = mutableListOf<Recipe?>()
     val favoriteRecipe = mutableListOf<Recipe?>()
+
     fun updateAuth(user: User) {
         email.value = user.email
         password.value = user.password
