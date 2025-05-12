@@ -27,7 +27,7 @@ fun HomeScreen(
         "Dinner"
     )
 
-    Scaffold(
+    /* Scaffold(
         bottomBar = {
             BottomNavigationBar(navController, homeViewModel.plannedMeals.size) // Số lượng công thức, List
         }
@@ -78,9 +78,9 @@ fun HomeScreen(
 //            }
         }
     }
+}*/
+
 }
-
-
 data class BottomNavItem(
     val route: String,
     val icon: Int,

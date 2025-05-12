@@ -1,12 +1,14 @@
-package com.example.mealmeatapp.view
-/*
+/*package com.example.mealmeatapp.ui.theme.view
 
+import android.bluetooth.BluetoothSocketException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -14,14 +16,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.mealmeatapp.ui.theme.controller.AuthViewModel
 import com.example.mealmeatapp.ui.theme.controller.HomeViewModel
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
@@ -65,12 +69,12 @@ fun SettingScreen(
 
     val settingItems = listOf(
         SettingItem(
-            iconResId = R.drawable.dark_mode_fill,
+            iconResId = R.drawable.moon,
             title = "Change Your Theme",
             onClick = { showThemeDialog = true }
         ),
         SettingItem(
-            iconResId = R.drawable.notifications_fill,
+            iconResId = R.drawable.notification,
             title = "Notifications",
             onClick = { showNotificationDialog = true }
         ),
@@ -80,17 +84,17 @@ fun SettingScreen(
             onClick = { showReportDialog = true }
         ),
         SettingItem(
-            iconResId = R.drawable.star_fill,
+            iconResId = R.drawable.stars,
             title = "Rate Us on Play Store",
             onClick = { showRateDialog = true }
         ),
         SettingItem(
-            iconResId = R.drawable.share_fill,
+            iconResId = R.drawable.share,
             title = "Share the App with Friends",
             onClick = { showShareDialog = true }
         ),
         SettingItem(
-            iconResId = R.drawable.verified_user_fill,
+            iconResId = R.drawable.privacy,
             title = "Privacy Policy",
             onClick = { showPrivacyDialog = true }
         ),
@@ -106,28 +110,26 @@ fun SettingScreen(
         ModalBottomSheet(
             onDismissRequest = { showThemeDialog = false },
             sheetState = rememberModalBottomSheetState(),
-            containerColor = colorResource(id = R.color.white)
+            containerColor = White
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 24.dp)
             ) {
-                // Title
                 Text(
                     text = "Select Theme",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 20.sp
                     ),
-                    color = colorResource(id = R.color.black),
+                    color = Black,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
-                // Theme Options
                 val themeOptions = listOf(
-                    "Light" to R.drawable.light_mode_fill, // sunny
-                    "Dark" to R.drawable.dark_mode_fill, // nightlight
+                    "Light" to R.drawable.sun,
+                    "Dark" to R.drawable.moon,
+                    "System Default" to R.drawable.setting
                 )
                 themeOptions.forEach { (option, iconRes) ->
                     val isSelected = selectedTheme == option
@@ -135,17 +137,15 @@ fun SettingScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
-                            .clickable {
-                                selectedTheme = option
-                            }
+                            .clickable { selectedTheme = option }
                             .border(
                                 width = if (isSelected) 2.dp else 0.dp,
-                                color = if (isSelected) colorResource(id = R.color.orange) else Color.Transparent,
+                                color = if (isSelected) Orange else Color.Transparent,
                                 shape = RoundedCornerShape(12.dp)
                             ),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (isSelected) colorResource(id = R.color.orange).copy(alpha = 0.1f) else colorResource(id = R.color.white)
+                            containerColor = if (isSelected) Orange.copy(alpha = 0.1f) else White
                         )
                     ) {
                         Row(
@@ -158,13 +158,13 @@ fun SettingScreen(
                                 modifier = Modifier
                                     .size(40.dp)
                                     .clip(CircleShape)
-                                    .background(colorResource(id = R.color.orange).copy(alpha = 0.2f)),
+                                    .background(Orange.copy(alpha = 0.2f)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     painter = painterResource(iconRes),
                                     contentDescription = option,
-                                    tint = colorResource(id = R.color.orange),
+                                    tint = Orange,
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -175,26 +175,22 @@ fun SettingScreen(
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                     fontSize = 16.sp
                                 ),
-                                color = colorResource(id = R.color.black)
+                                color = Black
                             )
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // Save Button
                 Button(
                     onClick = {
                         showThemeDialog = false
-                        // TODO: Save to DataStore and apply theme
                         println("Saved theme: $selectedTheme")
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
+                    colors = ButtonDefaults.buttonColors(containerColor = Orange)
                 ) {
                     Text(
                         text = "Save",
@@ -202,12 +198,13 @@ fun SettingScreen(
                             fontWeight = FontWeight.Medium,
                             fontSize = 16.sp
                         ),
-                        color = colorResource(id = R.color.white)
+                        color = White
                     )
                 }
             }
         }
     }
+
     // Notification Settings Dialog
     if (showNotificationDialog) {
         AlertDialog(
@@ -216,32 +213,32 @@ fun SettingScreen(
             text = {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Meal reminders", style = MaterialTheme.typography.bodyLarge, color = colorResource(id = R.color.black))
+                        Text("Meal reminders", style = MaterialTheme.typography.bodyLarge, color = Black)
                         Spacer(modifier = Modifier.weight(1f))
                         Switch(
                             checked = mealReminders,
                             onCheckedChange = { mealReminders = it },
-                            colors = SwitchDefaults.colors(checkedThumbColor = colorResource(id = R.color.orange))
+                            colors = SwitchDefaults.colors(checkedThumbColor = Orange)
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("New recipe notifications", style = MaterialTheme.typography.bodyLarge, color = colorResource(id = R.color.black))
+                        Text("New recipe notifications", style = MaterialTheme.typography.bodyLarge, color = Black)
                         Spacer(modifier = Modifier.weight(1f))
                         Switch(
                             checked = recipeNotifications,
                             onCheckedChange = { recipeNotifications = it },
-                            colors = SwitchDefaults.colors(checkedThumbColor = colorResource(id = R.color.orange))
+                            colors = SwitchDefaults.colors(checkedThumbColor = Orange)
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("App updates", style = MaterialTheme.typography.bodyLarge, color = colorResource(id = R.color.black))
+                        Text("App updates", style = MaterialTheme.typography.bodyLarge, color = Black)
                         Spacer(modifier = Modifier.weight(1f))
                         Switch(
                             checked = appUpdates,
                             onCheckedChange = { appUpdates = it },
-                            colors = SwitchDefaults.colors(checkedThumbColor = colorResource(id = R.color.orange))
+                            colors = SwitchDefaults.colors(checkedThumbColor = Orange)
                         )
                     }
                 }
@@ -250,21 +247,20 @@ fun SettingScreen(
                 TextButton(
                     onClick = {
                         showNotificationDialog = false
-                        // TODO: Save to DataStore or SharedPreferences
                         println("Saved notifications: Meal=$mealReminders, Recipe=$recipeNotifications, Updates=$appUpdates")
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
                 ) { Text("Save", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showNotificationDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = colorResource(id = R.color.white),
-            titleContentColor = colorResource(id = R.color.black),
-            textContentColor = colorResource(id = R.color.black)
+            containerColor = White,
+            titleContentColor = Black,
+            textContentColor = Black
         )
     }
 
@@ -300,20 +296,19 @@ fun SettingScreen(
                             putExtra(Intent.EXTRA_TEXT, "Description: $reportText\nEmail: $reportEmail")
                         }
                         context.startActivity(Intent.createChooser(intent, "Send Feedback"))
-                        // TODO: Optionally send via API
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
                 ) { Text("Submit", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showReportDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = colorResource(id = R.color.white),
-            titleContentColor = colorResource(id = R.color.black),
-            textContentColor = colorResource(id = R.color.black)
+            containerColor = White,
+            titleContentColor = Black,
+            textContentColor = Black
         )
     }
 
@@ -333,18 +328,18 @@ fun SettingScreen(
                             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")))
                         }
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
                 ) { Text("Rate Now", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showRateDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
                 ) { Text("Later", fontWeight = FontWeight.Medium) }
             },
-            containerColor = colorResource(id = R.color.white),
-            titleContentColor = colorResource(id = R.color.black),
-            textContentColor = colorResource(id = R.color.black)
+            containerColor = White,
+            titleContentColor = Black,
+            textContentColor = Black
         )
     }
 
@@ -364,18 +359,18 @@ fun SettingScreen(
                         }
                         context.startActivity(Intent.createChooser(shareIntent, "Share App"))
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
                 ) { Text("Share", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showShareDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = colorResource(id = R.color.white),
-            titleContentColor = colorResource(id = R.color.black),
-            textContentColor = colorResource(id = R.color.black)
+            containerColor = White,
+            titleContentColor = Black,
+            textContentColor = Black
         )
     }
 
@@ -391,18 +386,18 @@ fun SettingScreen(
                         showPrivacyDialog = false
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://yourapp.com/privacy")))
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
                 ) { Text("View", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showPrivacyDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = colorResource(id = R.color.white),
-            titleContentColor = colorResource(id = R.color.black),
-            textContentColor = colorResource(id = R.color.black)
+            containerColor = White,
+            titleContentColor = Black,
+            textContentColor = Black
         )
     }
 
@@ -417,32 +412,146 @@ fun SettingScreen(
                     onClick = {
                         showLogoutDialog = false
                         println("Logging out and navigating to mealtime")
-                        authViewModel.logout() // Xóa dữ liệu đăng nhập
-                        homeViewModel.clearPlannedMeals() // Xóa dữ liệu bữa ăn
+                        authViewModel.logout()
+                        homeViewModel.clearPlannedMeals()
                         navController.navigate("mealtime") {
                             popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         }
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.orange))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Orange)
                 ) { Text("Log Out", fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showLogoutDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = R.color.gray))
+                    colors = ButtonDefaults.textButtonColors(contentColor = Gray)
                 ) { Text("Cancel", fontWeight = FontWeight.Medium) }
             },
-            containerColor = colorResource(id = R.color.white),
-            titleContentColor = colorResource(id = R.color.black),
-            textContentColor = colorResource(id = R.color.black)
+            containerColor = White,
+            titleContentColor = Black,
+            textContentColor = Black
         )
     }
 
-
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Settings",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Black,
+                        fontSize = 20.sp
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() },
+                        modifier = Modifier
+                            .size(20.dp)
+                            .background(White.copy(alpha = 0.7f), CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.back),
+                            contentDescription = "Back",
+                            tint = Black
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { navController.navigate("chatbox") },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .background(Orange.copy(alpha = 0.2f), CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.chatbot),
+                            contentDescription = "Chatbot",
+                            tint = Blue,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = White,
+                    titleContentColor = Black
+                ),
+                modifier = Modifier.shadow(4.dp)
+            )
+        },
+        containerColor = White
+    ) { paddingValues ->
+        LazyColumn(
+            contentPadding = paddingValues,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(White)
+                .padding(horizontal = 15.dp)
+        ) {
+            items(settingItems.size) { index ->
+                val item = settingItems[index]
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .shadow(2.dp, RoundedCornerShape(12.dp))
+                        . clickable { item.onClick() },
+                    colors = CardDefaults.cardColors(containerColor = White)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(30.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .background(Orange.copy(alpha = 0.1f), CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = item.iconResId),
+                                    contentDescription = item.title,
+                                    tint = Orange,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Text(
+                                text = item.title,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 20.sp,
+                                color = Black
+                            )
+                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.right),
+                            contentDescription = "Navigate",
+                            tint = Orange,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+                if (index < settingItems.size - 1) {
+                    Divider(
+                        color = Gray.copy(alpha = 0.2f),
+                        thickness = 0.5.dp,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
+            }
+        }
+    }
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
