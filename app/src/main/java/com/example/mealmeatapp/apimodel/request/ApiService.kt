@@ -59,7 +59,7 @@ interface ApiService {
 
     @GET("recipes/informationBulk")
     suspend fun getRecipesInformationBulk(
-        @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
+        @Query("apiKey") apiKey: String = "a0abe9af58a5461d95b4c1ab0778096f",
         @Query("ids") ids: String,
         @Query("includeNutrition") includeNutrition: Boolean = true
     ): ArrayList<Recipe>
@@ -67,7 +67,7 @@ interface ApiService {
     @GET("recipes/{id}/information")
     suspend fun getInformationOfPriceByID(
         @Path("id") id: Int,
-        @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
+        @Query("apiKey") apiKey: String = "a0abe9af58a5461d95b4c1ab0778096f",
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("addWinePairing") addWinePairing: Boolean = false,
         @Query("addTasteData") addTasteData: Boolean = false,
@@ -75,14 +75,14 @@ interface ApiService {
 
     @GET("recipes/informationBulk")
     suspend fun getInformationOfManyPricesByIDs(
-        @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
+        @Query("apiKey") apiKey: String = "a0abe9af58a5461d95b4c1ab0778096f",
         @Path("ids") ids: String ?= null, // "715538,716429"
         @Query("includeNutrition") includeNutrition: Boolean = true,
     ) : List<Recipe>
 
     @GET("food/ingredients/search")
     suspend fun searchIngredient(
-        @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
+        @Query("apiKey") apiKey: String = "a0abe9af58a5461d95b4c1ab0778096f",
         @Query("query") query: String ?= null,
         @Query("addChildren") addChildren: Boolean = false,
         @Query("minProteinPercent") minProteinPercent: Double ?= null,
@@ -103,7 +103,7 @@ interface ApiService {
     @GET("food/ingredients/{id}/information")
     suspend fun getInformationOfIngredientByID(
         @Path("id") id: Int,
-        @Query("apiKey") apiKey: String = "f27c8af0388a49638bff23837424777e",
+        @Query("apiKey") apiKey: String = "a0abe9af58a5461d95b4c1ab0778096f",
         @Query("amount") amount: Double = 100.0,
         @Query("unit") unit: String = "grams",
         @Query("locale") locale: String = "en_US",

@@ -1,10 +1,12 @@
 package com.example.mealmeatapp.view.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -16,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.mealmeatapp.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.rememberAsyncImagePainter
 
 // Primary button (used for "NEXT")
 
@@ -91,7 +94,20 @@ fun DialogButton(
         )
     }
 }
+@Composable
+fun ImageFromUrl(
+    url: String,
+) {
+    Card {
+        Image(
+            painter = rememberAsyncImagePainter(url),
+            contentDescription = "url"
+        )
+    }
+}
+
 
 fun Modifier.enabled(enabled: Boolean): Modifier {
     return if (enabled) this else this.then(Modifier.alpha(0.5f))
 }
+

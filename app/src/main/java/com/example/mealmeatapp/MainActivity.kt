@@ -17,6 +17,7 @@ import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.view.FavoriteScreen
 import com.example.mealmeatapp.view.HomeScreen
 import com.example.mealmeatapp.view.MealtimeScreen
+import com.example.mealmeatapp.view.ProfileScreen
 import com.example.mealmeatapp.view.ProfileSetupScreen
 import com.example.mealmeatapp.view.RecipeDetailScreen
 import com.example.mealmeatapp.view.SettingScreen
@@ -116,6 +117,13 @@ class MainActivity : ComponentActivity() {
                                 SettingScreen(
                                     navController = navController,
                                     settingViewModel = settingViewModel,
+                                    profileViewModel = profileViewModel
+                                )
+                            }
+
+                            composable("profile") {
+                                ProfileScreen(
+                                    navController = navController,
                                     profileViewModel = profileViewModel
                                 )
                             }

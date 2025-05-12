@@ -42,6 +42,9 @@ fun SettingScreen(
                 .padding(16.dp)
         ) {
             val items = listOf(
+                SettingItem(R.drawable.person_fill, "Profile") {
+                    navController.navigate("profile")
+                },
                 SettingItem(R.drawable.notifications_fill, "Notifications") { settingViewModel.onNotificationDialog(true) },
                 SettingItem(R.drawable.report, "Suggest or Report Anything") { settingViewModel.onReportDialog(true) },
                 SettingItem(R.drawable.star_fill, "Rate Us on Play Store") { settingViewModel.onRateDialog(true) },

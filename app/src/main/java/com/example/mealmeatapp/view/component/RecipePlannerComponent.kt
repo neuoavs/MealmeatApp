@@ -1,5 +1,7 @@
 package com.example.mealmeatapp.view.component
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -18,9 +24,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Yellow
@@ -32,24 +41,22 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
-import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
 
 @Composable
-fun RecipeItemLargePlanner(
+fun RecipeItemLargePlan(
     navController: NavController,
     recipeDetailViewModel: RecipeDetailViewModel,
-    homeViewModel: HomeViewModel,
     profileViewModel: ProfileViewModel,
-    recipe: Recipe,
-    modifier: Modifier = Modifier
-) {
+    recipe: Recipe?,
+    modifier: Modifier = Modifier,
+    ) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -66,13 +73,14 @@ fun RecipeItemLargePlanner(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Circular image
-            AsyncImage(
-                model = recipe.image.toString(),
-                contentDescription = recipe.title,
+            Image(
+                painter = rememberAsyncImagePainter(recipe?.image),
+                contentDescription = recipe?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
+
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -83,7 +91,7 @@ fun RecipeItemLargePlanner(
             ) {
                 // Meal name (bold)
                 Text(
-                    text = recipe.title,
+                    text = recipe?.title ?: "",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
@@ -132,7 +140,7 @@ fun RecipeItemLargePlanner(
                 horizontalAlignment = Alignment.End
             ) {
                 val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe?.id }
-                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe?.id }
+                val isPlanned  = profileViewModel.addedRecipe   .any { it.id == recipe?.id }
 
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
@@ -142,7 +150,7 @@ fun RecipeItemLargePlanner(
                         .size(24.dp)
                         .clickable {
                             if (isFavorite) profileViewModel.removeFavoriteRecipe(recipe)
-                            else profileViewModel.addFavoriteRecipe(recipe)
+                            else           profileViewModel.addFavoriteRecipe(recipe)
                         }
                 )
 
@@ -155,7 +163,7 @@ fun RecipeItemLargePlanner(
                         .size(24.dp)
                         .clickable {
                             if (isPlanned) profileViewModel.removeRecipe(recipe)
-                            else profileViewModel.addRecipe(recipe)
+                            else           profileViewModel.addRecipe(recipe)
                         }
                 )
             }

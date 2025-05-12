@@ -1,10 +1,12 @@
-package com.example.mealmeatapp.view.component
+package com.example.mealmeatapp.view
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,6 +18,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
+import com.example.mealmeatapp.view.component.BottomNavigationBar
+import com.example.mealmeatapp.view.component.ProfileRow
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,28 +62,31 @@ fun ProfileScreen(
 
             ProfileRow(
                 label = "Email: ",
-                value = profileViewModel.email.value)
+                value = profileViewModel.email.value
+            )
             ProfileRow(
                 label = "Goal: ",
-                value = if (profileViewModel.isDiet.value) stringResource(R.string.diet_on) else stringResource(R.string.diet_off)
+                value = if (profileViewModel.isDiet.value) stringResource(R.string.diet_on) else stringResource(
+                    R.string.diet_off
+                )
             )
             ProfileRow(
                 label = "Gender: ",
-                value = ""
+                value = if (profileViewModel.gender.value) "Male" else "Female"
             )
 
             ProfileRow(
                 label = "Age: ",
-                value = ""
+                value = profileViewModel.age.intValue.toString()
             )
 
             ProfileRow(
                 label = "Height: ",
                 value =
-                if (profileViewModel.heightUnit.value == "cm")
-                    "${profileViewModel.heightCm.intValue} cm"
-                else
-                    "${profileViewModel.heightFeetInches.value.first}'${profileViewModel.heightFeetInches.value.second}"
+                    if (profileViewModel.heightUnit.value == "cm")
+                        "${profileViewModel.heightCm.intValue} cm"
+                    else
+                        "${profileViewModel.heightFeetInches.value.first}'${profileViewModel.heightFeetInches.value.second}"
             )
 
             ProfileRow(
@@ -90,7 +97,10 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { navController.navigate("profile_set_up") },
+                onClick = {
+                    profileViewModel.isUpdateProfile.value = true
+                    navController.navigate("profile_set_up")
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),

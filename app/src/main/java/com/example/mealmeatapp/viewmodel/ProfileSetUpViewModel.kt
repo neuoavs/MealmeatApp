@@ -188,7 +188,8 @@ class ProfileSetUpViewModel : ViewModel() {
             profileViewModel = profileViewModel,
             homeViewModel = homeViewModel
         )
-        val database = Firebase.database
+
+        /*val database = Firebase.database
         val myRef = database.getReference("profile")
         val pd = ProfileDatabase(
             email = profileViewModel.email.value,
@@ -214,6 +215,15 @@ class ProfileSetUpViewModel : ViewModel() {
         }
             .addOnFailureListener {
                 Toast.makeText(navController.context, "Failed to save profile", Toast.LENGTH_SHORT).show()
+        }*/
+
+        homeViewModel.fetchRandomRecipes(profileViewModel)
+        Toast.makeText(navController.context, "Profile saved successfully", Toast.LENGTH_SHORT).show()
+        if (profileViewModel.isUpdateProfile.value) {
+            navController.navigate("profile")
+            profileViewModel.isUpdateProfile.value = false
+        } else {
+            navController.navigate("home")
         }
     }
 

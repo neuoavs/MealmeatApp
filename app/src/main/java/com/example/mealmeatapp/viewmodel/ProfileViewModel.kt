@@ -23,6 +23,7 @@ class ProfileViewModel : ViewModel(){
 
     val addedRecipe =  mutableStateListOf<Recipe>()
     val favoriteRecipe = mutableStateListOf<Recipe>()
+    val isUpdateProfile = mutableStateOf(false)
 
     init {
         fetchFavoriteRecipes()

@@ -1,6 +1,7 @@
 package com.example.mealmeatapp.view
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
@@ -90,12 +95,21 @@ fun RecipeDetailScreen(
                         .height(250.dp)
                         .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
                 ) {
-                    AsyncImage(
-                        model = recipeDetailViewModel.recipe.value?.image.toString(),
-                        contentDescription = recipeDetailViewModel.recipe.value?.title.toString(),
+
+                    val painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data("https://img.spoonacular.com/recipes/324694-556x370.jpeg")
+                            .crossfade(true)
+                            .build()
+                    )
+
+                    Image(
+                        painter = painter,
+                        contentDescription =recipeDetailViewModel.recipe.value?.title,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxSize()
                     )
+
                     Box(
                         modifier = Modifier
                             .fillMaxSize()

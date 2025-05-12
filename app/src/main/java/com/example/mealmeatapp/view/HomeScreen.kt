@@ -1,6 +1,8 @@
 package com.example.mealmeatapp.view
 
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -95,6 +97,7 @@ fun HomeScreen(
 
 
             items(homeViewModel.recipes.value) { recipe ->
+
                 RecipeItemLargeHome(
                     navController = navController,
                     recipeDetailViewModel = recipeDetailViewModel,
