@@ -1,9 +1,5 @@
 package com.example.mealmeatapp.apimodel.recipe
 
-import com.example.example.AnalyzedInstruction
-import com.example.example.ExtendedIngredient
-import com.example.example.Nutrition
-import com.example.example.WinePairing
 import com.google.gson.annotations.SerializedName
 
 
@@ -51,13 +47,24 @@ data class Recipe (
 )
 
 class RecipeRepository {
+
     fun getNutritionValue(
-        recipe: Recipe,
+        recipe: Recipe?,
         name: String
     ): Pair<Float, String> {
-        val nameObject = recipe.nutrition.nutrients.find { it.name == name }
+        val nameObject = recipe?.nutrition?.nutrients?.find { it.name == name }
         val nameValue = nameObject?.amount ?: 0.0
         val percent = nameObject?.percentOfDailyNeeds ?: 0.0
         return (percent/100).toFloat() to "$nameValue ${nameObject?.unit}"
+    }
+
+    fun isFavorite(recipe: Recipe): Boolean {
+        // Kiểm tra xem đã có trong danh sách yêu thích ở cơ sơ dữ liệu chưa
+        return false
+    }
+
+    fun isAddedToCart(recipe: Recipe): Boolean {
+        // Kiểm tra xem đã thêm công thức vào trong cơ sở dữ liệu chưa
+        return false
     }
 }

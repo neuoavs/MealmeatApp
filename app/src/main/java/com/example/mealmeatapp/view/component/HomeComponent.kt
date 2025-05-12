@@ -57,6 +57,7 @@ import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.view.BottomNavItem
 import com.example.mealmeatapp.viewmodel.HomeViewModel
+import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
 
 // Home Screen
@@ -135,7 +136,9 @@ fun RandomRecipeButton(
 
 
 @Composable
-fun RecipeItemLarge(
+fun RecipeItemLargeHome(
+    navController: NavController,
+    recipeDetailViewModel: RecipeDetailViewModel,
     homeViewModel: HomeViewModel,
     recipe: Recipe,
     modifier: Modifier = Modifier
@@ -151,8 +154,8 @@ fun RecipeItemLarge(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier
             .clickable {
-                // Chuyển tới trang chi tiết công thức
-                //onClick()
+                recipeDetailViewModel.updateModel(recipe)
+                navController.navigate("recipe_detail")
             }
     ) {
         Row(

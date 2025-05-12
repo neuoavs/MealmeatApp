@@ -11,8 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-
+import com.example.mealmeatapp.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -29,7 +30,7 @@ fun CustomButton(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
+        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_green))
     ) {
         Text(
             text = text,
@@ -73,7 +74,7 @@ fun DialogButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    textColor: Color = Color(0xFF2E7D32)
+    textColor: Color = colorResource(id = R.color.dark_green)
 ) {
     TextButton(
         onClick = onClick,

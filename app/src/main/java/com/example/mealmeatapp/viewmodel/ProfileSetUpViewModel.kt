@@ -3,6 +3,7 @@ package com.example.mealmeatapp.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -67,6 +68,7 @@ class ProfileSetUpViewModel : ViewModel() {
             (weightKg.intValue * 2.2).toInt()
         }
     )
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun commitProfileData() {

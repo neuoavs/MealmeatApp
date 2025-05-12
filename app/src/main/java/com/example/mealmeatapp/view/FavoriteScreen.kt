@@ -2,24 +2,24 @@ package com.example.mealmeatapp.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.ui.theme.*
-import com.example.mealmeatapp.viewmodel.HomeViewModel
+import com.example.mealmeatapp.view.component.BottomNavigationBar
+import com.example.mealmeatapp.viewmodel.FavoriteViewModel
 import com.example.mealmeatapp.view.component.*
-import androidx.compose.foundation.lazy.items
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
-
 @Composable
-fun HomeScreen(
+fun FavoriteScreen(
     navController: NavController,
-    homeViewModel: HomeViewModel,
+    favoriteViewModel: FavoriteViewModel,
     recipeDetailViewModel: RecipeDetailViewModel
 ) {
     Scaffold(
@@ -35,29 +35,19 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Search box
-                SearchBoxHome(homeViewModel = homeViewModel)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Category buttons
-                CategoryButton(homeViewModel = homeViewModel)
-
                 Spacer(modifier = Modifier.height(24.dp))
 
-                TitleHome()
+                TitleFavorite()
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
 
-            items(homeViewModel.recipes.value) { recipe ->
-                RecipeItemLargeHome(
+            items(favoriteViewModel.favoriteRecipes.value) { recipe ->
+                RecipeItemLargeFavorite(
                     navController = navController,
                     recipeDetailViewModel = recipeDetailViewModel,
-                    homeViewModel = homeViewModel,
+                    favoriteViewModel = favoriteViewModel,
                     recipe = recipe,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -69,17 +59,10 @@ fun HomeScreen(
     }
 }
 
-
-data class BottomNavItem(
-    val route: String,
-    val icon: Int,
-    val label: String
-)
-
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenPreview() {
+fun FavoriteScreenPreview() {
     MealtimeAppTheme {
-//        HomeScreen(rememberNavController(), HomeViewModel())
+//        FavoriteScreen(favoriteViewModel = FavoriteViewModel(), rememberNavController())
     }
 }

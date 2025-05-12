@@ -60,4 +60,8 @@ class HomeViewModel : ViewModel() {
             }
         })
     }
+
+    fun onRecipeClick(recipe: Recipe) {
+        
+    }
 }

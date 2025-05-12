@@ -29,8 +29,12 @@ android {
         }
     }
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+                /*
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        */
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -45,7 +49,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     implementation("com.google.firebase:firebase-analytics")
 
-
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:1.2.2")
     //Thư viện UI
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     implementation ("androidx.navigation:navigation-compose:2.7.7")
