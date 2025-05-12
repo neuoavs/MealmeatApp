@@ -15,13 +15,15 @@ import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.view.component.BottomNavigationBar
 import com.example.mealmeatapp.viewmodel.FavoriteViewModel
 import com.example.mealmeatapp.view.component.*
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
 @Composable
 fun FavoriteScreen(
     navController: NavController,
     favoriteViewModel: FavoriteViewModel,
-    recipeDetailViewModel: RecipeDetailViewModel
+    recipeDetailViewModel: RecipeDetailViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     Scaffold(
         bottomBar = {
@@ -67,7 +69,8 @@ fun FavoriteScreenPreview() {
         FavoriteScreen(
             navController = rememberNavController(),
             favoriteViewModel = FavoriteViewModel(),
-            recipeDetailViewModel = RecipeDetailViewModel()
+            recipeDetailViewModel = RecipeDetailViewModel(),
+            profileViewModel = ProfileViewModel()
         )
     }
 }

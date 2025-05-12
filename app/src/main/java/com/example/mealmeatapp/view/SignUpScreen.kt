@@ -13,12 +13,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.view.component.*
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
 
 @Composable
 fun SignUpScreen(
     navController: NavController,
-    signUpViewModel: SignUpViewModel
+    signUpViewModel: SignUpViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     Column(
         modifier = Modifier
@@ -32,7 +34,11 @@ fun SignUpScreen(
         /* End Title */
 
         /* Form */
-        FormSignUp(navController, signUpViewModel)
+        FormSignUp(
+            navController = navController,
+            signUpViewModel = signUpViewModel,
+            profileViewModel = profileViewModel
+        )
         /* End Form */
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -58,7 +64,8 @@ fun SignUpScreenPreview() {
     MealtimeAppTheme {
         SignUpScreen(
             navController = rememberNavController(),
-            signUpViewModel = SignUpViewModel()
+            signUpViewModel = SignUpViewModel(),
+            profileViewModel = ProfileViewModel()
         )
     }
 }

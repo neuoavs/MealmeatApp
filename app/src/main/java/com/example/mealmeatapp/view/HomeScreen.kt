@@ -18,6 +18,7 @@ import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.view.component.*
 import androidx.compose.foundation.lazy.items
 import androidx.navigation.compose.rememberNavController
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 import kotlin.getValue
 
@@ -45,7 +46,8 @@ class HomeActivity : ComponentActivity() {
         HomeScreen(
             navController = navController,
             homeViewModel = homeViewModel,
-            recipeDetailViewModel = recipeDetailViewModel
+            recipeDetailViewModel = recipeDetailViewModel,
+            profileViewModel = ProfileViewModel()
         )
     }
 }
@@ -55,7 +57,8 @@ class HomeActivity : ComponentActivity() {
 fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel,
-    recipeDetailViewModel: RecipeDetailViewModel
+    recipeDetailViewModel: RecipeDetailViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     Scaffold(
         bottomBar = {
@@ -113,7 +116,8 @@ fun HomeScreenPreview() {
         HomeScreen(
             navController = rememberNavController(),
             homeViewModel = HomeViewModel(),
-            recipeDetailViewModel = RecipeDetailViewModel()
+            recipeDetailViewModel = RecipeDetailViewModel(),
+            profileViewModel = ProfileViewModel()
         )
     }
 }

@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 
-import com.example.mealmeatapp.ui.theme.model.ProfileData
+import com.example.mealmeatapp.model.ProfileData
 import java.time.LocalDate
 import java.time.Period
 
@@ -69,9 +69,11 @@ class ProfileSetUpViewModel : ViewModel() {
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun commitProfileData() {
-        profileDataToSubmit.value = ProfileData(
-            goal = selectedGoal.value ?: "",
+    private fun commitProfileData(
+        profileViewModel: ProfileViewModel
+    ) {
+        val profileData = ProfileData(
+            isDiet = if(selectedGoal.value == "Less weight") true else false,
             gender = selectedGender.value,
             age = age.intValue,
             heightCm = heightCm.intValue,
@@ -80,6 +82,8 @@ class ProfileSetUpViewModel : ViewModel() {
             weight = getWeighValue(),
             weightUnit = weightUnit.value
         )
+        profileDataToSubmit.value = profileData
+        profileViewModel.mergeProfile(profileData)
     }
 
     // Profile setup callbacks
@@ -149,7 +153,7 @@ class ProfileSetUpViewModel : ViewModel() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun onNextClick() {
+    fun onNextClick(profileViewModel: ProfileViewModel) {
         when (currentStep.intValue) {
             1 -> if (selectedGoal.value != null) ++currentStep.value
             2 -> ++currentStep.value
@@ -157,15 +161,16 @@ class ProfileSetUpViewModel : ViewModel() {
             4 -> ++currentStep.value
             5 -> showSummaryDialog.value = true
         }
-        commitProfileData()
+        commitProfileData(profileViewModel = profileViewModel)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onConfirmClick(
-        navController: NavController
+        navController: NavController,
+        profileViewModel: ProfileViewModel
     ) {
         showSummaryDialog.value = false
-        commitProfileData()
+        commitProfileData(profileViewModel)
         navController.navigate("home")
     }
 

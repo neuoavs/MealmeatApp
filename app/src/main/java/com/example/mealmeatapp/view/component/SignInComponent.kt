@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.R
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 
 @Composable
@@ -61,8 +62,8 @@ fun CreateLink(navController: NavController) {
 @Composable
 fun FormSignIn(
     navController: NavController,
-    signInViewModel: SignInViewModel
-
+    signInViewModel: SignInViewModel,
+    profileViewModel: ProfileViewModel
 ) {
 
 
@@ -120,7 +121,10 @@ fun FormSignIn(
 
     Button(
         onClick = {
-            signInViewModel.onSignInClick(navController = navController)
+            signInViewModel.onSignInClick(
+                navController = navController,
+                profileViewModel = profileViewModel
+            )
         },
         modifier = Modifier
             .fillMaxWidth()

@@ -1,6 +1,7 @@
 package com.example.mealmeatapp.viewmodel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,7 +22,10 @@ class SignInViewModel : ViewModel() {
     private val authRepository = AuthRepository()
 
     // Hàm xử lý khi người dùng nhấn nút đăng nhập
-    fun onSignInClick(navController: NavController) {
+    fun onSignInClick(
+        navController: NavController,
+        profileViewModel: ProfileViewModel
+    ) {
         // Tạo đối tượng User từ email và password hiện tại
         val user = User(email = email.value, password = password.value)
 
@@ -36,13 +40,15 @@ class SignInViewModel : ViewModel() {
                 onSuccess = {
                     // Khi đăng nhập thành công, tắt trạng thái loading và chuyển hướng đến màn hình thiết lập hồ sơ
                     isLoading.value = false
+                    profileViewModel.updateAuth(user)
+                    Toast.makeText(navController.context, "Sign in successfully", Toast.LENGTH_SHORT).show()
                     navController.navigate("profile_set_up")
                 },
                 onFailure = { exception ->
                     // Khi đăng nhập thất bại, tắt trạng thái loading, lưu thông báo lỗi và ghi log
                     isLoading.value = false
                     errorMessage.value = exception.message ?: "Unknown error"
-                    Log.e("SignInViewModel", "Sign-in failed: ${exception.message}")
+                    Toast.makeText(navController.context, "Sign in failed", Toast.LENGTH_SHORT).show()
                 }
             )
         }

@@ -31,12 +31,14 @@ import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
 import com.example.mealmeatapp.view.component.BottomNavigationBar
 import com.example.mealmeatapp.view.component.IngredientContent
 import com.example.mealmeatapp.view.component.InstructionContent
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
 @Composable
 fun RecipeDetailScreen(
     navController: NavController,
-    recipeDetailViewModel: RecipeDetailViewModel
+    recipeDetailViewModel: RecipeDetailViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val recipeRepository = RecipeRepository()
 

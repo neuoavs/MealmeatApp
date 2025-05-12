@@ -1,7 +1,7 @@
-package com.example.mealmeatapp.ui.theme.model
+package com.example.mealmeatapp.model
 
 data class ProfileData(
-    var goal: String,
+    var isDiet: Boolean,
     var gender: Boolean, // true for male, false for female
     var age: Int,
     var heightCm: Int,

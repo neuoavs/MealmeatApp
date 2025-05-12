@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -213,13 +214,6 @@ fun StepOne(
         iconResId = R.drawable.nutrition_fill, // less_weight
         isSelected = profileSetUpViewModel.selectedGoal.value == "Less weight",
         onClick = { profileSetUpViewModel.onGoalChange("Less weight") },
-        layoutType = "row"
-    )
-    ProfileOption(
-        text = "Gain weight",
-        iconResId = R.drawable.fitness_center, // gain_weight
-        isSelected = profileSetUpViewModel.selectedGoal.value == "Gain weight",
-        onClick = { profileSetUpViewModel.onGoalChange("Gain weight") },
         layoutType = "row"
     )
     ProfileOption(
@@ -629,7 +623,8 @@ fun ProfileTable(
 @Composable
 fun ProfileDialog(
     navController: NavController,
-    profileSetUpViewModel: ProfileSetUpViewModel
+    profileSetUpViewModel: ProfileSetUpViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     // Summary Dialog
     if (profileSetUpViewModel.showSummaryDialog.value && profileSetUpViewModel.profileDataToSubmit.value != null) {
@@ -653,7 +648,8 @@ fun ProfileDialog(
                 TextButton(
                     onClick = {
                         profileSetUpViewModel.onConfirmClick(
-                            navController = navController
+                            navController = navController,
+                            profileViewModel = profileViewModel
                         )
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF2E7D32))
@@ -679,12 +675,15 @@ fun ProfileDialog(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NextButtonProfile(
-    profileSetUpViewModel: ProfileSetUpViewModel
+    profileSetUpViewModel: ProfileSetUpViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     CustomButton(
         text = "NEXT",
         onClick = {
-            profileSetUpViewModel.onNextClick()
+            profileSetUpViewModel.onNextClick(
+                profileViewModel = profileViewModel
+            )
         },
         modifier = Modifier.enabled(
             when (profileSetUpViewModel.currentStep.intValue) {

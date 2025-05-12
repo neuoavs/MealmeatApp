@@ -19,13 +19,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.view.component.*
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.SettingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     navController: NavController,
-    settingViewModel: SettingViewModel
+    settingViewModel: SettingViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val context = LocalContext.current
     Scaffold(
@@ -40,7 +42,6 @@ fun SettingScreen(
                 .padding(16.dp)
         ) {
             val items = listOf(
-                SettingItem(R.drawable.dark_mode_fill, "Change Your Theme") { settingViewModel.onThemeDialog(true) },
                 SettingItem(R.drawable.notifications_fill, "Notifications") { settingViewModel.onNotificationDialog(true) },
                 SettingItem(R.drawable.report, "Suggest or Report Anything") { settingViewModel.onReportDialog(true) },
                 SettingItem(R.drawable.star_fill, "Rate Us on Play Store") { settingViewModel.onRateDialog(true) },
@@ -70,18 +71,15 @@ fun SettingScreen(
                         style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp)
                     )
                 }
-                Divider()
             }
         }
 
-        // Dialogs
-        if (settingViewModel.showThemeDialog) ThemeDialog(settingViewModel)
-        if (settingViewModel.showNotificationDialog) NotificationDialog(settingViewModel)
-        if (settingViewModel.showReportDialog) ReportDialog(settingViewModel, context)
-        if (settingViewModel.showRateDialog) RateDialog(context) { settingViewModel.onRateDialog(false) }
-        if (settingViewModel.showShareDialog) ShareDialog(context) { settingViewModel.onShareDialog(false) }
-        if (settingViewModel.showPrivacyDialog) PrivacyDialog(context) { settingViewModel.onPrivacyDialog(false) }
-        if (settingViewModel.showLogoutDialog) LogoutDialog(
+        if (settingViewModel.showNotificationDialog.value) NotificationDialog(settingViewModel)
+        if (settingViewModel.showReportDialog.value) ReportDialog(settingViewModel, context)
+        if (settingViewModel.showRateDialog.value) RateDialog(context) { settingViewModel.onRateDialog(false) }
+        if (settingViewModel.showShareDialog.value) ShareDialog(context) { settingViewModel.onShareDialog(false) }
+        if (settingViewModel.showPrivacyDialog.value) PrivacyDialog(context) { settingViewModel.onPrivacyDialog(false) }
+        if (settingViewModel.showLogoutDialog.value) LogoutDialog(
             onConfirm = {
                 settingViewModel.onLogoutDialog(false)
                 navController.navigate("mealtime") { popUpTo(navController.graph.startDestinationId) { inclusive = true } }
@@ -103,6 +101,7 @@ fun SettingScreenPreview() {
         SettingScreen(
             navController = rememberNavController(),
             settingViewModel = SettingViewModel(),
+            profileViewModel = ProfileViewModel()
         )
     }
 }

@@ -1,58 +1,38 @@
 package com.example.mealmeatapp.viewmodel
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 
 class SettingViewModel : ViewModel(){
 
     // Dialog visibility states
-    var showThemeDialog by mutableStateOf(false)
-        private set
-    var showNotificationDialog by mutableStateOf(false)
-        private set
-    var showReportDialog by mutableStateOf(false)
-        private set
-    var showRateDialog by mutableStateOf(false)
-        private set
-    var showShareDialog by mutableStateOf(false)
-        private set
-    var showPrivacyDialog by mutableStateOf(false)
-        private set
-    var showLogoutDialog by mutableStateOf(false)
-        private set
-
+    val showThemeDialog = mutableStateOf(false)
+    val showNotificationDialog = mutableStateOf(false)
+    val showReportDialog = mutableStateOf(false)
+    val showRateDialog = mutableStateOf(false)
+    val showShareDialog = mutableStateOf(false)
+    val showPrivacyDialog = mutableStateOf(false)
+    val showLogoutDialog = mutableStateOf(false)
     // Theme selection (to integrate with DataStore later)
-    var selectedTheme by mutableStateOf("System Default")
-        private set
-
     // Notification toggles
-    var mealReminders by mutableStateOf(true)
-        private set
-    var recipeNotifications by mutableStateOf(true)
-        private set
-    var appUpdates by mutableStateOf(true)
-        private set
-
+    val mealReminders = mutableStateOf(true)
+    val recipeNotifications = mutableStateOf(true)
+    val appUpdates = mutableStateOf(true)
     // Report input
-    var reportText by mutableStateOf("")
-        private set
-    var reportEmail by mutableStateOf("")
-        private set
+    val reportText = mutableStateOf("")
+    val reportEmail = mutableStateOf("")
+  
 
-    // Public APIs to update state
-    fun onThemeDialog(show: Boolean) { showThemeDialog = show }
-    fun selectTheme(theme: String) { selectedTheme = theme }
-    fun onNotificationDialog(show: Boolean) { showNotificationDialog = show }
-    fun toggleMealReminders(on: Boolean) { mealReminders = on }
-    fun toggleRecipeNotifications(on: Boolean) { recipeNotifications = on }
-    fun toggleAppUpdates(on: Boolean) { appUpdates = on }
-    fun onReportDialog(show: Boolean) { showReportDialog = show }
-    fun updateReportText(text: String) { reportText = text }
-    fun updateReportEmail(email: String) { reportEmail = email }
-    fun onRateDialog(show: Boolean) { showRateDialog = show }
-    fun onShareDialog(show: Boolean) { showShareDialog = show }
-    fun onPrivacyDialog(show: Boolean) { showPrivacyDialog = show }
-    fun onLogoutDialog(show: Boolean) { showLogoutDialog = show }
+
+    fun onNotificationDialog(show: Boolean) { showNotificationDialog.value = show }
+    fun toggleMealReminders(on: Boolean) { mealReminders.value = on }
+    fun toggleRecipeNotifications(on: Boolean) { recipeNotifications.value = on }
+    fun toggleAppUpdates(on: Boolean) { appUpdates.value = on }
+    fun onReportDialog(show: Boolean) { showReportDialog.value = show }
+    fun updateReportText(text: String) { reportText.value = text }
+    fun updateReportEmail(email: String) { reportEmail.value = email }
+    fun onRateDialog(show: Boolean) { showRateDialog.value = show }
+    fun onShareDialog(show: Boolean) { showShareDialog.value = show }
+    fun onPrivacyDialog(show: Boolean) { showPrivacyDialog.value = show }
+    fun onLogoutDialog(show: Boolean) { showLogoutDialog.value = show }
 }

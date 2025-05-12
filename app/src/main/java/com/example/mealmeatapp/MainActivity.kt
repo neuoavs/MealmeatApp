@@ -25,6 +25,7 @@ import com.example.mealmeatapp.view.SignUpScreen
 import com.example.mealmeatapp.viewmodel.FavoriteViewModel
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 import com.example.mealmeatapp.viewmodel.SettingViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
     private val recipeDetailViewModel: RecipeDetailViewModel by viewModels()
     private val favoriteViewModel: FavoriteViewModel by viewModels()
     private val settingViewModel: SettingViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,21 +60,24 @@ class MainActivity : ComponentActivity() {
                             composable("sign_in") {
                                 SignInScreen(
                                     navController = navController,
-                                    signInViewModel = signInViewModel
+                                    signInViewModel = signInViewModel,
+                                    profileViewModel = profileViewModel
                                 )
                             }
 
                             composable("sign_up") {
                                 SignUpScreen(
                                     navController = navController,
-                                    signUpViewModel = signUpViewModel
+                                    signUpViewModel = signUpViewModel,
+                                    profileViewModel = profileViewModel
                                 )
                             }
 
                             composable("profile_set_up") {
                                 ProfileSetupScreen(
                                     navController = navController,
-                                    profileSetUpViewModel = profileSetUpViewModel
+                                    profileSetUpViewModel = profileSetUpViewModel,
+                                    profileViewModel = profileViewModel
                                 )
                             }
 
@@ -80,14 +85,16 @@ class MainActivity : ComponentActivity() {
                                 HomeScreen(
                                     navController = navController,
                                     homeViewModel = homeViewModel,
-                                    recipeDetailViewModel = recipeDetailViewModel
+                                    recipeDetailViewModel = recipeDetailViewModel,
+                                    profileViewModel = profileViewModel
                                 )
                             }
 
                             composable("recipe_detail") {
                                 RecipeDetailScreen(
                                     navController = navController,
-                                    recipeDetailViewModel = recipeDetailViewModel
+                                    recipeDetailViewModel = recipeDetailViewModel,
+                                    profileViewModel = profileViewModel
                                 )
                             }
 
@@ -98,13 +105,15 @@ class MainActivity : ComponentActivity() {
                                 FavoriteScreen(
                                     navController = navController,
                                     favoriteViewModel = favoriteViewModel,
-                                    recipeDetailViewModel = recipeDetailViewModel
+                                    recipeDetailViewModel = recipeDetailViewModel,
+                                    profileViewModel = profileViewModel
                                 )
                             }
                             composable("setting") {
                                 SettingScreen(
                                     navController = navController,
-                                    settingViewModel = settingViewModel
+                                    settingViewModel = settingViewModel,
+                                    profileViewModel = profileViewModel
                                 )
                             }
 

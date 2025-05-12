@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.R
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
 
 
@@ -54,7 +55,8 @@ fun TitleSignUp() {
 @Composable
 fun FormSignUp(
     navController: NavController,
-    signUpViewModel: SignUpViewModel
+    signUpViewModel: SignUpViewModel,
+    profileViewModel: ProfileViewModel
 ) {
 
     // Email
@@ -120,7 +122,10 @@ fun FormSignUp(
 
     Button(
         onClick = {
-            signUpViewModel.onSignUpClick(navController = navController)
+            signUpViewModel.onSignUpClick(
+                navController = navController,
+                profileViewModel = profileViewModel
+            )
         },
         modifier = Modifier
             .fillMaxWidth()
