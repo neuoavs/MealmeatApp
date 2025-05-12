@@ -32,11 +32,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.ui.theme.*
 
-data class SettingItem(
-    val iconResId: Int,
-    val title: String,
-    val onClick: () -> Unit
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
