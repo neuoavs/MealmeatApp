@@ -11,14 +11,16 @@ import com.example.mealmeatapp.model.User
 class ProfileViewModel : ViewModel(){
     val email = mutableStateOf("")
     val password = mutableStateOf("")
+
     val isDiet = mutableStateOf(false)
     val gender = mutableStateOf(true) // true for male, false for female
     val age = mutableIntStateOf(0)
     val heightCm = mutableIntStateOf(203)
-    val heightFeetInches = mutableStateOf(Pair(6, 8))
+    val heightFeetInches = mutableStateOf(Pair(6, 8)) // first feet, second inches
     val heightUnit = mutableStateOf("ft")
     val weight = mutableIntStateOf(71)
     val weightUnit = mutableStateOf("kg")
+
     val addedRecipe = mutableListOf<Recipe?>()
     val favoriteRecipe = mutableListOf<Recipe?>()
     fun updateAuth(user: User) {
@@ -64,6 +66,8 @@ class ProfileViewModel : ViewModel(){
         weightUnit.value = profileData.weightUnit
     }
 
+
+    // Database zone
     private fun updateProfileDatabase() {
         // Phần này là đẩy dữ  profile lên database
 
@@ -72,22 +76,27 @@ class ProfileViewModel : ViewModel(){
     fun addRecipe(recipe: Recipe) {
         addedRecipe.add(recipe)
         //update lên database
+
     }
 
     fun removeRecipe(recipe: Recipe) {
         addedRecipe.remove(recipe)
         //update lên database
-
+//        email.value -> string
+//        recipe.id -> int
     }
 
     fun addFavoriteRecipe(recipe: Recipe) {
         favoriteRecipe.add(recipe)
         //update lên database
+    //        email.value -> string
+//        recipe.id -> int
     }
 
     fun removeFavoriteRecipe(recipe: Recipe) {
         favoriteRecipe.remove(recipe)
         //update lên database
-
+//        email.value -> string
+//        recipe.id -> int
     }
 }

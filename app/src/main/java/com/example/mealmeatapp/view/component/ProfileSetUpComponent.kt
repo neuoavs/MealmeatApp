@@ -212,14 +212,14 @@ fun StepOne(
     ProfileOption(
         text = "Less weight",
         iconResId = R.drawable.nutrition_fill, // less_weight
-        isSelected = profileSetUpViewModel.selectedGoal.value == "Less weight",
+        isSelected = profileSetUpViewModel.selectedGoal.value == "Less weight", // diet
         onClick = { profileSetUpViewModel.onGoalChange("Less weight") },
         layoutType = "row"
     )
     ProfileOption(
         text = "Stay healthy",
         iconResId = R.drawable.ecg_heart_fill, // stay_healthy
-        isSelected = profileSetUpViewModel.selectedGoal.value == "Stay healthy",
+        isSelected = profileSetUpViewModel.selectedGoal.value == "Stay healthy", // normal
         onClick = { profileSetUpViewModel.onGoalChange("Stay healthy") },
         layoutType = "row"
     )
