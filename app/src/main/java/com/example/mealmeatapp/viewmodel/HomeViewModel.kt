@@ -30,10 +30,7 @@ class HomeViewModel : ViewModel() {
 
     fun onCategoryChange(category: String) {
         selectedCategory.value = category
-
-        if (category == "Random") {
-            fetchRandomRecipes()
-        }
+        fetchRandomRecipes()
     }
 
     fun fetchRandomRecipes() {
