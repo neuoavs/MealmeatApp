@@ -53,7 +53,7 @@ fun HeaderProfile(
     Icon(
         painter = painterResource(id = R.drawable.arrow_back_ios),
         contentDescription = "Back",
-        tint = Color(0xFF2E7D32),
+        tint = colorResource(id = R.color.dark_green),
         modifier = Modifier
             .size(40.dp)
             .clickable {

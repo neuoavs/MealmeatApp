@@ -1,5 +1,6 @@
 package com.example.mealmeatapp.view.component
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -55,10 +56,17 @@ import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
-import com.example.mealmeatapp.view.BottomNavItem
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 
+
+
+
+data class BottomNavItem(
+    val route: String,
+    val icon: Int,
+    val label: String
+)
 
 // Home Screen
 @Composable
@@ -142,12 +150,6 @@ fun RecipeItemLargeHome(
     homeViewModel: HomeViewModel,
     recipe: Recipe,
     modifier: Modifier = Modifier
-
-//    isFavorite: Boolean,
-//    isPlanned: Boolean,
-//    onFavoriteClick: () -> Unit,
-//    onPlanClick: () -> Unit,
-//    onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -313,7 +315,6 @@ fun NutrientItemWithBar(
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
-//    plannedCount: Int
 ) {
     val navItems = listOf(
         BottomNavItem("home", R.drawable.home, "Home"),

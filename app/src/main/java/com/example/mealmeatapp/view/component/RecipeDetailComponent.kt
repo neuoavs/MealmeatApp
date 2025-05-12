@@ -53,12 +53,12 @@ fun InstructionContent(recipe: Recipe?) {
             color = colorResource(R.color.orange)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        recipe.analyzedInstructions.forEachIndexed { index, instruction ->
+        recipe?.analyzedInstructions?.forEachIndexed { index, instruction ->
             Text(
                 text = "${index + 1}. ${instruction.name}",
                 style = MaterialTheme.typography.titleSmall,
             )
-            recipe.analyzedInstructions[index].steps.forEach { st ->
+            recipe?.analyzedInstructions[index]?.steps?.forEach { st ->
                 Text(
                     text = "${index}.${st.number}. ${st.step}",
                     style = MaterialTheme.typography.bodySmall,

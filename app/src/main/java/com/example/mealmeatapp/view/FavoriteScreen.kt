@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.view.component.BottomNavigationBar
 import com.example.mealmeatapp.viewmodel.FavoriteViewModel
@@ -63,6 +64,10 @@ fun FavoriteScreen(
 @Composable
 fun FavoriteScreenPreview() {
     MealtimeAppTheme {
-//        FavoriteScreen(favoriteViewModel = FavoriteViewModel(), rememberNavController())
+        FavoriteScreen(
+            navController = rememberNavController(),
+            favoriteViewModel = FavoriteViewModel(),
+            recipeDetailViewModel = RecipeDetailViewModel()
+        )
     }
 }
