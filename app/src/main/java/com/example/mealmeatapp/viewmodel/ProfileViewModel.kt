@@ -4,9 +4,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mealmeatapp.apimodel.recipe.Recipe
+import com.example.mealmeatapp.apimodel.request.ApiClient
 import com.example.mealmeatapp.model.ProfileData
 import com.example.mealmeatapp.model.User
+import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel(){
     val email = mutableStateOf("")
@@ -22,8 +25,8 @@ class ProfileViewModel : ViewModel(){
     val weightUnit = mutableStateOf("kg")
 
     val addedRecipe =  mutableStateListOf<Recipe>()
-    val favoriteRecipe = mutableStateListOf<Recipe>()
-    val isUpdateProfile = mutableStateOf(false)
+    val favoriteRecipe = mutableStateListOf<Recipe>() // Danh sách yêu thích
+    val isUpdateProfile = mutableStateOf(false) // Thêm hàng chờ
 
     init {
         fetchFavoriteRecipes()
@@ -81,6 +84,7 @@ class ProfileViewModel : ViewModel(){
 
     }
 
+    // Firebase -> AddedRecipes = (email, idRecipe)
     fun addRecipe(recipe: Recipe?) {
         if (addedRecipe.none { it.id == recipe?.id }) {
             recipe?.let { addedRecipe.add(it)}
@@ -90,16 +94,20 @@ class ProfileViewModel : ViewModel(){
 
     fun removeRecipe(recipe: Recipe?) {
         if (addedRecipe.none { it.id == recipe?.id }) {
+
             recipe?.let { addedRecipe.remove(it)}
             // TODO: add to Firebase
         }
 
     }
 
+    // Firebase -> FavortieRecipe = (email, idRecipe)
     fun addFavoriteRecipe(recipe: Recipe?) {
         if (favoriteRecipe.none { it.id == recipe?.id }) {
-            recipe?.let { favoriteRecipe.add(it)}
             // TODO: add to Firebase
+            // email.value + recipe.id --> Database
+            recipe?.let { favoriteRecipe.add(it)}
+
         }
     }
 
@@ -112,11 +120,32 @@ class ProfileViewModel : ViewModel(){
     }
 
     private fun fetchFavoriteRecipes() {
+        // TODO: fetch from Firebase
+/*        FavoriteRecipe = (email, idRecipe)*/
+        // List<Int> of idRecipe -> String "1002,1122"
+        val ids = "1002,1122"
 
+        viewModelScope.launch {
+            try {
+                favoriteRecipe.addAll(ApiClient.apiService.getRecipesInformationBulk(ids = ids))
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     private fun fetchAddedRecipes() {
+        /*        AddedRecipe = (email, idRecipe)*/
+        // List<Int> of idRecipe -> String "1002,1122"
+        val ids = "1002,1122"
 
+        viewModelScope.launch {
+            try {
+                addedRecipe.addAll(ApiClient.apiService.getRecipesInformationBulk(ids = ids))
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     private fun getIdsFavoriteRecipes() : String {

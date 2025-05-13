@@ -8,9 +8,11 @@ import com.example.mealmeatapp.model.ScheduledMeal
 import java.time.LocalDate
 
 
-class MealScheduleViewModel : ViewModel() {
+class RecipePlannerViewModel : ViewModel() {
     private val _schedule = mutableStateListOf<ScheduledMeal>()
     val schedule: List<ScheduledMeal> = _schedule
+
+
 
     fun scheduleMeal(date: LocalDate, mealType: MealType, recipe: Recipe) {
         // loại bỏ nếu đã có cùng date+mealType
@@ -22,4 +24,12 @@ class MealScheduleViewModel : ViewModel() {
             _schedule.find { it.date == date && it.mealType == type }?.recipe
         }
     }
+
+
+    /*Note
+    Bang = email, Date, idRecipe
+    Chọn được tuần, ngày
+
+    Mon, Tue, Wed, Thu, Fri, Sat, Sun
+     */
 }

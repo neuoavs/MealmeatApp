@@ -26,7 +26,7 @@ import com.example.mealmeatapp.viewmodel.ProfileViewModel
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    profileViewModel: ProfileViewModel = viewModel()
+    profileViewModel: ProfileViewModel
 ) {
     Scaffold(
         bottomBar = {

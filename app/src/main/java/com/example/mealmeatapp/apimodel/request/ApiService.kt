@@ -12,13 +12,6 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    /*
-    Name	            Type	    Example	                Description
-    includeNutrition	boolean	    true	                Whether to include nutritional information to returned recipes.
-    include-tags	    string	    vegetarian, dessert	    The tags (can be diets, meal types, cuisines, or intolerances) that the recipe must have.
-    exclude-tags	    string	    dairy	                The tags (can be diets, meal types, cuisines, or intolerances) that the recipe must NOT have.
-    number	            number	    1	                    The number of random recipes to be returned (between 1 and 100)
-     */
     @GET("recipes/random")
     suspend fun getRandomRecipe(
         @Query("apiKey") apiKey: String = "fea9df499e504326b4f5f3504954d7d7",

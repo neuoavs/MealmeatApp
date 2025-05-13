@@ -182,10 +182,12 @@ class ProfileSetUpViewModel : ViewModel() {
             profileViewModel = profileViewModel,
             homeViewModel = homeViewModel
         )
-
-
         homeViewModel.fetchRandomRecipes(profileViewModel)
         Toast.makeText(navController.context, "Profile saved successfully", Toast.LENGTH_SHORT).show()
+
+        // profileViewModel -> ProfileDatabase --> Firebase
+
+        // Chuyển hướng
         if (profileViewModel.isUpdateProfile.value) {
             navController.navigate("profile")
             profileViewModel.isUpdateProfile.value = false

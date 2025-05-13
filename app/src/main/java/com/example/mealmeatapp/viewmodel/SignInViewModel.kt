@@ -2,10 +2,12 @@ package com.example.mealmeatapp.viewmodel
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.model.AuthRepository
 import com.example.mealmeatapp.model.User
 import com.google.firebase.Firebase
@@ -52,8 +54,10 @@ class SignInViewModel : ViewModel() {
                     Toast.makeText(navController.context, "Sign in successfully", Toast.LENGTH_SHORT).show()
 
                     // Code ở đây
-
-
+                    // email
+                    // profileViewModel.email.value =  ProfileDatabase().email
+                    // profileViewModel.heghtFeetInch.first.value =
+                    // ProfileDatabase()
                     homeViewModel.fetchRandomRecipes(profileViewModel)
                     navController.navigate("home")
                 },

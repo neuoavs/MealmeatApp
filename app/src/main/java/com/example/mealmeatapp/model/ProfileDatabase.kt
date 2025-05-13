@@ -1,5 +1,6 @@
 package com.example.mealmeatapp.model
 
+// Profile
 data class ProfileDatabase (
     var email: String,
     var isDiet: Boolean,
