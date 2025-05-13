@@ -9,6 +9,8 @@ import java.time.LocalDate
 
 
 class RecipePlannerViewModel : ViewModel() {
+
+
     private val _schedule = mutableStateListOf<ScheduledMeal>()
     val schedule: List<ScheduledMeal> = _schedule
 
@@ -32,4 +34,9 @@ class RecipePlannerViewModel : ViewModel() {
 
     Mon, Tue, Wed, Thu, Fri, Sat, Sun
      */
+
+    fun onClickMonday(profileViewModel: ProfileViewModel) {
+
+        //TODO:
+    }
 }

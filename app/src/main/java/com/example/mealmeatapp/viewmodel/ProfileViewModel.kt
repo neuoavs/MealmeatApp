@@ -87,6 +87,7 @@ class ProfileViewModel : ViewModel(){
     // Firebase -> AddedRecipes = (email, idRecipe)
     fun addRecipe(recipe: Recipe?) {
         if (addedRecipe.none { it.id == recipe?.id }) {
+
             recipe?.let { addedRecipe.add(it)}
             // TODO: add to Firebase
         }
