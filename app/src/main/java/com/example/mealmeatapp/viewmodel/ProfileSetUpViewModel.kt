@@ -8,15 +8,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-
 import com.example.mealmeatapp.model.ProfileData
-import com.example.mealmeatapp.model.ProfileDatabase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDate
 import java.time.Period
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 
 class ProfileSetUpViewModel : ViewModel() {
@@ -189,33 +183,6 @@ class ProfileSetUpViewModel : ViewModel() {
             homeViewModel = homeViewModel
         )
 
-        /*val database = Firebase.database
-        val myRef = database.getReference("profile")
-        val pd = ProfileDatabase(
-            email = profileViewModel.email.value,
-            isDiet = profileViewModel.isDiet.value,
-            gender = profileViewModel.gender.value,
-            age = profileViewModel.age.intValue,
-            heightCm = profileViewModel.heightCm.intValue,
-            heightFeet = profileViewModel.heightFeetInches.value.first,
-            heightInch = profileViewModel.heightFeetInches.value.second,
-            heightUnit = profileViewModel.heightUnit.value,
-            weight = profileViewModel.weight.intValue,
-            weightUnit = profileViewModel.weightUnit.value
-        )
-        val safeKey = pd.email
-            .replace(".", "")
-            .replace("@", "")
-
-        myRef.child(safeKey).setValue(pd)
-            .addOnSuccessListener {
-                homeViewModel.fetchRandomRecipes(profileViewModel)
-                Toast.makeText(navController.context, "Profile saved successfully", Toast.LENGTH_SHORT).show()
-                navController.navigate("home")
-        }
-            .addOnFailureListener {
-                Toast.makeText(navController.context, "Failed to save profile", Toast.LENGTH_SHORT).show()
-        }*/
 
         homeViewModel.fetchRandomRecipes(profileViewModel)
         Toast.makeText(navController.context, "Profile saved successfully", Toast.LENGTH_SHORT).show()

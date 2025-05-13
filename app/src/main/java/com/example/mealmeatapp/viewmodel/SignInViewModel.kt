@@ -50,30 +50,12 @@ class SignInViewModel : ViewModel() {
                     isLoading.value = false
                     profileViewModel.updateAuth(user)
                     Toast.makeText(navController.context, "Sign in successfully", Toast.LENGTH_SHORT).show()
+
+                    // Code ở đây
+
+
                     homeViewModel.fetchRandomRecipes(profileViewModel)
                     navController.navigate("home")
-                    /*val dbRef = Firebase.database.getReference("users")
-                        .child(user.email)
-                    dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            val pd = dataSnapshot.getValue(ProfileDatabase::class.java)
-                            if (pd != null) {
-                                profileViewModel.isDiet.value = pd.isDiet
-                                profileViewModel.gender.value = pd.gender
-                                profileViewModel.age.value = pd.age
-                                profileViewModel.heightCm.value = pd.heightCm.toInt()
-                                profileViewModel.heightFeetInches.value = pd.heightFeet.toInt() to pd.heightInch.toInt()
-                                profileViewModel.heightUnit.value = pd.heightUnit
-                                profileViewModel.weight.value = pd.weight.toInt()
-                                profileViewModel.weightUnit.value = pd.weightUnit
-                                homeViewModel.fetchRandomRecipes(profileViewModel)
-                                navController.navigate("home")
-                            }
-                        }
-                        override fun onCancelled(error: DatabaseError) {
-                            Toast.makeText(navController.context, "Sign in failed", Toast.LENGTH_SHORT).show()
-                        }
-                    })*/
                 },
                 onFailure = { exception ->
                     // Khi đăng nhập thất bại, tắt trạng thái loading, lưu thông báo lỗi và ghi log
