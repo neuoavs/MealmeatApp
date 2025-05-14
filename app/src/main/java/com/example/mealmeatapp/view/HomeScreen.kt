@@ -1,8 +1,6 @@
 package com.example.mealmeatapp.view
 
-import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -22,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
+import com.example.mealmeatapp.viewmodel.RecipePlannerViewModel
 import kotlin.getValue
 
 @Suppress("TYPE_INTERSECTION_AS_REIFIED_WARNING",
@@ -49,7 +48,8 @@ class HomeActivity : ComponentActivity() {
             navController = navController,
             homeViewModel = homeViewModel,
             recipeDetailViewModel = recipeDetailViewModel,
-            profileViewModel = ProfileViewModel()
+            profileViewModel = ProfileViewModel(),
+            recipePlannerViewModel = RecipePlannerViewModel()
         )
     }
 }
@@ -60,7 +60,8 @@ fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel,
     recipeDetailViewModel: RecipeDetailViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    recipePlannerViewModel: RecipePlannerViewModel
 ) {
     Scaffold(
         bottomBar = {
@@ -124,7 +125,8 @@ fun HomeScreenPreview() {
             navController = rememberNavController(),
             homeViewModel = HomeViewModel(),
             recipeDetailViewModel = RecipeDetailViewModel(),
-            profileViewModel = ProfileViewModel()
+            profileViewModel = ProfileViewModel(),
+            recipePlannerViewModel = RecipePlannerViewModel()
         )
     }
 }
