@@ -100,7 +100,7 @@ fun ProfileScreen(
                 onClick = {
                     profileViewModel.isUpdateProfile.value = true
                     navController.navigate("profile_set_up")
-                          },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -121,4 +121,3 @@ fun ProfileScreenPreview() {
             profileViewModel = ProfileViewModel())
     }
 }
-
