@@ -90,7 +90,7 @@ fun SearchBoxHome(
         label = { Text("Search for a meal") },
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(60.dp)
             .padding(vertical = 8.dp),
         leadingIcon = {
             Icon(

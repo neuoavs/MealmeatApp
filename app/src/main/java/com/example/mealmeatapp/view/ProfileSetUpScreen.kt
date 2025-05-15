@@ -26,6 +26,11 @@ fun ProfileSetupScreen(
     profileViewModel: ProfileViewModel,
     homeViewModel: HomeViewModel
 ) {
+    // Khởi tạo lại trạng thái khi vào màn hình chỉnh sửa profile
+    LaunchedEffect(Unit) {
+        profileSetUpViewModel.resetState()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -33,6 +38,7 @@ fun ProfileSetupScreen(
                 colorResource(id = R.color.light_cream)
             )
     ) {
+        // Header với nút điều hướng
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -45,6 +51,8 @@ fun ProfileSetupScreen(
                 profileSetUpViewModel = profileSetUpViewModel
             )
         }
+
+        // Nội dung chính theo từng bước
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,13 +89,15 @@ fun ProfileSetupScreen(
             }
         }
 
+        // Dialog hiển thị tóm tắt hoặc thoát
         ProfileDialog(
             navController = navController,
             profileSetUpViewModel = profileSetUpViewModel,
             profileViewModel = profileViewModel,
             homeViewModel = homeViewModel
         )
-        // Footer
+
+        // Footer với nút Next và StepCircle
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,4 +118,73 @@ fun ProfileSetupScreen(
     }
 }
 
+/**
+ * Dialog hiển thị tóm tắt thông tin profile hoặc dialog thoát sau khi xác nhận.
+ * @param navController Bộ điều hướng để chuyển hướng giữa các màn hình.
+ * @param profileSetUpViewModel ViewModel quản lý trạng thái thiết lập hồ sơ.
+ * @param profileViewModel ViewModel quản lý dữ liệu hồ sơ.
+ * @param homeViewModel ViewModel quản lý dữ liệu chính (home).
+ */
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ProfileDialog(
+    navController: NavController,
+    profileSetUpViewModel: ProfileSetUpViewModel,
+    profileViewModel: ProfileViewModel,
+    homeViewModel: HomeViewModel
+) {
+    // Hiển thị dialog tóm tắt khi hoàn tất bước 5
+    if (profileSetUpViewModel.showSummaryDialog.value) {
+        AlertDialog(
+            onDismissRequest = { profileSetUpViewModel.showSummaryDialog.value = false },
+            title = { Text("Confirm Profile") },
+            text = {
+                Column {
+                    Text("Age: ${profileSetUpViewModel.age.intValue}")
+                    Text("Gender: ${profileSetUpViewModel.getGenderValueString()}")
+                    Text("Height: ${profileSetUpViewModel.getHeightValueString()}")
+                    Text("Weight: ${profileSetUpViewModel.getWeightValueString()}")
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        profileSetUpViewModel.onConfirmClick(navController, profileViewModel, homeViewModel)
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { profileSetUpViewModel.showSummaryDialog.value = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 
+    // Hiển thị dialog thoát sau khi xác nhận profile
+    if (profileSetUpViewModel.showExitDialog.value) {
+        AlertDialog(
+            onDismissRequest = { profileSetUpViewModel.onCancelExitClick() },
+            title = { Text("Exit to Settings") },
+            text = { Text("Do you want to exit to Settings?") },
+            confirmButton = {
+                Button(
+                    onClick = { profileSetUpViewModel.onExitClick(navController) }
+                ) {
+                    Text("Exit")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { profileSetUpViewModel.onCancelExitClick() }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}

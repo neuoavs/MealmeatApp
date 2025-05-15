@@ -246,13 +246,22 @@ class ProfileSetUpViewModel : ViewModel() {
         homeViewModel.fetchRandomRecipes(profileViewModel)
         Toast.makeText(navController.context, "Profile saved successfully", Toast.LENGTH_SHORT).show()
 
-        // Chuyển hướng
-        if (profileViewModel.isUpdateProfile.value) {
-            navController.navigate("profile")
-            profileViewModel.isUpdateProfile.value = false
-        } else {
-            navController.navigate("home")
-        }
+        // Thay đổi: Không điều hướng ngay, giữ nguyên để xử lý nút thoát
+        showExitDialog.value = true // Hiển thị dialog thoát
+    }
+
+    // Thêm trạng thái cho dialog thoát
+    val showExitDialog = mutableStateOf(false)
+
+    // Xử lý khi nhấn nút thoát trong dialog
+    fun onExitClick(navController: NavController) {
+        showExitDialog.value = false
+        navController.navigate("setting") // Chuyển hướng đến màn hình setting
+    }
+
+    // Hủy dialog thoát mà không điều hướng
+    fun onCancelExitClick() {
+        showExitDialog.value = false
     }
 
     fun getHeightValueString(): String {
