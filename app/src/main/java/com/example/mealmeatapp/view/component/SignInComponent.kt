@@ -28,7 +28,9 @@ import androidx.navigation.NavController
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
+import com.example.mealmeatapp.viewmodel.RecipePlannerViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun TitleSignIn() {
@@ -49,6 +51,10 @@ fun TitleSignIn() {
     )
 }
 
+/**
+ * Hiển thị liên kết để tạo tài khoản mới.
+ * @param navController Bộ điều hướng để chuyển đến màn hình đăng ký.
+ */
 @Composable
 fun CreateLink(navController: NavController) {
     TextButton(onClick = { navController.navigate("sign_up") }) {
@@ -60,20 +66,27 @@ fun CreateLink(navController: NavController) {
     }
 }
 
+/**
+ * Hiển thị form đăng nhập với các trường nhập liệu và nút đăng nhập.
+ * @param navController Bộ điều hướng để chuyển hướng sau khi đăng nhập.
+ * @param signInViewModel ViewModel xử lý logic đăng nhập.
+ * @param profileViewModel ViewModel để cập nhật dữ liệu hồ sơ.
+ * @param homeViewModel ViewModel để lấy danh sách công thức.
+ * @param recipePlannerViewModel ViewModel để quản lý kế hoạch công thức.
+ */
 @Composable
 fun FormSignIn(
     navController: NavController,
     signInViewModel: SignInViewModel,
     profileViewModel: ProfileViewModel,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    recipePlannerViewModel: RecipePlannerViewModel
 ) {
-
-
-    // Email
+    // Trường nhập email
     OutlinedTextField(
         value = signInViewModel.email.value,
-        onValueChange = {signInViewModel.email.value = it},
-        label = { Text("Email")},
+        onValueChange = { signInViewModel.email.value = it },
+        label = { Text("Email") },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -81,11 +94,10 @@ fun FormSignIn(
         shape = RoundedCornerShape(8.dp)
     )
 
-
-    // Password
+    // Trường nhập mật khẩu
     OutlinedTextField(
         value = signInViewModel.password.value,
-        onValueChange = {signInViewModel.password.value = it },
+        onValueChange = { signInViewModel.password.value = it },
         label = { Text("Password") },
         modifier = Modifier
             .fillMaxWidth()
@@ -99,7 +111,7 @@ fun FormSignIn(
                 }) {
                 Icon(
                     painter = painterResource(
-                        id = if (signInViewModel.isPasswordVisibility.value) R.drawable.visibility else R.drawable.visibility_off // visibility and visibility_off
+                        id = if (signInViewModel.isPasswordVisibility.value) R.drawable.visibility else R.drawable.visibility_off
                     ),
                     contentDescription = "Toggle password visibility"
                 )
@@ -108,11 +120,13 @@ fun FormSignIn(
         shape = RoundedCornerShape(8.dp)
     )
 
+    // Liên kết quên mật khẩu (chưa có hành động cụ thể)
     TextButton(
         onClick = {
-            // Chuyển tới trang Forgot
+            // Chuyển tới trang Forgot (chưa triển khai)
         },
         modifier = Modifier
+            .padding(start = 16.dp)
     ) {
         Text(
             text = "Forgot password?",
@@ -121,12 +135,14 @@ fun FormSignIn(
         )
     }
 
+    // Nút đăng nhập
     Button(
         onClick = {
             signInViewModel.onSignInClick(
                 navController = navController,
                 profileViewModel = profileViewModel,
-                homeViewModel
+                homeViewModel = homeViewModel,
+                recipePlannerViewModel = recipePlannerViewModel // Thêm tham số này
             )
         },
         modifier = Modifier
@@ -143,5 +159,4 @@ fun FormSignIn(
             style = MaterialTheme.typography.labelLarge
         )
     }
-
 }

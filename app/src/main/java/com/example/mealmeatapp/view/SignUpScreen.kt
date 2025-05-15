@@ -45,15 +45,6 @@ fun SignUpScreen(
 
         AlreadyLink(navController)
 
-        Text(
-            text = "Or",
-            color = colorResource(id = R.color.gray),
-            style = MaterialTheme.typography.bodySmall
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        GoogleAuth()
     }
 }
 

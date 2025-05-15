@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.view.FavoriteScreen
 import com.example.mealmeatapp.view.HomeScreen
@@ -33,8 +34,11 @@ import com.example.mealmeatapp.viewmodel.SettingViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 import com.example.mealmeatapp.viewmodel.SignUpViewModel
 
+/**
+ * Activity chính của ứng dụng, thiết lập điều hướng và giao diện Compose.
+ */
 class MainActivity : ComponentActivity() {
-
+    // Khởi tạo các ViewModel bằng cách sử dụng delegate by viewModels()
     private val signInViewModel: SignInViewModel by viewModels()
     private val signUpViewModel: SignUpViewModel by viewModels()
     private val profileSetUpViewModel: ProfileSetUpViewModel by viewModels()
@@ -50,28 +54,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MealtimeAppTheme {
+                // Tạo NavController để quản lý điều hướng
                 val navController = rememberNavController()
                 Scaffold { innerPadding ->
+                    // Thiết lập NavHost để điều hướng giữa các màn hình
                     NavHost(
                         navController = navController,
                         startDestination = "meal_time",
                         modifier = Modifier.padding(innerPadding)
                     ) {
+                        // Màn hình khởi đầu
                         composable("meal_time") {
                             MealtimeScreen(
                                 navController = navController
                             )
                         }
 
+                        // Màn hình đăng nhập
                         composable("sign_in") {
                             SignInScreen(
                                 navController = navController,
                                 signInViewModel = signInViewModel,
                                 profileViewModel = profileViewModel,
-                                homeViewModel = homeViewModel
+                                homeViewModel = homeViewModel,
+                                recipePlannerViewModel = recipePlannerViewModel
                             )
                         }
 
+                        // Màn hình đăng ký
                         composable("sign_up") {
                             SignUpScreen(
                                 navController = navController,
@@ -80,6 +90,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Màn hình thiết lập hồ sơ
                         composable("profile_set_up") {
                             ProfileSetupScreen(
                                 navController = navController,
@@ -89,6 +100,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Màn hình chính (Home)
                         composable("home") {
                             HomeScreen(
                                 navController = navController,
@@ -99,6 +111,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Màn hình chi tiết công thức
                         composable("recipe_detail") {
                             RecipeDetailScreen(
                                 navController = navController,
@@ -107,6 +120,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Màn hình lập kế hoạch bữa ăn
                         composable("planner") {
                             MealPlannerScreen(
                                 navController = navController,
@@ -116,6 +130,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Màn hình danh sách yêu thích
                         composable("favorite") {
                             FavoriteScreen(
                                 navController = navController,
@@ -125,6 +140,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Màn hình cài đặt
                         composable("setting") {
                             SettingScreen(
                                 navController = navController,
@@ -133,6 +149,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        // Màn hình hồ sơ người dùng
                         composable("profile") {
                             ProfileScreen(
                                 navController = navController,

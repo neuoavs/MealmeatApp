@@ -16,6 +16,7 @@ import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.view.component.*
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
+import com.example.mealmeatapp.viewmodel.RecipePlannerViewModel
 import com.example.mealmeatapp.viewmodel.SignInViewModel
 
 @Composable
@@ -23,7 +24,8 @@ fun SignInScreen(
     navController: NavController,
     signInViewModel: SignInViewModel,
     profileViewModel: ProfileViewModel,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    recipePlannerViewModel: RecipePlannerViewModel
 ) {
     Column(
         modifier = Modifier
@@ -40,20 +42,12 @@ fun SignInScreen(
             navController = navController,
             profileViewModel = profileViewModel,
             signInViewModel = signInViewModel,
-            homeViewModel = homeViewModel
+            homeViewModel = homeViewModel,
+            recipePlannerViewModel = recipePlannerViewModel
         )
 
         CreateLink(navController)
 
-        Text(
-            text = "Or",
-            color = colorResource(id = R.color.gray),
-            style = MaterialTheme.typography.bodySmall
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        GoogleAuth()
     }
 }
 
@@ -66,7 +60,8 @@ fun SignInScreenPreview() {
             navController = rememberNavController(),
             signInViewModel = SignInViewModel(),
             profileViewModel = ProfileViewModel(),
-            homeViewModel = HomeViewModel()
+            homeViewModel = HomeViewModel(),
+            recipePlannerViewModel = RecipePlannerViewModel()
         )
     }
 }
