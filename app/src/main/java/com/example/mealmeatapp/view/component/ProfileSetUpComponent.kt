@@ -359,6 +359,7 @@ fun StepThree(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StepFour(
     profileSetUpViewModel: ProfileSetUpViewModel
@@ -473,6 +474,7 @@ fun StepFour(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StepFive(
     profileSetUpViewModel: ProfileSetUpViewModel
