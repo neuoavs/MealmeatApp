@@ -38,9 +38,11 @@ fun MealPlannerScreen(
             weekStart = currentWeekStart.value,
             onPreviousWeek = {
                 currentWeekStart.value = currentWeekStart.value.minusWeeks(1)
+                println("Navigated to previous week: ${currentWeekStart.value}")
             },
             onNextWeek = {
                 currentWeekStart.value = currentWeekStart.value.plusWeeks(1)
+                println("Navigated to next week: ${currentWeekStart.value}")
             },
             navController = navController,
             profileViewModel = profileViewModel,
@@ -58,13 +60,14 @@ fun MealPlannerScreen(
 @Composable
 fun MealPlannerScreenPreview() {
     MealtimeAppTheme {
+        val recipePlannerViewModel = RecipePlannerViewModel().apply {
+            setPreviewMode(true)
+        }
         MealPlannerScreen(
             navController = rememberNavController(),
             profileViewModel = ProfileViewModel(),
             recipeDetailViewModel = RecipeDetailViewModel(),
-            recipePlannerViewModel = RecipePlannerViewModel().apply {
-                setPreviewMode(true)
-            }
+            recipePlannerViewModel = recipePlannerViewModel
         )
     }
 }

@@ -3,26 +3,40 @@ package com.example.mealmeatapp.view.component
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.Recipe
+import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
 import com.example.mealmeatapp.model.MealType
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
@@ -180,7 +194,9 @@ fun DayMealPlan(
                             .padding(8.dp)
                             .clickable {
                                 selectedMealType = mealType
+                                recipePlannerViewModel.fetchNewRecipes() // Fetch new recipes
                                 showDialog = true
+                                println("Add clicked for mealType: $mealType")
                             }
                     )
                 }
@@ -194,29 +210,24 @@ fun DayMealPlan(
                     )
                 } else {
                     mealsForDay.forEach { recipe ->
-                        Row(
+                        RecipeItemLargePlanner(
+                            navController = navController,
+                            recipeDetailViewModel = recipeDetailViewModel,
+                            profileViewModel = profileViewModel,
+                            recipe = recipe,
+                            onRemove = {
+                                recipePlannerViewModel.removeMeal(date, mealType, recipe)
+                            },
+                            onAdd = {
+                                selectedMealType = mealType
+                                recipePlannerViewModel.fetchNewRecipes() // Fetch new recipes
+                                showDialog = true
+                                println("Add clicked for mealType: $mealType")
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 16.dp, top = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = recipe.title,
-                                style = MaterialTheme.typography.bodySmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.delete),
-                                contentDescription = "Remove meal",
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .clickable {
-                                        recipePlannerViewModel.removeMeal(date, mealType, recipe)
-                                    }
-                            )
-                        }
+                                .padding(start = 16.dp, top = 4.dp)
+                        )
                     }
                 }
             }
@@ -229,12 +240,124 @@ fun DayMealPlan(
             onRecipeSelected = { recipe ->
                 recipePlannerViewModel.scheduleMeal(date, selectedMealType!!, recipe)
                 showDialog = false
+                println("Scheduled recipe ${recipe.title} for $selectedMealType on $date")
             },
             recipePlannerViewModel = recipePlannerViewModel,
             profileViewModel = profileViewModel,
             navController = navController,
             recipeDetailViewModel = recipeDetailViewModel
         )
+    }
+}
+@Composable
+fun RecipeItemLargePlanner(
+    navController: NavController,
+    recipeDetailViewModel: RecipeDetailViewModel,
+    profileViewModel: ProfileViewModel,
+    recipe: Recipe?,
+    onRemove: () -> Unit,
+    onAdd: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier = modifier
+            .clickable {
+                recipeDetailViewModel.updateModel(recipe)
+                navController.navigate("recipe_detail")
+            }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(recipe?.image ?: "https://img.spoonacular.com/recipes/324694-556x370.jpeg")
+                    .crossfade(true)
+                    .transformations(CircleCropTransformation())
+                    .build()
+            )
+            Image(
+                painter = painter,
+                contentDescription = recipe?.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = recipe?.title ?: "",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = RecipeRepository().getNutritionValue(recipe, "Calories").second,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
+                    color = colorResource(id = R.color.gray).copy(alpha = 0.6f)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    NutrientItemWithBar(
+                        name = "Protein",
+                        recipe = recipe,
+                        color = Color.Green
+                    )
+                    NutrientItemWithBar(
+                        name = "Fat",
+                        recipe = recipe,
+                        color = Color.Yellow
+                    )
+                    NutrientItemWithBar(
+                        name = "Carbohydrates",
+                        recipe = recipe,
+                        color = Color.Blue
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.delete),
+                    contentDescription = "Remove meal",
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { onRemove() }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.add),
+                    contentDescription = "Add meal",
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { onAdd() }
+                )
+            }
+        }
     }
 }
 
@@ -261,24 +384,28 @@ fun RecipeSelectionDialog(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .align(Alignment.Center),
-                shape = MaterialTheme.shapes.medium,
+                shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                 border = BorderStroke(2.dp, Color(0xFFFF9100))
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                ) {
                     Text(
                         text = "Select a Recipe",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color(0xFFFF9100),
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 12.dp)
                     )
                     recipePlannerViewModel.errorMessage?.let { error ->
                         Text(
                             text = error,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            modifier = Modifier.padding(bottom = 12.dp)
                         )
                     }
                     if (recipePlannerViewModel.allRecipes.isEmpty()) {
@@ -292,25 +419,33 @@ fun RecipeSelectionDialog(
                             textAlign = TextAlign.Center
                         )
                     } else {
-                        LazyColumn(modifier = Modifier.heightIn(max = 300.dp)) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .heightIn(max = 300.dp)
+                                .fillMaxWidth()
+                        ) {
                             items(recipePlannerViewModel.allRecipes) { recipe ->
-                                RecipeItemLargePlan(
+                                RecipeItemLargePlanner(
                                     navController = navController,
                                     recipeDetailViewModel = recipeDetailViewModel,
                                     profileViewModel = profileViewModel,
                                     recipe = recipe,
+                                    onRemove = {},
+                                    onAdd = { onRecipeSelected(recipe) }, // Schedule recipe on + click
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable { onRecipeSelected(recipe) }
-                                        .background(Color(0xFFFFF3E0), RoundedCornerShape(4.dp))
-                                        .padding(vertical = 4.dp)
+                                        .padding(horizontal = 8.dp, vertical = 8.dp)
                                 )
+                                Spacer(modifier = Modifier.height(8.dp))
                             }
                         }
                     }
                     TextButton(
                         onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.End),
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(top = 12.dp),
                         colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFFF9100))
                     ) {
                         Text("Cancel")
