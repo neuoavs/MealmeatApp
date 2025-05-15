@@ -41,7 +41,7 @@ fun TitleMealMeat() {
         modifier = Modifier.padding(top = 50.dp)
     ) {
         Text(
-            text = "Mealmeat",
+            text = "Meal Mate",
             color = colorResource(id = R.color.gold),
             style = MaterialTheme.typography.headlineLarge
         )

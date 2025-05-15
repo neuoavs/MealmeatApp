@@ -90,8 +90,8 @@ fun SearchBoxHome(
         label = { Text("Search for a meal") },
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .padding(vertical = 8.dp),
+            .height(80.dp)
+            .padding(vertical = 10.dp),
         leadingIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.search), // search

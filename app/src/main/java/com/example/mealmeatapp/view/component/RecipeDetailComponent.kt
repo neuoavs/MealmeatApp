@@ -74,7 +74,7 @@ fun InstructionContent(recipe: Recipe?) {
                         color = Black,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
-                    recipe?.analyzedInstructions[index]?.steps?.forEach { st ->
+                    recipe?.analyzedInstructions!![index]?.steps?.forEach { st ->
                         Text(
                             text = "${index + 1}.${st.number}. ${st.step}",
                             style = MaterialTheme.typography.bodySmall,
@@ -84,7 +84,7 @@ fun InstructionContent(recipe: Recipe?) {
                         )
                     }
                 } else {
-                    recipe?.analyzedInstructions[index]?.steps?.forEach { st ->
+                    recipe?.analyzedInstructions!![index]?.steps?.forEach { st ->
                         Text(
                             text = "${index + 1}.${st.number}. ${st.step}",
                             style = MaterialTheme.typography.bodySmall,
