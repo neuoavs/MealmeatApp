@@ -24,6 +24,7 @@ import com.example.mealmeatapp.view.RecipeDetailScreen
 import com.example.mealmeatapp.view.SettingScreen
 import com.example.mealmeatapp.view.SignInScreen
 import com.example.mealmeatapp.view.SignUpScreen
+import com.example.mealmeatapp.view.ChatScreen
 import com.example.mealmeatapp.viewmodel.FavoriteViewModel
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
@@ -147,6 +148,10 @@ class MainActivity : ComponentActivity() {
                                 settingViewModel = settingViewModel,
                                 profileViewModel = profileViewModel
                             )
+                        }
+
+                        composable("chat") {
+                            ChatScreen(navController = navController)
                         }
 
                         // Màn hình hồ sơ người dùng

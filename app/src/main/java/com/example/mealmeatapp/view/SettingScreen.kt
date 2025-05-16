@@ -1,6 +1,4 @@
-
 package com.example.mealmeatapp.view
-
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -31,6 +29,20 @@ fun SettingScreen(
 ) {
     val context = LocalContext.current
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Settings") },
+                actions = {
+                    IconButton(onClick = { navController.navigate("chat") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.chatbot),
+                            contentDescription = "Chatbot",
+                            tint = colorResource(id = R.color.dark_green)
+                        )
+                    }
+                }
+            )
+        },
         bottomBar = {
             BottomNavigationBar(navController)
         }
@@ -91,10 +103,6 @@ fun SettingScreen(
         )
     }
 }
-
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
