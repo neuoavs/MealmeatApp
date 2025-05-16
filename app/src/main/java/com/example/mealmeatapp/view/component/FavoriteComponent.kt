@@ -1,28 +1,12 @@
 package com.example.mealmeatapp.view.component
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +14,6 @@ import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,10 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
-import coil3.request.crossfade
+import coil.compose.AsyncImage
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
@@ -66,7 +46,6 @@ fun TitleFavorite() {
     )
 }
 
-
 @Composable
 fun RecipeItemLargeFavorite(
     navController: NavController,
@@ -74,9 +53,8 @@ fun RecipeItemLargeFavorite(
     favoriteViewModel: FavoriteViewModel,
     profileViewModel: ProfileViewModel,
     recipe: Recipe?,
-    modifier: Modifier = Modifier,
-
-    ) {
+    modifier: Modifier = Modifier
+) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -92,22 +70,18 @@ fun RecipeItemLargeFavorite(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://img.spoonacular.com/recipes/324694-556x370.jpeg")
-                    .crossfade(true)
-                    .build()
-            )
-            // Circular image
-            Image(
-                painter = painter,
+            AsyncImage(
+                model = recipe?.image ?: "",
                 contentDescription = recipe?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(CircleShape)
-
+                    .clip(CircleShape),
+                placeholder = painterResource(id = R.drawable.placeholder),
+                error = painterResource(id = R.drawable.error),
+                onError = { error ->
+                    Log.e("ImageError", "Error loading image for ${recipe?.title}: ${error.result.throwable.message}")
+                }
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -116,7 +90,6 @@ fun RecipeItemLargeFavorite(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                // Meal name (bold)
                 Text(
                     text = recipe?.title ?: "",
                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -128,7 +101,6 @@ fun RecipeItemLargeFavorite(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Calorie info (small, faded)
                 Text(
                     text = RecipeRepository().getNutritionValue(recipe, "Calories").second,
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
@@ -137,7 +109,6 @@ fun RecipeItemLargeFavorite(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Nutrient row with circles protein, fat, carbs
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
@@ -167,7 +138,7 @@ fun RecipeItemLargeFavorite(
                 horizontalAlignment = Alignment.End
             ) {
                 val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe?.id }
-                val isPlanned  = profileViewModel.addedRecipe   .any { it.id == recipe?.id }
+                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe?.id }
 
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
@@ -176,8 +147,10 @@ fun RecipeItemLargeFavorite(
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            if (isFavorite) profileViewModel.removeFavoriteRecipe(recipe)
-                            else           profileViewModel.addFavoriteRecipe(recipe)
+                            if (recipe != null) {
+                                if (isFavorite) profileViewModel.removeFavoriteRecipe(recipe)
+                                else profileViewModel.addFavoriteRecipe(recipe)
+                            }
                         }
                 )
 
@@ -189,8 +162,10 @@ fun RecipeItemLargeFavorite(
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            if (isPlanned) profileViewModel.removeRecipe(recipe)
-                            else           profileViewModel.addRecipe(recipe)
+                            if (recipe != null) {
+                                if (isPlanned) profileViewModel.removeRecipe(recipe)
+                                else profileViewModel.addRecipe(recipe)
+                            }
                         }
                 )
             }
@@ -198,25 +173,26 @@ fun RecipeItemLargeFavorite(
     }
 }
 
-
 @Composable
 fun LoadImage() {
     Column {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1280px-Image_created_with_a_mobile_phone.png")
-                    .crossfade(true)
-                    .build(),
+            model = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1280px-Image_created_with_a_mobile_phone.png",
             contentDescription = "Recipe Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(80.dp)
-                .clip(CircleShape)
+                .clip(CircleShape),
+            placeholder = painterResource(id = R.drawable.placeholder),
+            error = painterResource(id = R.drawable.error),
+            onError = { error ->
+                Log.e("ImageError", "Error loading image: ${error.result.throwable.message}")
+            }
         )
     }
 }
 
-@Preview (showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun RecipeItemLargeFavoritePreview() {
     MaterialTheme {

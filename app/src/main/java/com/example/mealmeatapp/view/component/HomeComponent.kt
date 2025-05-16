@@ -1,41 +1,14 @@
 package com.example.mealmeatapp.view.component
 
-
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +19,6 @@ import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,10 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
-import coil3.request.crossfade
+import coil.compose.AsyncImage
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
@@ -69,9 +38,6 @@ import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
-
-
-
 
 data class BottomNavItem(
     val route: String,
@@ -90,13 +56,13 @@ fun SearchBoxHome(
         label = { Text("Search for a meal") },
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
-            .padding(vertical = 10.dp),
+            .height(60.dp)
+            .padding(vertical = 8.dp),
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.search), // search
+                painter = painterResource(id = R.drawable.search),
                 contentDescription = "Search Icon",
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(22.dp)
             )
         },
         shape = RoundedCornerShape(8.dp),
@@ -120,9 +86,6 @@ fun TitleHome() {
         modifier = Modifier.padding(vertical = 8.dp)
     )
 }
-
-
-
 
 @Composable
 fun RecipeItemLargeHome(
@@ -148,22 +111,18 @@ fun RecipeItemLargeHome(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://img.spoonacular.com/recipes/324694-556x370.jpeg")
-                    .crossfade(true)
-                    .build()
-            )
-            // Circular image
-            Image(
-                painter = painter,
+            AsyncImage(
+                model = recipe.image,
                 contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(CircleShape)
-
+                    .clip(CircleShape),
+                placeholder = painterResource(id = R.drawable.placeholder),
+                error = painterResource(id = R.drawable.error),
+                onError = { error ->
+                    Log.e("ImageError", "Error loading image for ${recipe.title}: ${error.result.throwable.message}")
+                }
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -172,7 +131,6 @@ fun RecipeItemLargeHome(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                // Meal name (bold)
                 Text(
                     text = recipe.title,
                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -184,7 +142,6 @@ fun RecipeItemLargeHome(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Calorie info (small, faded)
                 Text(
                     text = RecipeRepository().getNutritionValue(recipe, "Calories").second,
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
@@ -193,7 +150,6 @@ fun RecipeItemLargeHome(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Nutrient row with circles protein, fat, carbs
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
@@ -222,8 +178,8 @@ fun RecipeItemLargeHome(
             Column(
                 horizontalAlignment = Alignment.End
             ) {
-                val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe?.id }
-                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe?.id }
+                val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe.id }
+                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe.id }
 
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
@@ -253,7 +209,6 @@ fun RecipeItemLargeHome(
         }
     }
 }
-
 
 @Composable
 fun NutrientItemWithBar(
@@ -303,8 +258,6 @@ fun NutrientItemWithBar(
         }
     }
 }
-
-
 
 @Composable
 fun BottomNavigationBar(
@@ -367,9 +320,6 @@ fun NutrientItemWithBarPreview() {
     }
 }
 
-
-
-
 @Composable
 fun CategoryButton(
     homeViewModel: HomeViewModel,
@@ -381,10 +331,12 @@ fun CategoryButton(
     ) {
         homeViewModel.categories.forEach { category ->
             Button(
-                onClick = { homeViewModel.onCategoryChange(
-                    category = category,
-                    profileViewModel = profileViewModel
-                ) },
+                onClick = {
+                    homeViewModel.onCategoryChange(
+                        category = category,
+                        profileViewModel = profileViewModel
+                    )
+                },
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 2.dp),
@@ -404,4 +356,3 @@ fun CategoryButton(
         }
     }
 }
-

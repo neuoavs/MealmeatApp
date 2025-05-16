@@ -1,9 +1,9 @@
 package com.example.mealmeatapp.view.component
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,11 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import coil3.request.transformations
-import coil3.transform.CircleCropTransformation
+import coil.compose.AsyncImage
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
@@ -249,6 +244,7 @@ fun DayMealPlan(
         )
     }
 }
+
 @Composable
 fun RecipeItemLargePlanner(
     navController: NavController,
@@ -274,20 +270,18 @@ fun RecipeItemLargePlanner(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(recipe?.image ?: "https://img.spoonacular.com/recipes/324694-556x370.jpeg")
-                    .crossfade(true)
-                    .transformations(CircleCropTransformation())
-                    .build()
-            )
-            Image(
-                painter = painter,
+            AsyncImage(
+                model = recipe?.image ?: "",
                 contentDescription = recipe?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(CircleShape)
+                    .clip(CircleShape),
+                placeholder = painterResource(id = R.drawable.placeholder),
+                error = painterResource(id = R.drawable.error),
+                onError = { error ->
+                    Log.e("ImageError", "Error loading image for ${recipe?.title}: ${error.result.throwable.message}")
+                }
             )
 
             Spacer(modifier = Modifier.width(12.dp))

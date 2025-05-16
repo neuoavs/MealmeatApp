@@ -18,10 +18,9 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.mealmeatapp.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 
 // Primary button (used for "NEXT")
-
 @Composable
 fun CustomButton(
     text: String,
@@ -94,6 +93,7 @@ fun DialogButton(
         )
     }
 }
+
 @Composable
 fun ImageFromUrl(
     url: String,
@@ -106,8 +106,6 @@ fun ImageFromUrl(
     }
 }
 
-
 fun Modifier.enabled(enabled: Boolean): Modifier {
     return if (enabled) this else this.then(Modifier.alpha(0.5f))
 }
-
