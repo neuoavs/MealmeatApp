@@ -41,7 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository

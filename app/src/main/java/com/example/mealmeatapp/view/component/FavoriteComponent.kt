@@ -1,5 +1,6 @@
 package com.example.mealmeatapp.view.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,10 +41,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
-import coil3.request.crossfade
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
@@ -92,22 +92,19 @@ fun RecipeItemLargeFavorite(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://img.spoonacular.com/recipes/324694-556x370.jpeg")
-                    .crossfade(true)
-                    .build()
-            )
-            // Circular image
-            Image(
-                painter = painter,
+// Sử dụng AsyncImage tương tự như RecipeItemLargeHome
+            AsyncImage(
+                model = recipe?.image ?: "",
                 contentDescription = recipe?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(CircleShape)
-
+                    .clip(CircleShape),
+                placeholder = painterResource(id = R.drawable.placeholder),
+                error = painterResource(id = R.drawable.error),
+                onError = { error ->
+                    Log.e("ImageError", "Error loading image for ${recipe?.title}: ${error.result.throwable.message}")
+                }
             )
 
             Spacer(modifier = Modifier.width(12.dp))

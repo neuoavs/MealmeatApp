@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.mealmeatapp.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 
 // Primary button (used for "NEXT")
 

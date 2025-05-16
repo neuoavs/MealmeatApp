@@ -1,7 +1,5 @@
 package com.example.mealmeatapp.view.component
 
-
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,8 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +41,6 @@ import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,10 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil3.request.crossfade
+import coil.compose.AsyncImage
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
@@ -70,6 +62,7 @@ import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
 import android.util.Log
 
+// Phần còn lại của mã giữ nguyên
 
 
 
@@ -149,29 +142,20 @@ fun RecipeItemLargeHome(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(recipe.image)
-                    .crossfade(true)
-                    .listener(
-                        onError = { request, result ->
-                            Log.e("ImageError", "Error loading image: ${result.throwable}")
-                        }
-                    )
-                    .build()
-            )
-            // Circular image
-            Image(
-                painter = painter,
+            // Sử dụng AsyncImage thay cho Image với rememberAsyncImagePainter
+            AsyncImage(
+                model = recipe.image, // Sử dụng URL từ recipe.image
                 contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(CircleShape)
-
+                    .clip(CircleShape),
+                placeholder = painterResource(id = R.drawable.placeholder), // Hình ảnh placeholder
+                error = painterResource(id = R.drawable.error), // Hình ảnh lỗi
+                onError = { error ->
+                    Log.e("ImageError", "Error loading image for ${recipe.title}: ${error.result.throwable.message}")
+                }
             )
-
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -229,8 +213,8 @@ fun RecipeItemLargeHome(
             Column(
                 horizontalAlignment = Alignment.End
             ) {
-                val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe?.id }
-                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe?.id }
+                val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe.id }
+                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe.id }
 
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
