@@ -1,6 +1,6 @@
 package com.example.mealmeatapp.apimodel.ingredient
 
-import com.example.example.Nutrition
+import com.example.mealmeatapp.apimodel.recipe.Nutrition
 import com.google.gson.annotations.SerializedName
 
 data class Ingredient(

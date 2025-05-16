@@ -1,16 +1,13 @@
 package com.example.mealmeatapp.apimodel.recipe
 
-import com.example.example.AnalyzedInstruction
-import com.example.example.ExtendedIngredient
-import com.example.example.Nutrition
-import com.example.example.WinePairing
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import com.google.gson.annotations.SerializedName
 
 
 data class Recipe (
     @SerializedName("id") var id: Int = 0,
     @SerializedName("title") var title: String = "",
-    @SerializedName("image") var imageUrl: String = "",
+    @SerializedName("image") var image: String = "",
     @SerializedName("readyInMinutes") var readyInMinutes: Int = 0,
     @SerializedName("servings") var servings: Int = 0,
     @SerializedName("sourceUrl") var sourceUrl: String = "",
@@ -51,13 +48,41 @@ data class Recipe (
 )
 
 class RecipeRepository {
+
     fun getNutritionValue(
-        recipe: Recipe,
+        recipe: Recipe?,
         name: String
     ): Pair<Float, String> {
-        val nameObject = recipe.nutrition.nutrients.find { it.name == name }
+        val nameObject = recipe?.nutrition?.nutrients?.find { it.name == name }
         val nameValue = nameObject?.amount ?: 0.0
         val percent = nameObject?.percentOfDailyNeeds ?: 0.0
         return (percent/100).toFloat() to "$nameValue ${nameObject?.unit}"
+    }
+
+    fun isFavorite(
+        profileViewModel: ProfileViewModel,
+        recipe: Recipe?
+    ): Boolean {
+        // Kiểm tra xem đã có trong danh sách yêu thích ở cơ sơ dữ liệu chưa ở bảng favoriteRecipes
+        /*
+        profileViewModel.email.value -> Lấy email
+        recipe.id -> Lấy id công thức
+         */
+
+        return false
+    }
+
+
+    fun isAddedToCart(
+        profileViewModel: ProfileViewModel,
+        recipe: Recipe?
+    ): Boolean {
+        // Kiểm tra xem đã thêm công thức vào trong cơ sở dữ liệu chưa ở bảng addedRecipes
+        /*
+        profileViewModel.email.value -> Lấy email
+        recipe.id -> Lấy id công thức
+         */
+
+        return false
     }
 }

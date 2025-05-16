@@ -39,10 +39,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mealmeatapp.R
+import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.viewmodel.ProfileSetUpViewModel
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.example.mealmeatapp.model.ProfileDatabase
 
 // Profile Set Up Screen
 @Composable
@@ -53,7 +57,7 @@ fun HeaderProfile(
     Icon(
         painter = painterResource(id = R.drawable.arrow_back_ios),
         contentDescription = "Back",
-        tint = Color(0xFF2E7D32),
+        tint = colorResource(id = R.color.dark_green),
         modifier = Modifier
             .size(40.dp)
             .clickable {
@@ -211,21 +215,14 @@ fun StepOne(
     ProfileOption(
         text = "Less weight",
         iconResId = R.drawable.nutrition_fill, // less_weight
-        isSelected = profileSetUpViewModel.selectedGoal.value == "Less weight",
+        isSelected = profileSetUpViewModel.selectedGoal.value == "Less weight", // diet
         onClick = { profileSetUpViewModel.onGoalChange("Less weight") },
-        layoutType = "row"
-    )
-    ProfileOption(
-        text = "Gain weight",
-        iconResId = R.drawable.fitness_center, // gain_weight
-        isSelected = profileSetUpViewModel.selectedGoal.value == "Gain weight",
-        onClick = { profileSetUpViewModel.onGoalChange("Gain weight") },
         layoutType = "row"
     )
     ProfileOption(
         text = "Stay healthy",
         iconResId = R.drawable.ecg_heart_fill, // stay_healthy
-        isSelected = profileSetUpViewModel.selectedGoal.value == "Stay healthy",
+        isSelected = profileSetUpViewModel.selectedGoal.value == "Stay healthy", // normal
         onClick = { profileSetUpViewModel.onGoalChange("Stay healthy") },
         layoutType = "row"
     )
@@ -629,10 +626,12 @@ fun ProfileTable(
 @Composable
 fun ProfileDialog(
     navController: NavController,
-    profileSetUpViewModel: ProfileSetUpViewModel
+    profileSetUpViewModel: ProfileSetUpViewModel,
+    profileViewModel: ProfileViewModel,
+    homeViewModel: HomeViewModel
 ) {
     // Summary Dialog
-    if (profileSetUpViewModel.showSummaryDialog.value && profileSetUpViewModel.profileDataToSubmit.value != null) {
+    if (profileSetUpViewModel.showSummaryDialog.value) {
         AlertDialog(
             onDismissRequest = { profileSetUpViewModel.showSummaryDialog.value = false },
             title = {
@@ -653,7 +652,9 @@ fun ProfileDialog(
                 TextButton(
                     onClick = {
                         profileSetUpViewModel.onConfirmClick(
-                            navController = navController
+                            navController = navController,
+                            profileViewModel = profileViewModel,
+                            homeViewModel = homeViewModel
                         )
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF2E7D32))
@@ -679,12 +680,17 @@ fun ProfileDialog(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NextButtonProfile(
-    profileSetUpViewModel: ProfileSetUpViewModel
+    profileSetUpViewModel: ProfileSetUpViewModel,
+    profileViewModel: ProfileViewModel,
+    homeViewModel: HomeViewModel
 ) {
     CustomButton(
         text = "NEXT",
         onClick = {
-            profileSetUpViewModel.onNextClick()
+            profileSetUpViewModel.onNextClick(
+                profileViewModel = profileViewModel,
+                homeViewModel = homeViewModel
+            )
         },
         modifier = Modifier.enabled(
             when (profileSetUpViewModel.currentStep.intValue) {

@@ -170,5 +170,3 @@ fun LogoutDialog(onConfirm: () -> Unit, onCancel: () -> Unit) {
         }
     )
 }
-
-

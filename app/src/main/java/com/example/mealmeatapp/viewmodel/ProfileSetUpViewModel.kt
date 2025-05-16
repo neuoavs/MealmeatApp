@@ -1,17 +1,15 @@
 package com.example.mealmeatapp.viewmodel
 
-
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-
-import com.example.mealmeatapp.ui.theme.model.ProfileData
+import com.example.mealmeatapp.model.ProfileData
 import java.time.LocalDate
 import java.time.Period
-
 
 class ProfileSetUpViewModel : ViewModel() {
     // Profile setup states
@@ -29,7 +27,7 @@ class ProfileSetUpViewModel : ViewModel() {
     val weightLb = mutableIntStateOf(156)
     val profileDataToSubmit = mutableStateOf<ProfileData?>(null)
     val showDatePicker = mutableStateOf(false)
-    var showSummaryDialog = mutableStateOf(false)
+    val showSummaryDialog = mutableStateOf(false)
     @RequiresApi(Build.VERSION_CODES.O)
     val age = mutableIntStateOf(calculateAge(selectedDate.value))
 
@@ -68,23 +66,87 @@ class ProfileSetUpViewModel : ViewModel() {
         }
     )
 
+    // Hàm reset trạng thái của ProfileSetUpViewModel
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun commitProfileData() {
-        profileDataToSubmit.value = ProfileData(
-            goal = selectedGoal.value ?: "",
+    fun resetState() {
+        currentStep.intValue = 1
+        selectedGoal.value = null
+        selectedGender.value = true
+        selectedDate.value = LocalDate.now().minusYears(19)
+        heightUnit.value = "ft"
+        heightFeet.intValue = 6
+        heightInches.intValue = 8
+        heightCm.intValue = 203
+        weightUnit.value = "kg"
+        weightKg.intValue = 71
+        weightLb.intValue = 156
+        profileDataToSubmit.value = null
+        showDatePicker.value = false
+        showSummaryDialog.value = false
+        age.intValue = calculateAge(selectedDate.value)
+        updateDerivedStates()
+    }
+
+    // Cập nhật các trạng thái phụ thuộc
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateDerivedStates() {
+        heightInCm.intValue = if (heightUnit.value == "ft") {
+            (heightFeet.intValue * 30.48 + heightInches.intValue * 2.54).toInt()
+        } else {
+            heightCm.intValue
+        }
+
+        heightInFeetInches.value = if (heightUnit.value == "cm") {
+            val totalInches = (heightCm.intValue / 2.54).toInt()
+            val feet = totalInches / 12
+            val inches = totalInches % 12
+            feet to inches
+        } else {
+            heightFeet.intValue to heightInches.intValue
+        }
+
+        weightInKg.intValue = if (weightUnit.value == "kg") {
+            weightKg.intValue
+        } else {
+            (weightLb.intValue / 2.2).toInt()
+        }
+
+        weightInLb.intValue = if (weightUnit.value == "lb") {
+            weightLb.intValue
+        } else {
+            (weightKg.intValue * 2.2).toInt()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun commitProfileData(
+        profileViewModel: ProfileViewModel,
+        homeViewModel: HomeViewModel
+    ) {
+        // Cập nhật các trạng thái phụ thuộc trước khi tạo ProfileData
+        updateDerivedStates()
+
+        val profileData = ProfileData(
+            isDiet = selectedGoal.value == "Less weight",
             gender = selectedGender.value,
             age = age.intValue,
-            heightCm = heightCm.intValue,
+            heightCm = if (heightUnit.value == "ft") {
+                (heightFeet.intValue * 30.48 + heightInches.intValue * 2.54).toInt()
+            } else {
+                heightCm.intValue
+            },
             heightFeetInches = heightInFeetInches.value,
             heightUnit = heightUnit.value,
             weight = getWeighValue(),
             weightUnit = weightUnit.value
         )
+        profileDataToSubmit.value = profileData
+        profileViewModel.mergeProfile(profileData)
     }
 
     // Profile setup callbacks
     fun onStepChange(step: Int) {
-        currentStep.value = step
+        currentStep.intValue = step
     }
 
     fun onGoalChange(goal: String) {
@@ -98,7 +160,7 @@ class ProfileSetUpViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun onDateChange(date: LocalDate) {
         selectedDate.value = date
-        age.value = calculateAge(date)
+        age.intValue = calculateAge(date)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -106,72 +168,96 @@ class ProfileSetUpViewModel : ViewModel() {
         return Period.between(dateOfBirth, LocalDate.now()).years
     }
 
-
-
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onHeightUnitChange(unit: String) {
         heightUnit.value = unit
+        updateDerivedStates()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onHeightFeetChange(feet: Int) {
-        heightFeet.value = feet
+        heightFeet.intValue = feet
+        updateDerivedStates()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onHeightInchesChange(inches: Int) {
-        heightInches.value = inches
+        heightInches.intValue = inches
+        updateDerivedStates()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onHeightCmChange(cm: Int) {
-        heightCm.value = cm
+        heightCm.intValue = cm
+        updateDerivedStates()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onWeightUnitChange(unit: String) {
         weightUnit.value = unit
+        updateDerivedStates()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onWeightKgChange(kg: Int) {
-        weightKg.value = kg
+        weightKg.intValue = kg
+        updateDerivedStates()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onWeightLbChange(lb: Int) {
-        weightLb.value = lb
+        weightLb.intValue = lb
+        updateDerivedStates()
     }
 
-    fun onBackClick(
-        navController: NavController
-    ) {
+    fun onBackClick(navController: NavController) {
         navController.navigate("sign_in")
     }
 
-    fun onSkipClick(
-        navController: NavController
-    ) {
+    fun onSkipClick(navController: NavController) {
         navController.navigate("home")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun onNextClick() {
+    fun onNextClick(
+        profileViewModel: ProfileViewModel,
+        homeViewModel: HomeViewModel
+    ) {
         when (currentStep.intValue) {
-            1 -> if (selectedGoal.value != null) ++currentStep.value
-            2 -> ++currentStep.value
-            3 -> ++currentStep.value
-            4 -> ++currentStep.value
-            5 -> showSummaryDialog.value = true
+            1 -> if (selectedGoal.value != null) currentStep.intValue++
+            2 -> currentStep.intValue++
+            3 -> currentStep.intValue++
+            4 -> currentStep.intValue++
+            5 -> {
+                commitProfileData(profileViewModel, homeViewModel)
+                showSummaryDialog.value = true
+            }
         }
-        commitProfileData()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onConfirmClick(
-        navController: NavController
+        navController: NavController,
+        profileViewModel: ProfileViewModel,
+        homeViewModel: HomeViewModel
     ) {
         showSummaryDialog.value = false
-        commitProfileData()
-//        navController.navigate("home")
+        commitProfileData(profileViewModel, homeViewModel)
+        homeViewModel.fetchRandomRecipes(profileViewModel)
+        Toast.makeText(navController.context, "Profile saved successfully", Toast.LENGTH_SHORT).show()
+
+        // Chuyển hướng
+        if (profileViewModel.isUpdateProfile.value) {
+            navController.navigate("profile")
+            profileViewModel.isUpdateProfile.value = false
+        } else {
+            navController.navigate("home")
+        }
     }
 
     fun getHeightValueString(): String {
         return if (heightUnit.value == "ft") {
-            "${heightFeet.intValue}'${heightInches.intValue}"
+            "${heightFeet.intValue}'${heightInches.intValue}\""
         } else {
             "${heightCm.intValue} cm"
         }
@@ -186,18 +272,10 @@ class ProfileSetUpViewModel : ViewModel() {
     }
 
     fun getGenderValueString(): String {
-        return if (selectedGender.value) {
-            "Male"
-        } else {
-            "Female"
-        }
+        return if (selectedGender.value) "Male" else "Female"
     }
 
     fun getWeighValue(): Int {
-        return if (weightUnit.value == "kg") {
-            weightKg.intValue
-        } else {
-            weightLb.intValue
-        }
+        return if (weightUnit.value == "kg") weightKg.intValue else weightLb.intValue
     }
 }

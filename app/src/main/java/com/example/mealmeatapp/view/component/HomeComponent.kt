@@ -1,5 +1,8 @@
 package com.example.mealmeatapp.view.component
 
+
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +32,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +45,7 @@ import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,13 +56,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil3.request.crossfade
 import com.example.mealmeatapp.apimodel.recipe.Recipe
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.recipe.RecipeRepository
-import com.example.mealmeatapp.view.BottomNavItem
+import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.viewmodel.HomeViewModel
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
+import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
+import android.util.Log
 
+
+
+
+
+data class BottomNavItem(
+    val route: String,
+    val icon: Int,
+    val label: String
+)
 
 // Home Screen
 @Composable
@@ -99,58 +122,25 @@ fun TitleHome() {
     )
 }
 
-@Composable
-fun RandomRecipeButton(
-    homeViewModel: HomeViewModel
-) {
-    Button(
-        onClick = { homeViewModel.onRandomRecipeClick() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(45.dp),
-        shape = RoundedCornerShape(22.5.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange))
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.shuffle), // shuffle
-                contentDescription = "Random Icon",
-                tint = White,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = "Random Meal",
-                color = White,
-                style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
-            )
-        }
-    }
-}
+
 
 
 @Composable
-fun RecipeItemLarge(
+fun RecipeItemLargeHome(
+    navController: NavController,
+    recipeDetailViewModel: RecipeDetailViewModel,
     homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel,
     recipe: Recipe,
     modifier: Modifier = Modifier
-
-//    isFavorite: Boolean,
-//    isPlanned: Boolean,
-//    onFavoriteClick: () -> Unit,
-//    onPlanClick: () -> Unit,
-//    onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier
             .clickable {
-                // Chuyển tới trang chi tiết công thức
-                //onClick()
+                recipeDetailViewModel.updateModel(recipe)
+                navController.navigate("recipe_detail")
             }
     ) {
         Row(
@@ -159,15 +149,29 @@ fun RecipeItemLarge(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(recipe.image)
+                    .crossfade(true)
+                    .listener(
+                        onError = { request, result ->
+                            Log.e("ImageError", "Error loading image: ${result.throwable}")
+                        }
+                    )
+                    .build()
+            )
             // Circular image
-            AsyncImage(
-                model = recipe.imageUrl,
+            Image(
+                painter = painter,
                 contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
+
             )
+
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -222,20 +226,24 @@ fun RecipeItemLarge(
             Spacer(modifier = Modifier.width(12.dp))
 
             // Favorite and Plan icons
-            /*Column(
+            Column(
                 horizontalAlignment = Alignment.End
             ) {
+                val isFavorite = profileViewModel.favoriteRecipe.any { it.id == recipe?.id }
+                val isPlanned = profileViewModel.addedRecipe.any { it.id == recipe?.id }
+
                 Icon(
                     painter = painterResource(id = if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite),
                     contentDescription = "Favorite",
-                    tint = if (isFavorite) colorResource(id = R.color.orange) else MaterialTheme.colorScheme.primary,
+                    tint = if (isFavorite) colorResource(id = R.color.red) else MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                             Xử lý thêm vào yêu thích
-                             onFavoriteClick()
+                            if (isFavorite) profileViewModel.removeFavoriteRecipe(recipe)
+                            else profileViewModel.addFavoriteRecipe(recipe)
                         }
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
                 Icon(
                     painter = painterResource(id = if (isPlanned) R.drawable.check_circle else R.drawable.add),
@@ -244,11 +252,11 @@ fun RecipeItemLarge(
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                             Xử lý thêm vào thực đơn
-                             onPlanClick()
+                            if (isPlanned) profileViewModel.removeRecipe(recipe)
+                            else profileViewModel.addRecipe(recipe)
                         }
                 )
-            }*/
+            }
         }
     }
 }
@@ -257,7 +265,7 @@ fun RecipeItemLarge(
 @Composable
 fun NutrientItemWithBar(
     name: String,
-    recipe: Recipe,
+    recipe: Recipe?,
     color: Color
 ) {
     Row(
@@ -308,11 +316,10 @@ fun NutrientItemWithBar(
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
-    plannedCount: Int
 ) {
     val navItems = listOf(
         BottomNavItem("home", R.drawable.home, "Home"),
-        BottomNavItem("planner", R.drawable.calendar_month_fill, "Planner ($plannedCount)"),
+        BottomNavItem("planner", R.drawable.calendar_month_fill, "Planner"),
         BottomNavItem("favorite", R.drawable.favorite_fill, "Favorite"),
         BottomNavItem("setting", R.drawable.setting, "Setting"),
     )
@@ -359,17 +366,32 @@ fun BottomNavigationBar(
     }
 }
 
-/*@Composable
-fun CategoryButton(
+@Preview(showBackground = true)
+@Composable
+fun NutrientItemWithBarPreview() {
+    MealtimeAppTheme {
+        BottomNavigationBar(navController = rememberNavController())
+    }
+}
 
+
+
+
+@Composable
+fun CategoryButton(
+    homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        categories.forEach { category ->
+        homeViewModel.categories.forEach { category ->
             Button(
-                onClick = { homeViewModel.onCategoryChange(category) },
+                onClick = { homeViewModel.onCategoryChange(
+                    category = category,
+                    profileViewModel = profileViewModel
+                ) },
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 2.dp),
@@ -378,7 +400,7 @@ fun CategoryButton(
                     containerColor = if (homeViewModel.selectedCategory.value == category) colorResource(id = R.color.orange) else White,
                     contentColor = if (homeViewModel.selectedCategory.value == category) White else Black
                 ),
-                contentPadding = PaddingValues(8.dp)
+                contentPadding = PaddingValues(0.dp)
             ) {
                 Text(
                     text = category.uppercase(),
@@ -388,4 +410,5 @@ fun CategoryButton(
             }
         }
     }
-}*/
+}
+

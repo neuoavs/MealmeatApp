@@ -21,20 +21,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.rememberAsyncImagePainter
+import androidx.navigation.NavController
+import coil3.compose.rememberAsyncImagePainter
 import com.example.mealmeatapp.R
 import com.example.mealmeatapp.apimodel.request.Message
-import com.example.mealmeatapp.ui.theme.MealtimeAppTheme
 import com.example.mealmeatapp.viewmodel.ChatViewModel
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun ChatScreen() {
+fun ChatScreen(navController: NavController) {
     val viewModel: ChatViewModel = viewModel()
     var inputText by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -44,7 +43,6 @@ fun ChatScreen() {
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
-            // Add the image URI as a message in the chat
             viewModel.messages.add(Message("user", "Image uploaded", isImage = true, imageUri = uri.toString()))
         }
     }
@@ -62,12 +60,16 @@ fun ChatScreen() {
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.back),
-                contentDescription = "Back",
-                tint = Color(0xFF2E7D32),
-                modifier = Modifier.size(24.dp)
-            )
+            IconButton(
+                onClick = { navController.navigateUp() } // Quay lại SettingScreen
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.back),
+                    contentDescription = "Back",
+                    tint = Color(0xFF2E7D32),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "MealMate",
@@ -154,10 +156,7 @@ fun ChatScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = {
-                    // Launch the image picker when the camera icon is clicked
-                    imagePickerLauncher.launch("image/*")
-                },
+                onClick = { imagePickerLauncher.launch("image/*") },
                 modifier = Modifier.size(40.dp)
             ) {
                 Icon(
@@ -248,7 +247,6 @@ fun ChatMessageBubble(message: Message) {
                 .widthIn(max = 280.dp)
         ) {
             if (message.isImage) {
-                // Display the uploaded image
                 Image(
                     painter = rememberAsyncImagePainter(model = message.imageUri),
                     contentDescription = "Uploaded Image",
@@ -258,7 +256,6 @@ fun ChatMessageBubble(message: Message) {
                     contentScale = ContentScale.Crop
                 )
             } else {
-                // Display text message
                 Text(
                     text = message.content,
                     fontSize = 16.sp,
@@ -278,16 +275,5 @@ fun ChatMessageBubble(message: Message) {
                 .fillMaxWidth()
                 .padding(start = 48.dp, top = 4.dp)
         )
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ChatScreenPreview() {
-    MealtimeAppTheme {
-        val viewModel = ChatViewModel()
-        viewModel.messages.add(Message("assistant", "We haven't seen you for 2 weeks. Would you like to set up an appointment with your nutritionist?"))
-        viewModel.messages.add(Message("user", "OK, let's make an appointment"))
-        ChatScreen()
     }
 }

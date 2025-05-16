@@ -1,5 +1,9 @@
 package com.example.mealmeatapp.view
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -9,27 +13,59 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.mealmeatapp.ui.theme.*
 import com.example.mealmeatapp.viewmodel.HomeViewModel
 import com.example.mealmeatapp.view.component.*
-import kotlin.text.category
+import androidx.compose.foundation.lazy.items
+import androidx.navigation.compose.rememberNavController
+import com.example.mealmeatapp.viewmodel.ProfileViewModel
+import com.example.mealmeatapp.viewmodel.RecipeDetailViewModel
+import com.example.mealmeatapp.viewmodel.RecipePlannerViewModel
+import kotlin.getValue
+
+@Suppress("TYPE_INTERSECTION_AS_REIFIED_WARNING",
+    "INFERRED_TYPE_VARIABLE_INTO_EMPTY_INTERSECTION_WARNING"
+)
+class HomeActivity : ComponentActivity() {
+
+    private val homeViewModel: HomeViewModel by viewModels()
+    private val recipeDetailViewModel: RecipeDetailViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MealtimeAppTheme {
+                HomeActivityContent()
+            }
+        }
+    }
+
+    @Composable
+    private fun HomeActivityContent() {
+        // Tạo NavController riêng cho HomeActivity
+        val navController = rememberNavController()
+        HomeScreen(
+            navController = navController,
+            homeViewModel = homeViewModel,
+            recipeDetailViewModel = recipeDetailViewModel,
+            profileViewModel = ProfileViewModel(),
+            recipePlannerViewModel = RecipePlannerViewModel()
+        )
+    }
+}
+
 
 @Composable
 fun HomeScreen(
+    navController: NavController,
     homeViewModel: HomeViewModel,
-    navController: NavController
+    recipeDetailViewModel: RecipeDetailViewModel,
+    profileViewModel: ProfileViewModel,
+    recipePlannerViewModel: RecipePlannerViewModel
 ) {
-    val categories = listOf(
-        "All",
-        "Breakfast",
-        "Lunch",
-        "Dinner"
-    )
-
-    /* Scaffold(
+    Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController, homeViewModel.plannedMeals.size) // Số lượng công thức, List
+            BottomNavigationBar(navController) // Mục menu
         }
     ) { padding ->
         LazyColumn(
@@ -43,54 +79,54 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Search box
-                SearchBoxHome(
-                    homeViewModel = homeViewModel
-                )
+                SearchBoxHome(homeViewModel = homeViewModel)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Category buttons
-//                CategoryButton()
+                CategoryButton(
+                    homeViewModel = homeViewModel,
+                    profileViewModel = profileViewModel
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 TitleHome()
 
-                // Button "Random Meal"
-                RandomRecipeButton(
-                    homeViewModel = homeViewModel
-                )
-
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-          // Display meals based on selected category
-//            items(homeViewModel.recipe.value) { recipe ->
-//                if (homeViewModel.selectedCategory.value == "All" || recipe.category == homeViewModel.selectedCategory.value) {
-//                    RecipeItemLarge(
-//                        homeViewModel = homeViewModel,
-//                        recipe = recipe,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(vertical = 6.dp),
-//                    )
-//                }
-//            }
+
+            items(homeViewModel.recipes.value) { recipe ->
+
+                RecipeItemLargeHome(
+                    navController = navController,
+                    recipeDetailViewModel = recipeDetailViewModel,
+                    homeViewModel = homeViewModel,
+                    profileViewModel = profileViewModel,
+                    recipe = recipe,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                )
+            }
         }
+
     }
-}*/
-
 }
-data class BottomNavItem(
-    val route: String,
-    val icon: Int,
-    val label: String
-)
 
-@Preview(showBackground = true)
+
+
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
     MealtimeAppTheme {
-        HomeScreen(HomeViewModel(), rememberNavController())
+        HomeScreen(
+            navController = rememberNavController(),
+            homeViewModel = HomeViewModel(),
+            recipeDetailViewModel = RecipeDetailViewModel(),
+            profileViewModel = ProfileViewModel(),
+            recipePlannerViewModel = RecipePlannerViewModel()
+        )
     }
 }

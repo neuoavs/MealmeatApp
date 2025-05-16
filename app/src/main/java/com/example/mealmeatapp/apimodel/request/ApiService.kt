@@ -12,27 +12,18 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    /*
-    Name	            Type	    Example	                Description
-    includeNutrition	boolean	    true	                Whether to include nutritional information to returned recipes.
-    include-tags	    string	    vegetarian, dessert	    The tags (can be diets, meal types, cuisines, or intolerances) that the recipe must have.
-    exclude-tags	    string	    dairy	                The tags (can be diets, meal types, cuisines, or intolerances) that the recipe must NOT have.
-    number	            number	    1	                    The number of random recipes to be returned (between 1 and 100)
-     */
     @GET("recipes/random")
-    fun getRamdomRepice(
-        @Query("apiKey") apiKey: String = "c84bbc45816e4665a7941fa34fb71841",
+    suspend fun getRandomRecipe(
+        @Query("apiKey") apiKey: String = "0eb480b8c96c43218be96f3eecd94529",
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("include-tags") includeTags:  String ?= null,
         @Query("exclude-tags") excludeTags: String ?= null,
-        @Query("number") number: Int = 10,
-    ): Call<RandomRecipesResponse>
-
-
+        @Query("number") number: Int = 5,
+    ): RandomRecipesResponse
 
     @GET("recipes/complexSearch")
-    fun searchRepice(
-        @Query("apiKey") apiKey: String = "c84bbc45816e4665a7941fa34fb71841",
+    suspend fun searchRepice(
+        @Query("apiKey") apiKey: String = "0eb480b8c96c43218be96f3eecd94529",
         @Query("query") query: String ?= null,
         @Query("cuisine") cuisine: String ?= null,
         @Query("diet") diet: String ?= null,
@@ -57,28 +48,34 @@ interface ApiService {
         @Query("number") number: Int ?= null,
         @Query("addRecipeInformation") addRecipeInformation: Boolean = true,
         @Query("addRecipeInstructions") addRecipeInstructions: Boolean = true
-    ) : Call<SearchRecipeResponse>
+    ) : SearchRecipeResponse
 
+    @GET("recipes/informationBulk")
+    suspend fun getRecipesInformationBulk(
+        @Query("apiKey") apiKey: String = "0eb480b8c96c43218be96f3eecd94529",
+        @Query("ids") ids: String,
+        @Query("includeNutrition") includeNutrition: Boolean = true
+    ): ArrayList<Recipe>
 
     @GET("recipes/{id}/information")
-    fun getInformationOfPriceByID(
+    suspend fun getInformationOfPriceByID(
         @Path("id") id: Int,
-        @Query("apiKey") apiKey: String = "c84bbc45816e4665a7941fa34fb71841",
+        @Query("apiKey") apiKey: String = "0eb480b8c96c43218be96f3eecd94529",
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("addWinePairing") addWinePairing: Boolean = false,
         @Query("addTasteData") addTasteData: Boolean = false,
-    ) : Call<Recipe>
+    ) : Recipe
 
-    @GET("recipes/{id}/information")
-    fun getInformationOfManyPricesByIDs(
-        @Query("apiKey") apiKey: String = "c84bbc45816e4665a7941fa34fb71841",
+    @GET("recipes/informationBulk")
+    suspend fun getInformationOfManyPricesByIDs(
+        @Query("apiKey") apiKey: String = "0eb480b8c96c43218be96f3eecd94529",
         @Path("ids") ids: String ?= null, // "715538,716429"
         @Query("includeNutrition") includeNutrition: Boolean = true,
-    ) : Call<List<Recipe>>
+    ) : List<Recipe>
 
     @GET("food/ingredients/search")
-    fun searchIngredient(
-        @Query("apiKey") apiKey: String = "c84bbc45816e4665a7941fa34fb71841",
+    suspend fun searchIngredient(
+        @Query("apiKey") apiKey: String = "0eb480b8c96c43218be96f3eecd94529",
         @Query("query") query: String ?= null,
         @Query("addChildren") addChildren: Boolean = false,
         @Query("minProteinPercent") minProteinPercent: Double ?= null,
@@ -94,15 +91,15 @@ interface ApiService {
         @Query("language") language: String = "en",
         @Query("offset") offset: Int ?= null,
         @Query("number") number: Int ?= null
-    ) : Call<SearchIngredientResponse>
+    ) : SearchIngredientResponse
 
     @GET("food/ingredients/{id}/information")
-    fun getInformationOfIngredientByID(
+    suspend fun getInformationOfIngredientByID(
         @Path("id") id: Int,
-        @Query("apiKey") apiKey: String = "c84bbc45816e4665a7941fa34fb71841",
+        @Query("apiKey") apiKey: String = "0eb480b8c96c43218be96f3eecd94529",
         @Query("amount") amount: Double = 100.0,
         @Query("unit") unit: String = "grams",
         @Query("locale") locale: String = "en_US",
-    ) : Call<Ingredient>
+    ) : Ingredient
 
 }

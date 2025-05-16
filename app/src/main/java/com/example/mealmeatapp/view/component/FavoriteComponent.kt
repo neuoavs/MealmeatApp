@@ -185,7 +185,7 @@ fun RecipeItemLargeFavorite(
                 Icon(
                     painter = painterResource(id = if (isPlanned) R.drawable.check_circle else R.drawable.add),
                     contentDescription = if (isPlanned) "Planned" else "Add to Plan",
-                    tint = if (isPlanned) colorResource(id = R.color.orange) else MaterialTheme.colorScheme.primary,
+                    tint = if (isPlanned) colorResource(id = R.color.red) else MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
