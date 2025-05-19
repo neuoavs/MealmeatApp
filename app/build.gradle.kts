@@ -54,6 +54,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.foundation:foundation:1.6.0") // Đảm bảo có foundation
+    implementation("androidx.window:window:1.2.0")
     implementation("io.coil-kt:coil:2.5.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("io.coil-kt:coil-gif:2.5.0")
@@ -83,6 +86,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth)
+    implementation(libs.androidx.material3.window.size.class1.android)
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)

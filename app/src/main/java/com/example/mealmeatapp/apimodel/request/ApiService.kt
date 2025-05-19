@@ -14,7 +14,7 @@ interface ApiService {
 
     @GET("recipes/random")
     suspend fun getRandomRecipe(
-        @Query("apiKey") apiKey: String = "9ec7be114eb844208452a55391ac572b",
+        @Query("apiKey") apiKey: String = "cf6b0f50bcf943048dd01c49105592bf",
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("include-tags") includeTags:  String ?= null,
         @Query("exclude-tags") excludeTags: String ?= null,
@@ -23,7 +23,7 @@ interface ApiService {
 
     @GET("recipes/complexSearch")
     suspend fun searchRepice(
-        @Query("apiKey") apiKey: String = "9ec7be114eb844208452a55391ac572b",
+        @Query("apiKey") apiKey: String = "cf6b0f50bcf943048dd01c49105592bf",
         @Query("query") query: String ?= null,
         @Query("cuisine") cuisine: String ?= null,
         @Query("diet") diet: String ?= null,
@@ -52,7 +52,7 @@ interface ApiService {
 
     @GET("recipes/informationBulk")
     suspend fun getRecipesInformationBulk(
-        @Query("apiKey") apiKey: String = "9ec7be114eb844208452a55391ac572b",
+        @Query("apiKey") apiKey: String = "cf6b0f50bcf943048dd01c49105592bf",
         @Query("ids") ids: String,
         @Query("includeNutrition") includeNutrition: Boolean = true
     ): ArrayList<Recipe>
@@ -60,7 +60,7 @@ interface ApiService {
     @GET("recipes/{id}/information")
     suspend fun getInformationOfPriceByID(
         @Path("id") id: Int,
-        @Query("apiKey") apiKey: String = "9ec7be114eb844208452a55391ac572b",
+        @Query("apiKey") apiKey: String = "cf6b0f50bcf943048dd01c49105592bf",
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("addWinePairing") addWinePairing: Boolean = false,
         @Query("addTasteData") addTasteData: Boolean = false,
@@ -68,14 +68,14 @@ interface ApiService {
 
     @GET("recipes/informationBulk")
     suspend fun getInformationOfManyPricesByIDs(
-        @Query("apiKey") apiKey: String = "219090434a564544adf96b5c6f0f6093",
+        @Query("apiKey") apiKey: String = "cf6b0f50bcf943048dd01c49105592bf",
         @Path("ids") ids: String ?= null, // "715538,716429"
         @Query("includeNutrition") includeNutrition: Boolean = true,
     ) : List<Recipe>
 
     @GET("food/ingredients/search")
     suspend fun searchIngredient(
-        @Query("apiKey") apiKey: String = "9ec7be114eb844208452a55391ac572b",
+        @Query("apiKey") apiKey: String = "cf6b0f50bcf943048dd01c49105592bf",
         @Query("query") query: String ?= null,
         @Query("addChildren") addChildren: Boolean = false,
         @Query("minProteinPercent") minProteinPercent: Double ?= null,
@@ -96,7 +96,7 @@ interface ApiService {
     @GET("food/ingredients/{id}/information")
     suspend fun getInformationOfIngredientByID(
         @Path("id") id: Int,
-        @Query("apiKey") apiKey: String = "9ec7be114eb844208452a55391ac572b",
+        @Query("apiKey") apiKey: String = "cf6b0f50bcf943048dd01c49105592bf",
         @Query("amount") amount: Double = 100.0,
         @Query("unit") unit: String = "grams",
         @Query("locale") locale: String = "en_US",

@@ -1,4 +1,3 @@
-// com.example.mealmeatapp.viewmodel/ChatViewModel.kt
 package com.example.mealmeatapp.viewmodel
 
 import android.util.Log
